@@ -1,0 +1,103 @@
+---
+description: Project Structure: Standards for Python project organization using UV package manager
+globs: **/*.py,**/README.md
+alwaysApply: false
+---
+# Python Project Structure and Organization
+
+## Introduction
+This guide defines the standard project structure and organization for Python projects using the UV package manager.
+
+## Guidelines
+
+### Example Project Root Structure
+```
+project_name/
+├── project_name/
+│   ├── __init__.py
+│   ├── core/
+│   ├── utils/
+│   └── main.py
+├── tests/
+│   ├── __init__.py
+│   ├── test_core/
+│   └── test_utils/
+├── docs/
+├── .venv/                  # UV-managed virtual environment
+├── .python-version         # UV Python version pin
+├── README.md
+├── pyproject.toml         # Project metadata and dependencies
+├── uv.lock                # UV lockfile for dependency versions
+└── .gitignore
+```
+
+### Project Setup
+- Initialize new projects with `uv init`
+- Use `uv python pin` to set project Python version
+- Create virtual environment with `uv venv`
+- Activate with `source .venv/bin/activate`
+
+### Dependency Management
+- Declare dependencies in pyproject.toml
+- Use `uv add` to add new dependencies
+- Use `uv add --dev` or `uv add --group <name>` for development dependencies
+- Use `uv remove` to remove dependencies
+- Use `uv sync` to install/update dependencies
+- Use `uv lock` to generate/update lockfile
+- Use `uv tree` to view dependency tree
+
+### Module Organization
+- Keep modules focused and single-purpose
+- Use __init__.py files appropriately
+- Implement lazy imports for heavy dependencies
+- Use relative imports within packages
+
+### Script Management
+- Use UV's script support for standalone scripts
+- Declare script dependencies with `uv add --script`
+- Run scripts in isolated environments with `uv run`
+
+### Python Version Management
+- Use UV to manage multiple Python versions
+- Install versions: `uv python install <version>`
+- List versions: `uv python list`
+- Pin versions: `uv python pin <version>`
+- Support multiple Python versions in CI
+
+### Configuration
+- Use environment variables for deployment settings
+- Keep configuration in dedicated config files
+- Never commit sensitive data or credentials
+- Use .env files for local development
+
+### Documentation
+- Include a comprehensive README.md
+- Maintain documentation in docs/
+- Document installation and setup procedures
+- Include examples and usage guides
+
+## Examples
+
+```python
+# Example pyproject.toml
+[project]
+name = "my-project"
+version = "0.1.0"
+description = "A well-structured Python project"
+dependencies = [
+    "requests>=2.31.0",
+    "pydantic>=2.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=24.0.0",
+    "ruff>=0.2.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+```

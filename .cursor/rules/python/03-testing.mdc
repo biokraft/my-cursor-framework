@@ -1,0 +1,97 @@
+---
+description: Standards for Python testing practices and patterns
+globs: tests/**/*.py
+alwaysApply: false
+---
+# Python Testing Best Practices
+
+## Introduction
+This guide defines the standard testing practices and patterns for Python projects.
+
+## Guidelines
+
+### Test Framework
+- Use pytest as the primary testing framework
+- Organize tests using pytest fixtures
+- Utilize parametrize for multiple test cases
+- Keep tests isolated and independent
+
+### Test Structure
+- Follow AAA pattern (Arrange-Act-Assert)
+- One concept per test function
+- Clear, descriptive test names
+- Group related tests in classes
+
+### Test Coverage
+- Aim for minimum 80% code coverage
+- Test both success and failure paths
+- Include edge cases and boundary conditions
+- Test public interfaces thoroughly
+
+### Mocking and Fixtures
+- Use pytest fixtures for test setup
+- Mock external dependencies
+- Use dependency injection for testability
+- Create reusable fixture factories
+
+### Test Types
+- Unit tests: Test individual components
+- Integration tests: Test component interaction
+- Functional tests: Test complete features
+- Performance tests: Test system performance
+
+### Best Practices
+- Keep tests fast and efficient
+- Use appropriate assertions
+- Clean up test resources
+- Document test requirements
+- Use markers for test categorization
+
+## Examples
+
+```python
+# Bad test - lacks structure and clarity
+def test_something():
+    result = process_data()
+    assert result == True
+
+# Good test - follows AAA pattern and best practices
+import pytest
+from typing import Dict
+
+@pytest.mark.integration
+def test_user_registration_success(db_connection):
+    """Test successful user registration flow."""
+    # Arrange
+    user_data: Dict[str, str] = {
+        "username": "testuser",
+        "email": "test@example.com",
+        "password": "secure_password"
+    }
+    
+    # Act
+    result = register_user(user_data)
+    
+    # Assert
+    assert result.status_code == 201
+    assert result.user.username == user_data["username"]
+    assert result.user.email == user_data["email"]
+    
+    # Cleanup
+    db_connection.delete_user(result.user.id)
+
+# Example of parametrized test
+@pytest.mark.parametrize("input_value,expected", [
+    (1, 2),
+    (2, 4),
+    (0, 0),
+    (-1, -2)
+])
+def test_double_number(input_value: int, expected: int):
+    """Test number doubling with various inputs."""
+    assert double_number(input_value) == expected
+```
+
+metadata:
+  priority: high
+  version: 1.0

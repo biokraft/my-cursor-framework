@@ -1,0 +1,95 @@
+---
+description: Standards for code style and formatting in Python projects
+globs: **/*.py
+alwaysApply: false
+---
+# Python Code Style and Formatting
+
+## Introduction
+This guide defines the standard code style and formatting rules for Python projects.
+
+## Guidelines
+
+### Type Hints
+- Always use type hints for function parameters and return values
+- Use type hints for variable annotations where possible
+- Import types from typing module (List, Dict, Optional, etc.)
+- Use Union[type1, type2] for multiple possible types
+- Use Optional[type] instead of Union[type, None]
+- Consider using TypeVar for generic types
+- Use collections.abc for container types (Sequence, Mapping, etc.)
+
+### Indentation
+- Use 4 spaces for indentation
+- Never mix tabs and spaces
+- Align continuation lines with parentheses/brackets
+
+### Line Length
+- Maximum line length: 88 characters (Black formatter standard)
+- Use parentheses for line continuation
+- Break before binary operators
+
+### Naming Conventions
+- Classes: CapWords (PascalCase)
+- Functions/Variables: lowercase_with_underscores (snake_case)
+- Constants: UPPERCASE_WITH_UNDERSCORES
+- Protected attributes: _single_leading_underscore
+- Private attributes: __double_leading_underscore
+- Magic methods: __double_underscores__
+
+### Imports
+- One import per line
+- Group imports in this order:
+  1. Standard library imports
+  2. Related third party imports
+  3. Local application imports
+- Use absolute imports over relative imports
+
+### Whitespace
+- Two blank lines before top-level classes/functions
+- One blank line before class methods
+- No trailing whitespace
+- Surround operators with single space
+- No space inside parentheses/brackets
+
+### Documentation
+- Use docstrings for all public modules/functions/classes
+- Follow Google-style docstring format
+- Include type hints for function parameters and return values
+
+## Examples
+
+```python
+# Bad style - no type hints
+def process_data(items, threshold):
+    results = []
+    for item in items:
+        if item > threshold:
+            results.append(item * 2)
+    return results
+
+# Good style - with type hints
+from typing import List, Optional
+
+def process_data(
+    items: List[float],
+    threshold: float,
+    multiplier: Optional[float] = None
+) -> List[float]:
+    """Process a list of numbers above a threshold.
+    
+    Args:
+        items: List of numbers to process
+        threshold: Minimum value to include
+        multiplier: Optional value to multiply by (defaults to 2)
+        
+    Returns:
+        List of processed values above threshold
+    """
+    results: List[float] = []
+    mult = multiplier if multiplier is not None else 2.0
+    for item in items:
+        if item > threshold:
+            results.append(item * mult)
+    return results
+```

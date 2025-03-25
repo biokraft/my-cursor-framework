@@ -75,4 +75,4 @@ Create tests
 Run "cargo build" and verify the application works
 Run "cargo clippy" and resolve linting errors
 ```
-Did the LLM go on a bad path? Restart a new chat session to clear the LLM context window and use the above prompt. Keep doing it until everything is implemented.
+Did the LLM go on a bad path? Restart a new chat session to clear the LLM context window and use the above prompt. Keep doing it until everything is implemented. 

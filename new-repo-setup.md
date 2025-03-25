@@ -63,3 +63,16 @@ When groundhog explain is invoked it prints hello world.
 
 IMPORTANT: Write up the specifications into the "specs/" folder with each domain topic (including technical topic) as a seperate markdown file. Create a "SPECS.md" in the root of the directory which is an overview document that contains a table that links to all the specs.
 ```
+
+## keep going until implemented
+The next secret is really just continually issuing the same prompt
+
+```
+Study @SPECS.md for functional specifications.
+Study @.cursor for technical requirements
+Implement what is not implemented
+Create tests
+Run "cargo build" and verify the application works
+Run "cargo clippy" and resolve linting errors
+```
+Did the LLM go on a bad path? Restart a new chat session to clear the LLM context window and use the above prompt. Keep doing it until everything is implemented.

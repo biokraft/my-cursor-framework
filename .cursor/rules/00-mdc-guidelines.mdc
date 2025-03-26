@@ -31,15 +31,53 @@ alwaysApply: false       # Set to true for global rules
 
 > **Important**: Despite the appearance, the frontmatter is not strictly YAML formatted. The `globs` field is a comma-separated list and should NOT include brackets `[]` or quotes `"`.
 
+#### Valid Frontmatter Properties
+
+Cursor MDC files only support these three specific properties:
+
+- **description**: Required field for describing the rule's purpose and relevance
+- **globs**: Optional patterns for automatic attachment to matching files
+- **alwaysApply**: Optional boolean to make a rule globally applied
+
+No other properties (such as `agentAttached`) are valid or supported in the frontmatter.
+
 #### Frontmatter Guidelines for Setting Fields
 
 - **description**: Should be agent-friendly and clearly describe when the rule is relevant. Format as `<topic>: <details>` for best results.
+  - For rules that should be automatically attached by the agent for specific topics, include clear trigger keywords in the description (e.g., "Python dependency management with UV: Attaches when dealing with Python dependencies or package management")
 - **globs**: 
+  - Format must be a simple comma-separated list without brackets or quotes
   - If a rule is only relevant in very specific situations, leave globs empty so it's loaded only when applicable to the user request.
   - If both globs are empty and alwaysApply is set to false, the rule will be attached by the agent only when it determines the rule is relevant to the user's query.
   - If the only glob would match all files (like `**/*`), leave it empty and set `alwaysApply: true` instead.
   - Otherwise, be as specific as possible with glob patterns to ensure rules are only applied with relevant files.
 - **alwaysApply**: Use sparingly for truly global guidelines.
+
+#### Examples of Valid Frontmatter
+
+```
+---
+description: Python style guidelines: Apply when working with Python code
+globs: **/*.py
+alwaysApply: false
+---
+```
+
+```
+---
+description: Project-wide documentation standards: Always apply these guidelines
+globs: 
+alwaysApply: true
+---
+```
+
+```
+---
+description: Dependency management with UV: Attaches when dealing with dependencies
+globs: 
+alwaysApply: false
+---
+```
 
 #### Glob Pattern Examples
 

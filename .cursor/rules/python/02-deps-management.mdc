@@ -1,6 +1,6 @@
 ---
 description: Python dependency management with UV: Attaches when dealing with Python dependencies or package management
-globs: 
+globs:
 alwaysApply: false
 ---
 # Python Dependency Management with UV
@@ -22,6 +22,8 @@ This guide explains how to manage Python dependencies using the UV package manag
 - Use `uv add --dev` or `uv add --group <n>` for development dependencies
 - Use `uv remove` to remove dependencies
 - Use `uv sync` to install/update dependencies
+  - Use `uv sync --extra <group>` to install specific extras/groups
+  - Use `uv sync --all-extras` to install all extras/groups
 - Use `uv lock` to generate/update lockfile
 - Use `uv tree` to view dependency tree
 
@@ -36,6 +38,11 @@ This guide explains how to manage Python dependencies using the UV package manag
 - List versions: `uv python list`
 - Pin versions: `uv python pin <version>`
 - Support multiple Python versions in CI
+
+### CI Environment Setup
+- Use `export UV_SYSTEM_PYTHON=1` in CI environments 
+- Use `uv sync --extra ci` for test dependencies
+- Use `uv run <command>` to execute commands in the UV environment
 
 ## Examples
 
@@ -56,6 +63,10 @@ dev = [
     "pytest-cov>=4.0.0",
     "black>=24.0.0",
     "ruff>=0.2.0",
+]
+ci = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
 ]
 
 [build-system]
@@ -81,6 +92,11 @@ uv add --dev pytest black ruff
 uv sync
 uv lock
 
+# Install with specific extras
+uv sync --extra dev
+uv sync --extra ci
+uv sync --all-extras
+
 # Run scripts in isolated environments
 uv run pytest
-``` 
+```

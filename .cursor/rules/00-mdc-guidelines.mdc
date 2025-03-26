@@ -36,6 +36,7 @@ alwaysApply: false       # Set to true for global rules
 - **description**: Should be agent-friendly and clearly describe when the rule is relevant. Format as `<topic>: <details>` for best results.
 - **globs**: 
   - If a rule is only relevant in very specific situations, leave globs empty so it's loaded only when applicable to the user request.
+  - If both globs are empty and alwaysApply is set to false, the rule will be attached by the agent only when it determines the rule is relevant to the user's query.
   - If the only glob would match all files (like `**/*`), leave it empty and set `alwaysApply: true` instead.
   - Otherwise, be as specific as possible with glob patterns to ensure rules are only applied with relevant files.
 - **alwaysApply**: Use sparingly for truly global guidelines.
@@ -65,7 +66,7 @@ Brief overview of rule purpose.
 # Good example
 def my_function():
     pass
-````
+```
 
 ## Special Features
 

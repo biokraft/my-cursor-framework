@@ -8,4 +8,4 @@ alwaysApply: true
 
 When working with Cursor rules or MDC files, follow the comprehensive guidelines in the MDC documentation:
 
-[MDC Guidelines](mdc:.cursor/rules/00-mdc-guidelines.mdc)
+[MDC Guidelines](mdc:.cursor/rules/01-mdc-guidelines.mdc)

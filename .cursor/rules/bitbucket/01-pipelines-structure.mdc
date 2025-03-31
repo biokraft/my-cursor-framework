@@ -1,0 +1,89 @@
+---
+description: Bitbucket Pipelines structure: Guidelines for structuring bitbucket-pipelines.yml, especially for self-hosted runners.
+globs: **/bitbucket-pipelines.yml
+alwaysApply: false
+---
+
+# Cursor Rule: Bitbucket Pipelines Best Practices
+
+## Rule ID
+
+`bitbucket/01-pipelines-structure`
+
+## Description
+
+This rule provides guidelines for structuring `bitbucket-pipelines.yml` files to ensure clarity, maintainability, and correct execution, especially when using self-hosted runners.
+
+## Applies To
+
+`bitbucket-pipelines.yml`
+
+## Guidelines
+
+1.  **Standard Structure:** Ensure your `bitbucket-pipelines.yml` follows the standard top-level structure:
+    *   `image`: (Optional, but recommended) Defines the default Docker image for steps.
+    *   `clone`: (Optional) Configures repository cloning behavior.
+    *   `options`: (Optional) Global options like `docker`, `max-time`.
+    *   `definitions`: (Optional, but recommended) Defines reusable components like `steps`, `services`, `caches`.
+    *   `pipelines`: Defines the actual pipeline triggers and steps (e.g., `default`, `branches`, `pull-requests`, `custom`).
+
+2.  **`runs-on` Placement:**
+    *   The `runs-on` directive **must be defined within a `step` block**, either directly under a step in the `pipelines` section or within a reusable step definition under the `definitions` section.
+    *   **Do not** place `runs-on` at the top level of the file alongside `image` or `clone`. It will be ignored there.
+    *   Example (in definitions):
+        ```yaml
+        definitions:
+          steps:
+            - build-step: &build-step
+                name: Build Project
+                runs-on:
+                  - self.hosted
+                  - custom.runner.label # Optional custom label
+                script:
+                  - echo "Building..."
+        ```
+    *   Example (direct in pipelines):
+        ```yaml
+        pipelines:
+          default:
+            - step:
+                name: Deploy
+                runs-on:
+                  - self.hosted
+                script:
+                  - echo "Deploying..."
+        ```
+
+3.  **Self-Hosted Runners (`self.hosted`):**
+    *   When using `runs-on` with `self.hosted`, ensure your runner is correctly registered with your Bitbucket repository or workspace and is active.
+    *   Verify that any additional custom labels (like `techhub.alias.vm.template.engine`) match the labels configured on your runner.
+    *   Consult your runner's configuration and the Bitbucket documentation if pipelines are not picking up the self-hosted runner.
+
+4.  **Reusability with YAML Anchors:**
+    *   For steps used in multiple pipelines (e.g., test steps running on branches and pull requests), define them once under `definitions -> steps` using a YAML anchor (`&anchor_name`).
+    *   Reference the step using the alias (`*anchor_name`) in your `pipelines` section. This keeps the configuration DRY (Don't Repeat Yourself).
+    *   Example:
+        ```yaml
+        definitions:
+          steps:
+            - test-step: &test-step
+                name: Run Tests
+                runs-on: [self.hosted] # Or other labels
+                script:
+                  - npm install
+                  - npm test
+        pipelines:
+          branches:
+            main:
+              - step: *test-step
+          pull-requests:
+            '**':
+              - step: *test-step
+        ```
+
+5.  **Validation:**
+    *   Use the Bitbucket Pipelines Validator (available in the Bitbucket UI or via online tools) to check your `bitbucket-pipelines.yml` syntax before committing.
+
+## Rationale
+
+Following these guidelines helps avoid common pitfalls like misplacing the `runs-on` directive, leading to pipelines running in the default cloud environment instead of the intended self-hosted runner. Using definitions and anchors improves maintainability. 

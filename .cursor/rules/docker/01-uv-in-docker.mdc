@@ -1,0 +1,244 @@
+---
+description: UV in Docker: Best practices for using UV package manager in Dockerfiles
+globs: **/Dockerfile*, **/dockerfile*
+alwaysApply: false
+---
+# UV Package Manager in Docker
+
+## Introduction
+This guide provides best practices for using the UV package manager in Docker containers based on the official UV documentation and our organization's dependency management standards.
+
+## Guidelines
+
+### Installing UV in Docker
+
+#### Methods to Install UV
+
+1. **Install with Installer Script (RECOMMENDED)**:
+   ```dockerfile
+   FROM python:3.12-slim-bookworm
+   
+   # Install curl for the installer
+   RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates \
+       && apt-get clean \
+       && rm -rf /var/lib/apt/lists/*
+   
+   # Download and run installer
+   ADD https://astral.sh/uv/install.sh /uv-installer.sh
+   RUN sh /uv-installer.sh && rm /uv-installer.sh
+   
+   # Add to PATH
+   ENV PATH="/root/.local/bin/:$PATH"
+   ```
+
+2. **Copy from Distroless Image** (use only when install script is not feasible):
+   ```dockerfile
+   FROM python:3.12-slim-bookworm
+   COPY --from=ghcr.io/astral-sh/uv:0.6.11 /uv /uvx /bin/
+   ```
+
+3. **Pre-built Images** (NOT RECOMMENDED for production use):
+   - Only use for development or when absolutely necessary
+   - Official UV Docker images with UV pre-installed:
+     - Distroless: `ghcr.io/astral-sh/uv:latest`
+     - Debian-based: `ghcr.io/astral-sh/uv:debian`
+     - Alpine-based: `ghcr.io/astral-sh/uv:alpine`
+     - Python-specific: `ghcr.io/astral-sh/uv:python3.12-bookworm`
+
+### Optimizing Docker Builds with UV
+
+#### Cache Management
+- Use Docker's cache mounting to optimize builds:
+  ```dockerfile
+  RUN --mount=type=cache,target=/root/.cache/uv uv sync
+  ```
+
+- For persistent cache, set a specific cache directory:
+  ```dockerfile
+  ENV UV_CACHE_DIR=/opt/uv-cache/
+  ```
+
+- Alternatively, disable cache to reduce image size:
+  ```dockerfile
+  ENV UV_NO_CACHE=1
+  ```
+
+#### Layer Optimization
+- **IMPORTANT**: Always create separate layers for dependencies to optimize build time and caching:
+  ```dockerfile
+  # Stage 1: Copy only dependency-related files
+  COPY pyproject.toml uv.lock ./
+  
+  # Stage 2: Create virtual environment and install dependencies in their own layer
+  RUN uv venv .venv
+  ENV PATH="/app/.venv/bin:$PATH"
+  RUN --mount=type=cache,target=/root/.cache/uv \
+      uv sync
+  # For specific extras:
+  # RUN --mount=type=cache,target=/root/.cache/uv \
+  #     uv sync --extra dev
+  # Or for all extras:
+  # RUN --mount=type=cache,target=/root/.cache/uv \
+  #     uv sync --all-extras
+  
+  # Stage 3: Only after dependencies are installed, copy application code
+  COPY . .
+  
+  # Stage 4 (optional): Install the project itself
+  RUN --mount=type=cache,target=/root/.cache/uv \
+      uv sync
+  ```
+
+- For workspaces, use the `--no-install-workspace` flag
+- For specific packages, use `--no-install-package <n>`
+
+#### Non-Editable Installs
+- Use `--no-editable` with multi-stage builds to create standalone environments:
+  ```dockerfile
+  # Builder stage
+  FROM python:3.12-slim AS builder
+  
+  # Install UV using the recommended installer script
+  RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates \
+      && apt-get clean \
+      && rm -rf /var/lib/apt/lists/*
+  ADD https://astral.sh/uv/install.sh /uv-installer.sh
+  RUN sh /uv-installer.sh && rm /uv-installer.sh
+  ENV PATH="/root/.local/bin/:$PATH"
+  
+  WORKDIR /app
+  
+  # Copy ONLY dependency files first
+  COPY pyproject.toml uv.lock ./
+  
+  # Create virtual environment and install dependencies in their own layer
+  RUN uv venv .venv
+  ENV PATH="/app/.venv/bin:$PATH"
+  
+  # Install dependencies in their own layer
+  RUN --mount=type=cache,target=/root/.cache/uv \
+      uv sync --frozen --no-install-project
+  
+  # Only after dependencies are installed, copy application code
+  COPY . .
+  
+  # Install project
+  RUN --mount=type=cache,target=/root/.cache/uv \
+      uv sync --frozen
+  
+  # Final stage
+  FROM python:3.12-slim
+  WORKDIR /app
+  COPY --from=builder /app/.venv /app/.venv
+  ENV PATH="/app/.venv/bin:$PATH"
+  CMD ["python", "-m", "your_module"]
+  ```
+
+#### Temporary UV Usage
+- For build-time only usage, mount UV just for commands:
+  ```dockerfile
+  RUN --mount=from=ghcr.io/astral-sh/uv,source=/uv,target=/bin/uv \
+      uv sync
+  ```
+
+### UV Environment Setup in Docker
+
+#### System Environment
+- For containers when a virtual environment might not be needed:
+  ```dockerfile
+  ENV UV_SYSTEM_PYTHON=1
+  RUN uv sync
+  ```
+
+#### Virtual Environment (RECOMMENDED)
+- Create and use a virtual environment (preferred approach):
+  ```dockerfile
+  RUN uv venv /app/.venv
+  ENV PATH="/app/.venv/bin:$PATH"
+  
+  # Install dependencies with uv sync
+  COPY pyproject.toml uv.lock ./
+  RUN --mount=type=cache,target=/root/.cache/uv \
+      uv sync
+  ```
+
+#### Installing Requirements
+- **ALWAYS** separate dependency installation from project code:
+  ```dockerfile
+  # Copy ONLY dependency files first
+  COPY pyproject.toml uv.lock ./
+  
+  # Create virtual environment
+  RUN uv venv .venv
+  ENV PATH="/app/.venv/bin:$PATH"
+  
+  # Install dependencies in their own layer
+  RUN --mount=type=cache,target=/root/.cache/uv \
+      uv sync
+  # For specific extras:
+  # RUN --mount=type=cache,target=/root/.cache/uv \
+  #     uv sync --extra dev
+  
+  # Only after dependencies are installed, copy application code
+  COPY . .
+  
+  # Sync to ensure project is installed
+  RUN --mount=type=cache,target=/root/.cache/uv \
+      uv sync
+  ```
+
+## Best Practices
+
+1. **Always use the installer script** for most reliable UV installation
+   ```dockerfile
+   ADD https://astral.sh/uv/install.sh /uv-installer.sh
+   RUN sh /uv-installer.sh && rm /uv-installer.sh
+   ```
+
+2. **Always pin UV versions** when using the installer script:
+   ```dockerfile
+   ADD https://astral.sh/uv/install.sh /uv-installer.sh
+   RUN UV_INSTALLER_VERSION=0.6.11 sh /uv-installer.sh && rm /uv-installer.sh
+   ```
+
+3. **Verify image provenance** for security if using pre-built images:
+   ```bash
+   gh attestation verify --owner astral-sh oci://ghcr.io/astral-sh/uv:0.6.11
+   ```
+
+4. **Optimize layer caching** by following this specific order:
+   - Base image and UV installation
+   - Copy dependency files only (pyproject.toml, uv.lock)
+   - Create a virtual environment
+   - Install dependencies in a separate layer using `uv sync`
+   - Copy project code
+   - Install/sync project
+
+5. **Use multi-stage builds** to minimize final image size
+
+6. **Consider bytecode compilation** for faster startup times:
+   ```dockerfile
+   # Compile Python bytecode before running
+   RUN python -m compileall /app
+   ```
+
+7. **Use `uv sync` with extras** for environment-specific dependencies:
+   ```dockerfile
+   # For development environments
+   RUN --mount=type=cache,target=/root/.cache/uv \
+       uv sync --extra dev
+   
+   # For production, just the main dependencies
+   RUN --mount=type=cache,target=/root/.cache/uv \
+       uv sync
+   ```
+   
+8. **Consider lockfile management**:
+   ```dockerfile
+   # Generate/update lockfile if needed
+   RUN uv lock
+   
+   # Use frozen installs for reproducible builds
+   RUN --mount=type=cache,target=/root/.cache/uv \
+       uv sync --frozen
+   ```

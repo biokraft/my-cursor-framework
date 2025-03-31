@@ -19,15 +19,13 @@ This guide explains how to manage Python dependencies using the UV package manag
 ### Dependency Management
 - Declare dependencies in `pyproject.toml`:
     - Main dependencies under `[project.dependencies]`.
-    - **Dependency groups** (e.g., for dev, test) under `[tool.uv.sources]` or `[project.dependency-groups]`. These are typically installed by default during `uv sync`.
     - **Optional dependencies** (extras) under `[project.optional-dependencies]`. These are *not* installed by default and require explicit flags like `--extra` or `--all-extras` during `uv sync`.
 - Use `uv add <package>` to add new main dependencies.
-- Use `uv add --group <name> <package>` to add dependencies to specific *dependency groups* (e.g., `uv add --group dev pytest`). Note: `uv add --dev <package>` is often a shorthand for `uv add --group dev <package>`.
-- Use `uv add --optional <name> <package>` to add dependencies to specific *optional dependency groups* (extras) (e.g., `uv add --optional server fastapi`).
-- Use `uv remove <package>` to remove dependencies. Specify `--group <name>` or `--optional <name>` if removing from a specific group or optional set.
-- Use `uv sync` to install/update dependencies based on `pyproject.toml` and `uv.lock`. This installs main dependencies and all dependency groups by default.
-    - Use `uv sync --all-extras` to install main dependencies, all dependency groups, *and* all optional dependencies (extras).
-    - Use `uv sync --extra <name>` to install main dependencies, all dependency groups, *and* specific optional dependencies (extras).
+- Use `uv add --optional <group> <package>` to add dependencies to specific *optional dependency groups* (extras) (e.g., `uv add --optional dev pytest`).
+- Use `uv remove <package>` to remove dependencies. Specify `--optional <group>` if removing from a specific optional group.
+- Use `uv sync` to install/update dependencies based on `pyproject.toml` and `uv.lock`. This installs only main dependencies by default.
+    - Use `uv sync --all-extras` to install main dependencies and all optional dependencies (extras).
+    - Use `uv sync --extra <name>` to install main dependencies and a specific optional dependency group (e.g., `uv sync --extra dev`).
 - Use `uv lock` to generate or update the `uv.lock` file, capturing the exact versions of all resolved dependencies.
 - Use `uv tree` to view the project's dependency tree.
 
@@ -61,20 +59,14 @@ dependencies = [
 ]
 
 [project.optional-dependencies] # Optional dependencies (extras)
-server = ["fastapi>=0.100.0", "uvicorn[standard]>=0.20.0"]
-cli = ["typer>=0.9.0"]
-
-[tool.uv.sources] # Dependency groups (alternative to [project.dependency-groups])
 dev = [
     "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
+    "pytest-cov>=4.0.0", 
     "black>=24.0.0",
     "ruff>=0.2.0",
 ]
-ci = [
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
-]
+server = ["fastapi>=0.100.0", "uvicorn[standard]>=0.20.0"]
+cli = ["typer>=0.9.0"]
 
 [build-system]
 requires = ["hatchling"]
@@ -95,16 +87,117 @@ source .venv/bin/activate
 
 # Add and manage dependencies
 uv add requests pydantic                       # Add main dependencies
-uv add --group dev pytest black ruff          # Add to 'dev' group
-uv add --optional server fastapi uvicorn      # Add to 'server' optional group (extra)
+uv add --optional dev pytest black ruff        # Add to 'dev' optional group
+uv add --optional server fastapi uvicorn       # Add to 'server' optional group
 
 # Install dependencies and update lockfile
-uv sync                                       # Installs main + all group deps ('dev', 'ci')
+uv sync                                       # Installs ONLY main dependencies
+uv sync --extra dev                           # Installs main + 'dev' extras
 uv lock                                       # Update uv.lock based on current state
 
 # Install with specific extras
-uv sync --extra server                       # Install main + all groups + 'server' extra
-uv sync --all-extras                         # Install main + all groups + all extras ('server', 'cli')
+uv sync --extra server                       # Install main + 'server' extra
+uv sync --all-extras                         # Install main + ALL extras ('dev', 'server', 'cli')
+
+# Run commands in the environment
+uv run pytest
+uv run python my_script.py
+```
+# Python Dependency Management with UV
+
+## Introduction
+This guide explains how to manage Python dependencies using the UV package manager, a fast alternative to pip and other package managers.
+
+## Guidelines
+
+### Project Setup
+- Initialize new projects with `uv init`.
+- Use `uv python pin <version>` to set the project's target Python version in `.python-version` or `pyproject.toml`.
+- Create a virtual environment with `uv venv`.
+- Activate the environment with `source .venv/bin/activate` (Linux/macOS) or `.venv\Scripts\activate` (Windows).
+
+### Dependency Management
+- Declare dependencies in `pyproject.toml`:
+    - Main dependencies under `[project.dependencies]`.
+    - **Optional dependencies** (extras) under `[project.optional-dependencies]`. These are *not* installed by default and require explicit flags like `--extra` or `--all-extras` during `uv sync`.
+- Use `uv add <package>` to add new main dependencies.
+- Use `uv add --optional <n> <package>` to add dependencies to specific *optional dependency groups* (extras) (e.g., `uv add --optional dev pytest`).
+- Use `uv remove <package>` to remove dependencies. Specify `--optional <n>` if removing from a specific optional group.
+- Use `uv sync` to install/update dependencies based on `pyproject.toml` and `uv.lock`. This installs only main dependencies by default.
+    - Use `uv sync --all-extras` to install main dependencies and all optional dependencies (extras).
+    - Use `uv sync --extra <name>` to install main dependencies and a specific optional dependency group (e.g., `uv sync --extra dev`).
+- Use `uv lock` to generate or update the `uv.lock` file, capturing the exact versions of all resolved dependencies.
+- Use `uv tree` to view the project's dependency tree.
+
+### Script Management
+- Use UV's script support for standalone scripts (see `uv run` documentation).
+- Run commands within the project's environment using `uv run <command>`.
+
+### Python Version Management
+- Use UV to manage multiple Python installations if desired.
+- Install versions: `uv python install <version>`
+- List available/installed versions: `uv python list`
+- Find system Pythons: `uv python find`
+
+### CI Environment Setup
+- Consider setting `UV_SYSTEM_PYTHON=1` in CI if you want UV to prefer system-installed Python over UV-managed ones.
+- Use `uv sync` (potentially with `--extra` flags if CI needs optional dependencies) to set up the environment.
+- Use `uv run <command>` to execute tests or other CI steps within the managed environment.
+
+## Examples
+
+```toml
+# Example pyproject.toml
+[project]
+name = "my-project"
+version = "0.1.0"
+description = "A well-structured Python project"
+requires-python = ">=3.9" # Define compatible Python versions
+dependencies = [
+    "requests>=2.31.0",
+    "pydantic>=2.0.0",
+]
+
+[project.optional-dependencies] # Optional dependencies (extras)
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0", 
+    "black>=24.0.0",
+    "ruff>=0.2.0",
+]
+server = ["fastapi>=0.100.0", "uvicorn[standard]>=0.20.0"]
+cli = ["typer>=0.9.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+```
+
+### Common UV Commands
+```bash
+# Initialize a project
+uv init
+
+# Pin Python version (creates/updates .python-version)
+uv python pin 3.11
+
+# Create and activate virtual environment
+uv venv
+source .venv/bin/activate
+
+# Add and manage dependencies
+uv add requests pydantic                       # Add main dependencies
+uv add --optional dev pytest black ruff        # Add to 'dev' optional group
+uv add --optional server fastapi uvicorn       # Add to 'server' optional group
+
+# Install dependencies and update lockfile
+uv sync                                       # Installs ONLY main dependencies
+uv sync --extra dev                           # Installs main + 'dev' extras
+uv lock                                       # Update uv.lock based on current state
+
+# Install with specific extras
+uv sync --extra server                       # Install main + 'server' extra
+uv sync --all-extras                         # Install main + ALL extras ('dev', 'server', 'cli')
 
 # Run commands in the environment
 uv run pytest

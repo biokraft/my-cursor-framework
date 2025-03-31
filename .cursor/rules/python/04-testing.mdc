@@ -68,15 +68,15 @@ def test_user_registration_success(db_connection):
         "email": "test@example.com",
         "password": "secure_password"
     }
-    
+
     # Act
     result = register_user(user_data)
-    
+
     # Assert
     assert result.status_code == 201
     assert result.user.username == user_data["username"]
     assert result.user.email == user_data["email"]
-    
+
     # Cleanup
     db_connection.delete_user(result.user.id)
 

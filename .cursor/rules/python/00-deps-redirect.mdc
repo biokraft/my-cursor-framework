@@ -8,4 +8,4 @@ alwaysApply: true
 
 For any questions or tasks related to Python dependencies or package management, please refer to the comprehensive dependency management guidelines:
 
-[Python Dependency Management with UV](mdc:.cursor/rules/python/02-deps-management.mdc) 
+[Python Dependency Management with UV](mdc:.cursor/rules/python/02-deps-management.mdc)

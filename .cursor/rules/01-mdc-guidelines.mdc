@@ -45,7 +45,7 @@ No other properties (such as `agentAttached`) are valid or supported in the fron
 
 - **description**: Should be agent-friendly and clearly describe when the rule is relevant. Format as `<topic>: <details>` for best results.
   - For rules that should be automatically attached by the agent for specific topics, include clear trigger keywords in the description (e.g., "Python dependency management with UV: Attaches when dealing with Python dependencies or package management")
-- **globs**: 
+- **globs**:
   - Format must be a simple comma-separated list without brackets or quotes
   - If a rule is only relevant in very specific situations, leave globs empty so it's loaded only when applicable to the user request.
   - If both globs are empty and alwaysApply is set to false, the rule will be attached by the agent only when it determines the rule is relevant to the user's query.
@@ -66,7 +66,7 @@ alwaysApply: false
 ```
 ---
 description: Project-wide documentation standards: Always apply these guidelines
-globs: 
+globs:
 alwaysApply: true
 ---
 ```
@@ -74,7 +74,7 @@ alwaysApply: true
 ```
 ---
 description: Dependency management with UV: Attaches when dealing with dependencies
-globs: 
+globs:
 alwaysApply: false
 ---
 ```

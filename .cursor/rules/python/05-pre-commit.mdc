@@ -1,0 +1,154 @@
+---
+description: Pre-commit configuration guide: Apply when setting up Python projects with pre-commit hooks
+globs: .pre-commit-config.yaml, pyproject.toml
+alwaysApply: false
+---
+
+# Pre-commit Configuration for Python Projects
+
+## Introduction
+This guide defines the standard pre-commit configuration for Python projects, focusing on code quality and consistency.
+
+## Pre-commit Configuration
+
+### Setup
+- Install pre-commit: `pip install pre-commit` or with UV: `uv add --optional dev pre-commit`
+- Create a `.pre-commit-config.yaml` file in your project root
+- Run `pre-commit install` to set up the git hooks
+- Add pre-commit to your dev dependencies in pyproject.toml:
+  ```toml
+  [project.optional-dependencies]
+  dev = [
+      "pre-commit>=4.2.0",
+      "ruff>=0.11.2",
+      # other dev dependencies...
+  ]
+  ```
+
+### Recommended Hooks
+
+#### Ruff (Linting and Formatting)
+- Use Ruff for both linting and formatting (replaces Black, isort, Flake8, etc.)
+- Configure Ruff in `pyproject.toml` instead of the pre-commit config
+- Use `--fix` for auto-fixing linting issues
+- Ensure Ruff matches your Python target version (e.g., `py312`)
+
+#### Jupyter Notebook Cleaning
+- Use `nbstripout` to clean Jupyter notebook outputs before committing
+- Prevents large binary outputs from being committed to version control
+
+### Example Configuration
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.2  # Use the version from your project requirements
+    hooks:
+      # Run the linter
+      - id: ruff
+        args: [--fix]
+      # Run the formatter
+      - id: ruff-format
+
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.7.1
+    hooks:
+      - id: nbstripout
+        args: [--extra-keys=metadata.kernelspec metadata.language_info.version]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: check-toml
+```
+
+## Integration with UV
+
+When using UV for dependency management, ensure your pre-commit configuration works seamlessly:
+
+1. Add pre-commit to your development dependencies:
+   ```bash
+   uv add --optional dev pre-commit ruff
+   ```
+
+2. Install pre-commit hooks in your repo:
+   ```bash
+   uv run pre-commit install
+   ```
+
+3. Run pre-commit within the UV environment:
+   ```bash
+   uv run pre-commit run --all-files
+   ```
+
+See the [Python Dependency Management with UV](mdc:.cursor/rules/python/01-deps-management.mdc) guide for more details on managing dependencies.
+
+## Ruff Configuration Tips
+
+- Place configuration in `pyproject.toml` under `[tool.ruff]` section
+- Set `line-length` to match your project standards (typically 88 or 120)
+- Set `target-version` to match your Python version requirement
+- Use `extend-include` to include Jupyter notebooks in analysis
+- Use `dummy-variable-rgx` under `[tool.ruff.lint]` for unused variable patterns
+- Add rules to `ignore` for exceptions like `PT011` for test files
+- Configure docstring conventions with `pydocstyle.convention = "google"`
+
+### Common Ruff Settings Example
+
+```toml
+[tool.ruff]
+# Same as Black default
+line-length = 88
+# Match your Python version
+target-version = "py312"
+# Include Jupyter notebooks
+extend-include = ["*.ipynb"]
+# Allow autofix with --fix flag
+fix = true
+
+# Linting Configuration
+[tool.ruff.lint]
+# Allow unused variables when underscore-prefixed
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    # Add other rulesets as needed
+]
+ignore = [
+    # Customize ignored rules
+    "PT011",  # Ignore broad pytest.raises warnings
+]
+# Use PyDocStyle Google convention for docstrings
+pydocstyle.convention = "google"
+
+# Formatting options
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+docstring-code-format = true
+```
+
+## Best Practices
+
+1. **Exception Handling**: Always use proper exception chaining with `raise ... from err` in except blocks
+2. **Type Hints**: Use proper type hints and annotations in all code
+3. **Docstrings**: Follow Google-style docstrings with a period at the end of the first line
+4. **Imports**: List all exports in `__all__` when using `from module import *` elsewhere
+5. **Testing**: Add `match` parameter to `pytest.raises` assertions for better specificity
+
+## Troubleshooting
+
+- If Ruff configuration fails, check for syntax errors in your `pyproject.toml`
+- Ensure settings are in the correct sections (`[tool.ruff]`, `[tool.ruff.lint]`, etc.)
+- Run `pre-commit run --all-files` to test the configuration
+- Use `--verbose` flag with pre-commit to get more detailed error information

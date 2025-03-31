@@ -77,12 +77,12 @@ def process_data(
     multiplier: Optional[float] = None
 ) -> List[float]:
     """Process a list of numbers above a threshold.
-    
+
     Args:
         items: List of numbers to process
         threshold: Minimum value to include
         multiplier: Optional value to multiply by (defaults to 2)
-        
+
     Returns:
         List of processed values above threshold
     """

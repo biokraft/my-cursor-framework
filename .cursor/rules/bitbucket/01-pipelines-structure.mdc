@@ -86,4 +86,4 @@ This rule provides guidelines for structuring `bitbucket-pipelines.yml` files to
 
 ## Rationale
 
-Following these guidelines helps avoid common pitfalls like misplacing the `runs-on` directive, leading to pipelines running in the default cloud environment instead of the intended self-hosted runner. Using definitions and anchors improves maintainability. 
+Following these guidelines helps avoid common pitfalls like misplacing the `runs-on` directive, leading to pipelines running in the default cloud environment instead of the intended self-hosted runner. Using definitions and anchors improves maintainability.

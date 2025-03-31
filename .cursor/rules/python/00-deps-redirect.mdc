@@ -1,0 +1,11 @@
+---
+description: Redirects to dependency management guidelines for Python projects
+globs:
+alwaysApply: true
+---
+
+# Python Dependency Management
+
+For any questions or tasks related to Python dependencies or package management, please refer to the comprehensive dependency management guidelines:
+
+[Python Dependency Management with UV](mdc:.cursor/rules/python/02-deps-management.mdc) 

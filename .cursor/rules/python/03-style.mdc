@@ -19,6 +19,15 @@ This guide defines the standard code style and formatting rules for Python proje
 - Consider using TypeVar for generic types
 - Use collections.abc for container types (Sequence, Mapping, etc.)
 
+### Code Organization Principles
+- **DRY (Don't Repeat Yourself)**: Avoid duplicating code, logic, or validation
+  - Place validation logic close to the relevant class/data structure
+  - Use helper functions for repeated operations
+  - Each piece of knowledge should have a single, unambiguous representation
+- **Single Responsibility Principle**: Each class/function should have one reason to change
+- **Encapsulation**: Keep implementation details hidden when appropriate
+- **Composition over Inheritance**: Prefer composition for code reuse when possible
+
 ### Indentation
 - Use 4 spaces for indentation
 - Never mix tabs and spaces
@@ -92,4 +101,50 @@ def process_data(
         if item > threshold:
             results.append(item * mult)
     return results
+```
+
+# DRY Principle Examples
+
+```python
+# Bad - Duplicated validation logic
+class Template:
+    def validate_config(self, config):
+        # Primary validation
+        if 'name' not in config:
+            raise ValueError("Missing name")
+
+        # Feature validation (duplicated from Feature class)
+        for feature in config['features']:
+            if 'name' not in feature:
+                raise ValueError("Feature missing name")
+            if 'rules' not in feature:
+                raise ValueError("Feature missing rules")
+
+class Feature:
+    def validate(self, config):
+        # Same validation logic duplicated
+        if 'name' not in config:
+            raise ValueError("Feature missing name")
+        if 'rules' not in config:
+            raise ValueError("Feature missing rules")
+
+# Good - Delegation of responsibility
+class Template:
+    def validate_config(self, config):
+        # Only validate what belongs to Template
+        if 'name' not in config:
+            raise ValueError("Missing name")
+
+        # Delegate feature validation to Feature class
+        for feature in config['features']:
+            Feature.validate(feature)  # Let Feature validate its own structure
+
+class Feature:
+    @classmethod
+    def validate(cls, config):
+        # Single place for feature validation logic
+        if 'name' not in config:
+            raise ValueError("Feature missing name")
+        if 'rules' not in config:
+            raise ValueError("Feature missing rules")
 ```

@@ -9,6 +9,17 @@ Under `.cursor/rules` you can find a collection of my Cursor rules.
 
 You can pick and choose what you like.
 
+# Defining new cursor rules
+
+I like to define new cursor rules interactively with cursor while working on a project.
+Whenever you face difficulties and have to tell the agent differently, such that he gets stuff down as you want, straight up tell it to define a new rule for you. Nowadays cursor even offers the `/Generate Cursor Rules ` command.
+
+Never the less, I would still advise to always drop, the following two rules into your project:
+- [`.cursor/rules/00-cursor-rules.md`](.cursor/rules/00-cursor-rules.md)
+- [`.cursor/rules/01-mdc-guidelines.md`](.cursor/rules/01-mdc-guidelines.md)
+
+These two rules define the general structure of your cursor rules.
+
 # My Standard Workflow
 
 ## Project Setup

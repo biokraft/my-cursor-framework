@@ -120,6 +120,7 @@ Each time the user says **“continue”**:
 4. Add the following tools:
 - Search (everything)
 - Edit (everything)
+5. I can recommend claude-3.7-sonnet with thinking for this custom mode, but you can choose whatever you deem fit.
 
 # Acknowledgements & Sources
 

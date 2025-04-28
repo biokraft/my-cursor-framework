@@ -1,0 +1,69 @@
+---
+description: Apply whenever you are writing, testing, or deploying AWS CDK Python code as well as using the AWS CDK CLI.
+globs:
+alwaysApply: false
+---
+# AWS CDK Python Best Practices
+
+## Introduction
+This guide outlines best practices for developing, deploying, and managing AWS infrastructure using the AWS Cloud Development Kit (CDK) with Python.
+
+## Core Concepts
+
+### Version Management
+- **Problem**: Mismatches between the globally installed CDK CLI (`cdk` command) and the project's `aws-cdk-lib` version can cause errors.
+- **Best Practice**: Use `npx` to execute the CDK CLI. This ensures you run the version specified in your project's `node_modules` (installed via `npm install aws-cdk --save-dev`).
+  ```bash
+  # Instead of: cdk deploy
+  # Use:
+  npx cdk deploy
+  ```
+- **Recommendation**: Keep the local `aws-cdk` npm package and the `aws-cdk-lib` Python package versions aligned or ensure the CLI version is at least equal to the library version.
+
+### Bootstrapping
+- Bootstrapping provisions necessary resources (like an S3 bucket) for CDK deployments in a specific AWS account and region.
+- It's required **once per environment** (Account/Region combination).
+- **Command**: Always specify the account and region explicitly.
+  ```bash
+  npx cdk bootstrap aws://ACCOUNT_ID/REGION --profile YOUR_PROFILE
+  ```
+- **Permissions**: Ensure the credentials used for bootstrapping have permissions to create the necessary resources (S3 bucket, IAM roles, etc.).
+- **Troubleshooting**: `NoSuchBucket` error usually means the target environment hasn't been bootstrapped.
+
+### Deployment (`cdk deploy`)
+- **Command**: Use `npx cdk deploy`.
+- **Context**: Provide necessary context values if your `app.py` or stacks expect them (e.g., `--context account=ACCOUNT_ID`).
+- **Permissions**: The deployment role/user needs sufficient permissions to create/update the resources defined in your stacks AND potentially permissions to access the bootstrap S3 bucket (`s3:*`).
+  - **Troubleshooting**: `forbidden: null` often indicates missing permissions to access the bootstrap bucket.
+- **Strategy**: Implement guardrails (AWS Config, SCPs, Permissions Boundaries) instead of overly restrictive IAM policies for developers to maintain productivity while ensuring compliance. Avoid overly restrictive CloudFormation execution roles that might prevent rollbacks.
+- **Incremental Deployment**: Deploy stacks incrementally, especially during development, to isolate issues.
+
+### Stack Design
+- **Resource Limits**: CloudFormation stacks have resource limits (currently 500). High-level CDK constructs can generate many resources.
+  - **Monitoring**: CDK issues a warning if a stack exceeds 80% of the limit.
+  - **Mitigation**: If approaching the limit, refactor your application into multiple smaller stacks. Use cross-stack references to share outputs.
+- **Environment Specification**: For multi-AZ deployments (VPCs, Auto Scaling Groups), explicitly define the target environment in your stack definition to ensure the correct number of AZs are used.
+  ```python
+  # app.py or stack definition
+  env = cdk.Environment(
+      account='YOUR_ACCOUNT_ID',
+      region='YOUR_REGION'
+  )
+  MyStack(app, "MyStackName", env=env)
+  ```
+- **Resource Deletion**: By default, resources with state (like S3 Buckets, DynamoDB tables) have a `RemovalPolicy` of `RETAIN`. They won't be deleted upon `cdk destroy`. Change the `removal_policy` property if you need them to be deleted (use with caution, especially for production data).
+
+### Development Workflow
+- **Synthesize**: Run `npx cdk synth` to generate the CloudFormation template and catch synthesis-time errors.
+- **Diff**: Run `npx cdk diff` before deploying to review the changes that will be applied to your infrastructure.
+- **Project Structure**: Keep CDK code organized (e.g., separate stacks, constructs). Run CDK commands from the project root where `cdk.json` is located.
+
+## Troubleshooting Common Issues
+
+- **`--app is required`**: Ensure you are in the project root directory containing `cdk.json` when running `cdk` commands, or specify the app entrypoint using the `--app` flag (e.g., `npx cdk synth --app "python app.py"`).
+- **`NoSuchBucket` Error During Deploy**: The target environment (Account/Region) has not been bootstrapped. Run `npx cdk bootstrap aws://ACCOUNT/REGION`.
+- **`forbidden: null` Error During Deploy**: The IAM user/role deploying the stack lacks permissions, often for the bootstrap S3 bucket. Verify permissions.
+- **Version Mismatch Errors**: Use `npx cdk ...` to ensure the correct local CDK CLI version is used. Update local `aws-cdk` (npm) and `aws-cdk-lib` (pip/uv) if necessary.
+- **Incorrect Number of AZs Deployed**: Explicitly set the `env` property (account/region) when instantiating your stacks.
+
+See also: [AWS CDK Troubleshooting Guide](https://docs.aws.amazon.com/cdk/v2/guide/troubleshooting.html)

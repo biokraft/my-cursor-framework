@@ -1,0 +1,139 @@
+---
+description: AWS CDK CLI: Best practices for using the CDK Toolkit (cdk command)
+globs: cdk.json, app.py
+alwaysApply: false
+---
+
+# AWS CDK CLI Best Practices
+
+This guide covers best practices and common commands for the AWS CDK Command Line Interface (CLI), also known as the CDK Toolkit (`cdk`).
+
+## Version Management
+
+- **Problem**: Mismatches between the globally installed CDK CLI (`cdk` command) and the project's `aws-cdk-lib` version can cause errors.
+- **Best Practice**: Use `npx` (Node.js) or a similar tool to execute the project-local CDK CLI. This ensures you run the version specified in your project's `node_modules` (typically installed via `npm install aws-cdk --save-dev` or `yarn add aws-cdk --dev`).
+  ```bash
+  # Instead of: cdk deploy
+  # Use:
+  npx cdk deploy
+  ```
+- **Recommendation**: Keep the local `aws-cdk` Node.js package and the `aws-cdk-lib` Python package versions aligned, or ensure the CLI version is at least equal to the library version. Check versions using `npx cdk --version` and `uv pip list | grep aws-cdk-lib`.
+
+## Bootstrapping (`cdk bootstrap`)
+
+- **Purpose**: Provisions necessary resources (S3 bucket for assets, IAM roles) for CDK deployments in a specific AWS account and region combination (environment).
+- **Frequency**: Required **once per environment** you deploy to.
+- **Command**: Always specify the account and region explicitly. Use the profile that has permissions to create the bootstrap stack resources (S3, IAM, SSM parameters).
+  ```bash
+  # Use npx to ensure correct local version
+  npx cdk bootstrap aws://ACCOUNT_ID/REGION --profile YOUR_PROFILE
+  ```
+- **Modern Template**: Ensure you are using the modern bootstrap template. CDK CLI v2 requires it. If you bootstrapped with CDK v1, re-bootstrap.
+- **Customization**: You can customize the bootstrap stack name, bucket name, KMS key, execution policies, and trust relationships using flags like `--toolkit-stack-name`, `--bootstrap-bucket-name`, `--bootstrap-kms-key-id`, `--cloudformation-execution-policies`, `--trust`.
+- **Security**: Be mindful of the default `--cloudformation-execution-policies` (grants broad permissions) and `--trust` (defaults to the current account). Configure these according to your security requirements. Use `--no-bootstrap-customer-key` if you don't require a customer-managed KMS key for the bootstrap bucket to avoid KMS costs.
+- **Troubleshooting**: `NoSuchBucket` error during deploy usually means the target environment hasn't been bootstrapped or the deploy role lacks permissions to the bootstrap bucket.
+
+## Synthesis (`cdk synth` or `cdk s`)
+
+- **Purpose**: Generates AWS CloudFormation templates from your CDK app code. Catches synthesis-time errors.
+- **Command**:
+  ```bash
+  # Synthesize a specific stack
+  npx cdk synth MyStack
+
+  # Synthesize all stacks
+  npx cdk synth
+
+  # Synthesize stacks matching a pattern
+  npx cdk synth "*-NetworkStack"
+
+  # Output to a specific directory
+  npx cdk synth --output=cdk.out.dev
+  ```
+- **Best Practice**: Run `synth` frequently during development to validate code changes.
+- **Context**: Pass context variables required by your app using the `-c` or `--context` flag.
+  ```bash
+  npx cdk synth -c environment=dev -c feature_flag=true MyStack
+  ```
+- **Determinism**: Avoid network lookups (e.g., using AWS SDK calls) during synthesis. Use [CDK Context Providers](https://docs.aws.amazon.com/cdk/v2/guide/context.html) (`.fromLookup()`) which cache results in `cdk.context.json`. Commit `cdk.context.json` to source control to ensure deterministic synthesis across environments.
+
+## Deployment (`cdk deploy`)
+
+- **Purpose**: Deploys the synthesized CloudFormation templates to AWS.
+- **Command**:
+  ```bash
+  # Deploy a specific stack
+  npx cdk deploy MyStack --profile YOUR_PROFILE
+
+  # Deploy multiple stacks (CDK determines order based on dependencies)
+  npx cdk deploy StackA StackB
+
+  # Deploy all stacks
+  npx cdk deploy --all
+
+  # Deploy stacks matching a pattern
+  npx cdk deploy "App*Stack"
+  ```
+- **Permissions**: The deployment role/user needs:
+    1. Permission to assume the various CDK bootstrap roles (`DeploymentActionRole`, `FilePublishingRole`, `ImagePublishingRole`, `LookupRole`).
+    2. Permission to interact with CloudFormation (`cloudformation:*`).
+    3. Permission to pass the `CloudFormationExecutionRole` to CloudFormation.
+    4. The `CloudFormationExecutionRole` itself needs permissions to create/update/delete the resources defined in your stacks *and* permissions to read from the bootstrap bucket.
+- **Security Approval**: By default, CDK prompts for approval for security-sensitive changes (IAM roles/policies, Security Group rules). Use `--require-approval never` to bypass (useful in CI/CD) or `--require-approval broadening` (default). Configure globally in `cdk.json` via `requireApproval`.
+- **Parameters**: Pass CloudFormation parameters using `--parameters`.
+  ```bash
+  npx cdk deploy MyStack --parameters Param1=Value1 --parameters MyStack:Param2=StackSpecificValue
+  ```
+- **Rollback**: By default, CloudFormation rolls back failed deployments. Use `--no-rollback` during development to speed up iteration by leaving successfully created resources in place. **Do not use `--no-rollback` in production.**
+- **Hot Swapping**: Use `--hotswap` for faster deployments of Lambda function code, Step Functions state machines, or ECS container images *during development*. It bypasses CloudFormation change sets. Falls back to CloudFormation if hot swapping isn't possible. **Do not use `--hotswap` in production.**
+- **Outputs**: Save stack outputs to a file using `--outputs-file`.
+  ```bash
+  npx cdk deploy MyStack --outputs-file ./outputs.json
+  ```
+
+## Diff (`cdk diff`)
+
+- **Purpose**: Compares the stack defined in your code against the deployed stack in AWS or a local CloudFormation template file. Shows proposed changes.
+- **Command**:
+  ```bash
+  # Compare against deployed stack
+  npx cdk diff MyStack --profile YOUR_PROFILE
+
+  # Compare against a local template file
+  npx cdk diff MyStack --template ./my-template.yaml
+  ```
+- **Best Practice**: Always run `cdk diff` before `cdk deploy` to review changes, especially security-related ones.
+
+## Watch (`cdk watch`)
+
+- **Purpose**: Monitors source files for changes and automatically triggers deployments (using `--hotswap` by default). Useful for rapid iteration during development.
+- **Command**:
+  ```bash
+  npx cdk watch MyLambdaStack --profile YOUR_PROFILE
+  ```
+- **Configuration**: Configure watched files (`include`/`exclude`) and build commands (`build`) in `cdk.json` under the `watch` key.
+- **Caution**: **Do not use `cdk watch` for production deployments.**
+
+## Other Useful Commands
+
+- `cdk list` or `cdk ls`: Lists the stacks in your application. Add `--long` for more details (name, environment).
+- `cdk doctor`: Checks your environment for potential issues (e.g., version mismatches).
+- `cdk destroy`: Destroys deployed stacks. Use with caution, especially with stateful resources. Check `RemovalPolicy` in your code.
+- `cdk context`: Manages cached context values in `cdk.context.json`. Use `cdk context --clear` to reset lookups.
+- `cdk import`: Imports existing AWS resources into CDK/CloudFormation management. (See [Importing existing resources into a stack](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-import)).
+
+## Configuration (`cdk.json`)
+
+- Store default values for CLI flags like `app`, `profile`, `requireApproval`, `watch`, `build`, `context`, etc., in `cdk.json` at the project root. See [AWS CDK CLI Configuration](https://docs.aws.amazon.com/cdk/v2/guide/cli.html#cli-config).
+
+## Troubleshooting Common CLI Issues
+
+- **`--app is required` or Cannot find app**: Ensure you are in the project root directory containing `cdk.json` or specify the app command correctly using `--app "python app.py"`.
+- **Version Mismatch Errors**: Use `npx cdk ...` or ensure global `cdk` matches `aws-cdk` version in `package.json`. Run `cdk doctor`.
+- **Authentication/Permissions Errors**:
+    - Verify the correct `--profile` is used or AWS environment variables (`AWS_ACCESS_KEY_ID`, etc.) are set.
+    - Ensure the profile/role has permissions to assume the necessary CDK bootstrap roles.
+    - Ensure the `CloudFormationExecutionRole` (defined during bootstrap) has permissions for the resources being deployed *and* read access to the bootstrap bucket.
+    - Check `sts:AssumeRole` permissions.
+- **Bootstrap Issues (`NoSuchBucket`, `forbidden: null`)**: Ensure the target environment is bootstrapped and the deployment credentials can access the bootstrap bucket/resources.
+- **Context Lookup Failures**: Run `cdk context --clear` and re-run `synth` or `deploy` to refresh cached context. Ensure the credentials used for synthesis have permissions for lookups (defined by the `LookupRole`).

@@ -1,0 +1,133 @@
+---
+description: AWS CDK Python Library: Best practices for writing CDK code using aws-cdk-lib
+globs: infra/**/*.py, app.py
+alwaysApply: false
+---
+
+# AWS CDK Python Library Best Practices
+
+This guide covers best practices for writing AWS CDK applications using the `aws_cdk` Python library.
+
+## Project Structure
+
+- **Single App/Repo**: Start with a single CDK App per code repository. An App can contain multiple stacks.
+- **Logical Units as Constructs**: Model logical units of your application (e.g., API, database, monitoring) as `Construct` subclasses, not `Stack` subclasses.
+  ```python
+  # backend/api/infrastructure.py
+  from aws_cdk import (core as cdk,
+                         aws_apigateway as apigw,
+                         aws_lambda as lambda_)
+
+  class ApiConstruct(cdk.Construct):
+      def __init__(self, scope: cdk.Construct, id: str, *, table_name: str, **kwargs):
+          super().__init__(scope, id, **kwargs)
+          # ... define API Gateway, Lambda function, etc.
+          self.api_endpoint = ... # Output attribute
+  ```
+- **Stacks for Deployment**: Use `Stack` subclasses primarily for composing constructs and defining deployment configurations for different environments (dev, prod).
+  ```python
+  # backend/component.py (or similar)
+  from aws_cdk import core as cdk
+  from .api.infrastructure import ApiConstruct
+  from .database.infrastructure import DatabaseConstruct
+
+  class BackendStack(cdk.Stack):
+      def __init__(self, scope: cdk.Construct, id: str, *, db_billing_mode, **kwargs):
+          super().__init__(scope, id, **kwargs)
+          db = DatabaseConstruct(self, "Database", billing_mode=db_billing_mode)
+          api = ApiConstruct(self, "Api", table_name=db.table.table_name)
+          # Grant permissions, define outputs
+          db.table.grant_read_write_data(api.lambda_function)
+          cdk.CfnOutput(self, "ApiEndpoint", value=api.api_endpoint)
+  ```
+- **Instantiate Stacks in `app.py`**: Define and instantiate your stacks in the main application entry point (`app.py`).
+  ```python
+  # app.py
+  import aws_cdk as cdk
+  import os
+  from backend.component import BackendStack
+
+  app = cdk.App()
+
+  dev_env = cdk.Environment(
+      account=os.environ["CDK_DEFAULT_ACCOUNT"],
+      region=os.environ["CDK_DEFAULT_REGION"]
+  )
+
+  prod_env = cdk.Environment(account="PROD_ACCOUNT_ID", region="PROD_REGION")
+
+  BackendStack(app, "BackendDev", env=dev_env, db_billing_mode="PAY_PER_REQUEST")
+  BackendStack(app, "BackendProd", env=prod_env, db_billing_mode="PROVISIONED")
+
+  app.synth()
+  ```
+- **Code Co-Location**: Keep infrastructure code (`aws_cdk`) and runtime code (e.g., Lambda handlers) within the same logical unit/package for easier maintenance and versioning.
+
+## Construct Design
+
+- **Configuration via Properties**: Pass configuration into constructs via constructor properties (`__init__` kwargs) rather than relying on environment variables within the construct. Limit environment variable lookups to the top-level `app.py` for environment-specific settings.
+- **Inputs and Outputs**: Clearly define input properties and output attributes for constructs to facilitate composition and cross-construct/stack references.
+  ```python
+  class MyConstruct(cdk.Construct):
+      def __init__(self, scope: cdk.Construct, id: str, *, input_prop: str, **kwargs):
+          super().__init__(scope, id, **kwargs)
+          # ... create resources ...
+          self._output_attr = "some_value"
+
+      @property
+      def output_attr(self) -> str:
+          return self._output_attr
+  ```
+- **Domain-Driven Design**: Group resources within constructs based on business domain or logical function (e.g., `AuthConstruct`, `DataProcessingConstruct`).
+- **Share Constructs, Not Stacks**: If reusable infrastructure patterns emerge, package them as custom `Construct` libraries, not `Stack` subclasses.
+
+## Stack Design
+
+- **Environment Specification**: Explicitly define the target environment (`account`/`region`) when instantiating stacks, especially for resources sensitive to Availability Zones (VPCs, ASGs).
+  ```python
+  env = cdk.Environment(account='YOUR_ACCOUNT_ID', region='YOUR_REGION')
+  MyStack(app, "MyStackName", env=env)
+  ```
+- **Resource Limits**: Be aware of CloudFormation's stack resource limits (currently 500). Refactor large stacks into smaller, interconnected stacks if approaching the limit. Use cross-stack references or SSM Parameter Store for sharing outputs.
+- **Stateful vs. Stateless**: Consider separating stateful resources (databases, S3 buckets with data) into dedicated stacks with `terminationProtection=True` and appropriate `RemovalPolicy` settings. This allows stateless application stacks to be destroyed and recreated more freely.
+- **Modeling Stages**: Define distinct stacks or configurations within stacks for different deployment stages (dev, staging, prod) directly in the code. Avoid CloudFormation Parameters/Conditions for stage differentiation; use Python's `if` statements and configuration objects passed during stack instantiation.
+
+## Resource Management
+
+- **Logical IDs**: Be extremely cautious when refactoring code that might change the logical ID of **stateful** resources (e.g., renaming constructs, changing their position in the tree). This causes resource **replacement**, not update. Write unit tests (`Assertions.template_matches`) to assert the logical IDs of critical stateful resources remain stable.
+- **Physical Names**: Avoid hardcoding physical names for resources (`bucket_name`, `table_name`, etc.). Let CDK/CloudFormation generate unique names. Pass generated names/ARNs to runtime code via environment variables, SSM parameters, or configuration files. Pass references between stacks directly in code if in the same app, or use `CfnOutput` and `from_lookup`/`from_arn` methods for cross-app references.
+- **Removal Policies**: By default, stateful resources (S3 Buckets, DynamoDB tables, RDS instances etc.) have `RemovalPolicy.RETAIN`. They **will not** be deleted when the stack is destroyed. For development or ephemeral resources, explicitly set `removal_policy=cdk.RemovalPolicy.DESTROY`. For production data, `RETAIN` (or `SNAPSHOT` for RDS/EBS) is safer.
+- **Log Retention**: Configure `log_retention` for Lambda functions and other log-producing resources. The default is often `INFINITE`, which can lead to high costs.
+  ```python
+  from aws_cdk import aws_logs as logs
+
+  lambda_.Function(
+      # ... other props
+      log_retention=logs.RetentionDays.ONE_MONTH
+  )
+  ```
+
+## Permissions
+
+- **Use `grant()` Methods**: Prefer the built-in `grant*()` methods on L2 constructs (e.g., `bucket.grant_read(my_lambda)`) to manage IAM permissions between resources. CDK generates least-privilege policies automatically.
+- **Avoid Predefined Roles**: Letting CDK manage IAM roles is generally more flexible and secure than forcing the use of predefined roles, which often require overly broad permissions or hinder development. Use Permission Boundaries and Service Control Policies (SCPs) as organizational guardrails instead.
+- **Write Own Policies When Necessary**: If `grant()` methods are insufficient or too broad for a specific need, create `iam.PolicyStatement` objects and attach them explicitly using `role.add_to_policy()` or similar methods. Be specific with actions and resources.
+
+## Testing
+
+- **Snapshot Tests**: Use `aws_cdk.assertions.Template.from_stack()` to generate a CloudFormation template from your stack and compare it against a stored snapshot. This catches unexpected changes.
+- **Fine-Grained Assertions**: Use `aws_cdk.assertions.Assertions.template_matches()` or specific matchers (`has_resource_properties`, `capture`, etc.) to verify specific resource configurations, properties, logical IDs, and policies.
+- **Testing Constructs**: Test custom constructs in isolation by synthesizing a minimal stack containing just the construct.
+- **Aspects**: Use Aspects (`aws_cdk.Aspects`) to apply checks or modifications across the construct tree, useful for enforcing tagging standards or security policies (e.g., using `cdk-nag`).
+
+## Security
+
+- **Least Privilege**: While `grant()` methods help, always review the generated policies (`cdk synth`) to ensure they align with the principle of least privilege.
+- **Permissions Boundaries**: Apply permissions boundaries to the CDK deployment roles (via bootstrap customization) or application roles to enforce organizational guardrails.
+- **Secrets Management**: Do not hardcode secrets in CDK code. Use `aws_cdk.SecretValue.secrets_manager()` or `aws_cdk.SecretValue.ssm_secure()` to reference secrets stored in AWS Secrets Manager or SSM Parameter Store (SecureString type).
+- **`cdk-nag`**: Integrate `cdk-nag` using Aspects to automatically check your synthesized templates against common security best practices (e.g., encryption, public access).
+
+## General Tips
+
+- **Read the Docs**: Understand the properties and defaults of the L2 constructs you are using.
+- **Don't Over-Abstract**: Infrastructure code should prioritize clarity and readability. Avoid overly complex abstractions or factory patterns if simpler, slightly more repetitive code is easier to understand and maintain.

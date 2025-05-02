@@ -1,5 +1,5 @@
 ---
-description: Redirects to dependency management guidelines for Python projects
+description: Apply whenever python dependencies need to be managed
 globs:
 alwaysApply: true
 ---

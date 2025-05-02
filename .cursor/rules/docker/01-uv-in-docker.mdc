@@ -17,16 +17,16 @@ This guide provides best practices for using the UV package manager in Docker co
 1. **Install with Installer Script (RECOMMENDED)**:
    ```dockerfile
    FROM python:3.12-slim-bookworm
-   
+
    # Install curl for the installer
    RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates \
        && apt-get clean \
        && rm -rf /var/lib/apt/lists/*
-   
+
    # Download and run installer
    ADD https://astral.sh/uv/install.sh /uv-installer.sh
    RUN sh /uv-installer.sh && rm /uv-installer.sh
-   
+
    # Add to PATH
    ENV PATH="/root/.local/bin/:$PATH"
    ```
@@ -68,7 +68,7 @@ This guide provides best practices for using the UV package manager in Docker co
   ```dockerfile
   # Stage 1: Copy only dependency-related files
   COPY pyproject.toml uv.lock ./
-  
+
   # Stage 2: Create virtual environment and install dependencies in their own layer
   RUN uv venv .venv
   ENV PATH="/app/.venv/bin:$PATH"
@@ -80,10 +80,10 @@ This guide provides best practices for using the UV package manager in Docker co
   # Or for all extras:
   # RUN --mount=type=cache,target=/root/.cache/uv \
   #     uv sync --all-extras
-  
+
   # Stage 3: Only after dependencies are installed, copy application code
   COPY . .
-  
+
   # Stage 4 (optional): Install the project itself
   RUN --mount=type=cache,target=/root/.cache/uv \
       uv sync
@@ -97,7 +97,7 @@ This guide provides best practices for using the UV package manager in Docker co
   ```dockerfile
   # Builder stage
   FROM python:3.12-slim AS builder
-  
+
   # Install UV using the recommended installer script
   RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates \
       && apt-get clean \
@@ -105,27 +105,27 @@ This guide provides best practices for using the UV package manager in Docker co
   ADD https://astral.sh/uv/install.sh /uv-installer.sh
   RUN sh /uv-installer.sh && rm /uv-installer.sh
   ENV PATH="/root/.local/bin/:$PATH"
-  
+
   WORKDIR /app
-  
+
   # Copy ONLY dependency files first
   COPY pyproject.toml uv.lock ./
-  
+
   # Create virtual environment and install dependencies in their own layer
   RUN uv venv .venv
   ENV PATH="/app/.venv/bin:$PATH"
-  
+
   # Install dependencies in their own layer
   RUN --mount=type=cache,target=/root/.cache/uv \
       uv sync --frozen --no-install-project
-  
+
   # Only after dependencies are installed, copy application code
   COPY . .
-  
+
   # Install project
   RUN --mount=type=cache,target=/root/.cache/uv \
       uv sync --frozen
-  
+
   # Final stage
   FROM python:3.12-slim
   WORKDIR /app
@@ -155,7 +155,7 @@ This guide provides best practices for using the UV package manager in Docker co
   ```dockerfile
   RUN uv venv /app/.venv
   ENV PATH="/app/.venv/bin:$PATH"
-  
+
   # Install dependencies with uv sync
   COPY pyproject.toml uv.lock ./
   RUN --mount=type=cache,target=/root/.cache/uv \
@@ -167,21 +167,21 @@ This guide provides best practices for using the UV package manager in Docker co
   ```dockerfile
   # Copy ONLY dependency files first
   COPY pyproject.toml uv.lock ./
-  
+
   # Create virtual environment
   RUN uv venv .venv
   ENV PATH="/app/.venv/bin:$PATH"
-  
+
   # Install dependencies in their own layer
   RUN --mount=type=cache,target=/root/.cache/uv \
       uv sync
   # For specific extras:
   # RUN --mount=type=cache,target=/root/.cache/uv \
   #     uv sync --extra dev
-  
+
   # Only after dependencies are installed, copy application code
   COPY . .
-  
+
   # Sync to ensure project is installed
   RUN --mount=type=cache,target=/root/.cache/uv \
       uv sync
@@ -227,17 +227,17 @@ This guide provides best practices for using the UV package manager in Docker co
    # For development environments
    RUN --mount=type=cache,target=/root/.cache/uv \
        uv sync --extra dev
-   
+
    # For production, just the main dependencies
    RUN --mount=type=cache,target=/root/.cache/uv \
        uv sync
    ```
-   
+
 8. **Consider lockfile management**:
    ```dockerfile
    # Generate/update lockfile if needed
    RUN uv lock
-   
+
    # Use frozen installs for reproducible builds
    RUN --mount=type=cache,target=/root/.cache/uv \
        uv sync --frozen

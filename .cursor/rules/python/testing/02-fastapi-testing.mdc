@@ -1,0 +1,124 @@
+---
+description: FastAPI Testing Practices: Guidelines for testing async FastAPI applications with database interactions based on project conventions.
+globs: tests/api/**/*.py, tests/conftest.py
+alwaysApply: false
+---
+# FastAPI Testing Practices
+
+## Introduction
+
+This guide outlines the established patterns for testing the async FastAPI application within this project, particularly focusing on asynchronous operations, database interactions, and authentication/authorization mocking. Adhering to these practices ensures consistent, isolated, and maintainable tests.
+
+## Core Libraries
+
+- **Test Runner**: `pytest`
+- **Async Support**: `pytest-asyncio`
+- **HTTP Client**: `httpx.AsyncClient` with `httpx.ASGITransport`
+- **Database**: `SQLAlchemy` (async API) with `aiosqlite` for in-memory testing
+
+## Key Fixtures (`tests/conftest.py`)
+
+- **`engine`**: Creates an async SQLAlchemy engine connected to an in-memory SQLite database (`sqlite+aiosqlite:///:memory:`). Creates the database schema (`Base.metadata.create_all`) for each test function.
+- **`db_session`**: Provides an `AsyncSession` instance yielded from an `async_sessionmaker` bound to the test `engine`. Ensures changes are rolled back after the test.
+- **`client`**: Provides an `httpx.AsyncClient` configured with `ASGITransport` to interact directly with the FastAPI `app`. Crucially, this fixture overrides application dependencies.
+- **Test Data Fixtures**: Fixtures like `test_user_tool_admin`, `test_mandate`, etc., create and insert specific model instances into the test database using the `db_session`.
+- **Auth Header Fixtures**: Fixtures like `tool_admin_headers`, `mandate_admin_headers`, etc., create test users, generate mock `AuthenticatedUser` schemas with specific roles, store them in a global `mock_user_store` keyed by a test token, and return HTTP `Authorization` headers containing that token.
+
+## Testing Principles
+
+### 1. Asynchronous Testing
+
+- Use `pytest-asyncio`.
+- Define test functions with `async def`.
+- Use `await` when calling async fixtures or making requests with the `client`.
+
+```python
+import pytest
+from httpx import AsyncClient
+
+@pytest.mark.asyncio
+async def test_async_endpoint(client: AsyncClient):
+    response = await client.get("/some/async/path")
+    assert response.status_code == 200
+```
+
+### 2. Database Interaction & Isolation
+
+- Rely on the `db_session` fixture for database access within tests.
+- **Do not** manage transactions directly within tests; the fixture handles setup and rollback.
+- Use test data fixtures (`test_user_...`, `test_mandate`) to arrange necessary data. The `engine` fixture ensures a clean database state for each test function.
+
+```python
+import pytest
+from sqlalchemy.ext.asyncio import AsyncSession
+from template_hub_be.models import User # Assuming User model
+
+@pytest.mark.asyncio
+async def test_user_creation(db_session: AsyncSession, test_user_tool_admin: User):
+    # Arrange: test_user_tool_admin fixture already added the user
+    # Act: Retrieve the user
+    user = await db_session.get(User, test_user_tool_admin.id)
+    # Assert
+    assert user is not None
+    assert user.user_email == "tool.admin@example.com"
+```
+
+### 3. API Testing with `client`
+
+- Use the `client` fixture for making HTTP requests to the application.
+- The `client` automatically handles overriding `get_session` and `get_current_user` dependencies.
+
+```python
+import pytest
+from httpx import AsyncClient
+
+@pytest.mark.asyncio
+async def test_protected_route(client: AsyncClient, tool_admin_headers: dict):
+    # Arrange: tool_admin_headers provides the Bearer token for a mock admin
+    # Act
+    response = await client.get("/admin/route", headers=tool_admin_headers)
+    # Assert
+    assert response.status_code == 200
+```
+
+### 4. Dependency Overrides
+
+- **Database**: The `client` fixture overrides the application's `get_session` dependency to return the test `db_session`. Tests interact with the isolated in-memory SQLite DB.
+- **Authentication**: The `client` fixture overrides the `get_current_user` dependency. This override uses the test tokens provided by auth header fixtures (e.g., `tool_admin_headers`) to look up mock `AuthenticatedUser` objects (with predefined roles) from the `mock_user_store`. This bypasses actual token validation and simulates authenticated users.
+
+### 5. Authentication & Authorization Testing
+
+- Use the auth header fixtures (e.g., `tool_admin_headers`, `project_viewer_headers`) to get the necessary `Authorization` header for requests requiring authentication.
+- The fixture automatically populates the `mock_user_store` so the overridden `get_current_user` dependency works correctly for the duration of the test using the `client`.
+- Test different roles by using the corresponding header fixture.
+- Test unauthenticated access by *not* providing headers.
+- Test invalid tokens implicitly (any token not generated by an auth fixture in the current test scope will cause the mock `get_current_user` to raise an HTTPException).
+
+```python
+import pytest
+from httpx import AsyncClient
+
+# Test successful access with correct role
+@pytest.mark.asyncio
+async def test_admin_access_success(client: AsyncClient, tool_admin_headers: dict):
+    response = await client.get("/admin/resource", headers=tool_admin_headers)
+    assert response.status_code == 200
+
+# Test forbidden access with incorrect role
+@pytest.mark.asyncio
+async def test_admin_access_forbidden(client: AsyncClient, project_viewer_headers: dict):
+    response = await client.get("/admin/resource", headers=project_viewer_headers)
+    # The overridden get_current_user will raise 403 based on mock roles
+    assert response.status_code == 403
+
+# Test unauthenticated access
+@pytest.mark.asyncio
+async def test_admin_access_unauthenticated(client: AsyncClient):
+    response = await client.get("/admin/resource")
+    # FastAPI/dependency handles lack of credentials
+    assert response.status_code == 401 # Or 403 depending on setup
+```
+
+## Related Rules
+
+- [Python Testing Best Practices](mdc:.cursor/rules/python/testing/01-best-practices.mdc)

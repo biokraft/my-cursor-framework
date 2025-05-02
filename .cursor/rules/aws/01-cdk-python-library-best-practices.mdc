@@ -3,7 +3,6 @@ description: AWS CDK Python Library: Best practices for writing CDK code using a
 globs: infra/**/*.py, app.py
 alwaysApply: false
 ---
-
 # AWS CDK Python Library Best Practices
 
 This guide covers best practices for writing AWS CDK applications using the `aws_cdk` Python library.
@@ -104,6 +103,26 @@ This guide covers best practices for writing AWS CDK applications using the `aws
   lambda_.Function(
       # ... other props
       log_retention=logs.RetentionDays.ONE_MONTH
+  )
+  ```
+- **L2 Construct Properties**: Many AWS CDK L2 constructs use specialized property objects to configure complex settings. Always check the API reference for the correct way to set properties. For example, use `BackupProps` for database backup configuration instead of direct parameters:
+  ```python
+  # INCORRECT way - direct parameter
+  db_cluster = rds.DatabaseCluster(
+      self,
+      "DatabaseCluster",
+      # ... other properties
+      backup_retention_period=cdk.Duration.days(7),  # This will fail!
+  )
+
+  # CORRECT way - using property objects
+  db_cluster = rds.DatabaseCluster(
+      self,
+      "DatabaseCluster",
+      # ... other properties
+      backup=rds.BackupProps(
+          retention=cdk.Duration.days(7)  # Proper configuration using BackupProps
+      ),
   )
   ```
 

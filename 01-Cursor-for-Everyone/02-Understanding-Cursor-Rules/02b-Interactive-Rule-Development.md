@@ -9,7 +9,7 @@ The core idea is simple:
 1.  **Observe:** Pay attention to how Cursor responds to your prompts.
 2.  **Identify Gaps:** Notice when the AI generates code that isn't quite right, misses a convention, or could benefit from specific project knowledge.
 3.  **Correct & Instruct:** Guide the AI in the chat to achieve the desired outcome.
-4.  **Codify into a Rule:** Once you've successfully guided the AI, immediately ask Cursor to help you create a new rule (or update an existing one) to capture that instruction permanently.
+4.  **Codify into a Rule:** Once you've successfully guided the AI, immediately ask Cursor to help you create a new `.mdc` rule (or update an existing one) to capture that instruction permanently.
 
 This iterative process turns every interaction into an opportunity to make Cursor a smarter, more tailored assistant for your specific project.
 
@@ -23,11 +23,11 @@ Here's a practical approach to defining rules on the fly:
     ```plaintext
     Okay, that's much better. Based on our last interaction, please help me create a new Cursor Rule (or update an existing one if more appropriate) to ensure you always follow [specific guideline/convention we just established].
 
-    The rule should be stored in `.cursor/rules/` and should follow the conventions outlined in `@.cursor/rules/00-cursor-rules.md`.
+    The rule should be an .mdc file, stored in `.cursor/rules/` and should follow the conventions outlined in `@.cursor/rules/00-cursor-rules.mdc` and `@.cursor/rules/01-mdc-guidelines.mdc` for its frontmatter and content.
 
-    Let's name it something like `[project_area]-[brief_description].md` (e.g., `python-docstring-format.md` or `api-error-handling.md`).
+    Let's name it something like `[project_area]-[brief_description].mdc` (e.g., `python-docstring-format.mdc` or `api-error-handling.mdc`).
     ```
-4.  **Refine and Save:** Cursor will draft the rule. Review it, make any necessary adjustments, and save it to your `.cursor/rules/` directory.
+4.  **Refine and Save:** Cursor will draft the rule. Review it, ensure its frontmatter is correctly configured according to `01-mdc-guidelines.mdc`, make any necessary adjustments to the Markdown content, and save it to your `.cursor/rules/` directory.
 
 ## Leveraging the `/Generate Cursor Rules` Command
 
@@ -36,17 +36,19 @@ Cursor also provides a built-in command to assist with rule generation:
 -   Type `/Generate Cursor Rules` in the chat.
 -   Cursor will often look at your recent interactions or ask clarifying questions to help draft a relevant rule.
 
-This can be a great starting point, which you can then refine using the interactive method described above.
+This can be a great starting point, which you can then refine using the interactive method described above, ensuring the output is a valid `.mdc` file with correct frontmatter.
 
 ## The Role of a "Master Rule" for Rule Creation
 
-To ensure consistency *within your rules themselves*, it's beneficial to have a "master rule" that defines how other rules should be structured, named, and maintained. This is often the purpose of the `00-cursor-rules.md` file mentioned previously.
+To ensure consistency *within your rules themselves*, it's beneficial to have "master rules" that define how other rules should be structured, named, and maintained. This is often the purpose of files like `00-cursor-rules.mdc` and `01-mdc-guidelines.mdc`.
 
-By referencing this master rule when asking Cursor to generate new rules (as shown in the example prompt), you guide the AI to create well-formatted and organized rules, making your entire ruleset easier to manage.
+By referencing these master rules when asking Cursor to generate new rules (as shown in the example prompt), you guide the AI to create well-formatted and organized `.mdc` rules, making your entire ruleset easier to manage.
 
-For example, your `00-cursor-rules.md` might specify:
--   Naming conventions for rule files (e.g., `domain-topic-version.md`).
+For example, your `00-cursor-rules.mdc` might specify:
+-   Naming conventions for rule files (e.g., `domain-topic-version.mdc`).
 -   Required sections within a rule file (e.g., Purpose, Scope, Examples, Version).
 -   Guidelines on how to phrase instructions for clarity.
 
-By actively teaching Cursor and codifying that knowledge into rules, you compound its effectiveness over time, creating a truly personalized AI partner. 
+And your `01-mdc-guidelines.mdc` provides the strict schema for frontmatter.
+
+By actively teaching Cursor and codifying that knowledge into well-structured `.mdc` rules, you compound its effectiveness over time, creating a truly personalized AI partner. 

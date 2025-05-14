@@ -1,139 +1,92 @@
-# Collection of my personal Cursor Best Practices
-Here I just store my Cursor best practices, rules, snippets and so on from whatever I gathered on the interwebs so far.
+# My Personal Cursor Framework: A Comprehensive Guide 🚀
 
-# What to expect
+Welcome to this personal collection of best practices, rules, and workflows designed to maximize your productivity with Cursor. This framework aims to help everyone, from Product Managers to Developers, harness the full potential of AI-assisted coding and documentation.
 
-I'll smash in a bunch of markdown files summarising on how I use Cursor, as well as more specific guides on some concepts.
+This repository is structured to guide you through understanding core Cursor concepts and then diving into advanced development workflows.
 
-Under `.cursor/rules` you can find a collection of my Cursor rules.
+---
 
-You can pick and choose what you like.
+## 🎯 How This Guide is Structured
 
-# Defining new cursor rules
+This framework is divided into two main parts:
 
-I like to define new cursor rules interactively with cursor while working on a project.
-Whenever you face difficulties and have to tell the agent differently, such that he gets stuff down as you want, straight up tell it to define a new rule for you. Nowadays cursor even offers the `/Generate Cursor Rules ` command.
+### 🌟 Part 1: Cursor for Everyone
 
-Never the less, I would still advise to always drop, the following two rules into your project:
-- [`.cursor/rules/00-cursor-rules.md`](.cursor/rules/00-cursor-rules.md)
-- [`.cursor/rules/01-mdc-guidelines.md`](.cursor/rules/01-mdc-guidelines.md)
+This section is designed for *anyone* using Cursor, regardless of their technical role. It covers fundamental concepts, setup, and features that enhance productivity for tasks like documentation, research, and project management.
 
-These two rules define the general structure of your cursor rules.
+-   📜 [The Golden Rule: Context is King](./01-Cursor-for-Everyone/00-The-Golden-Rule-Context-is-King.md)
+-   👋 [Welcome to Cursor](./01-Cursor-for-Everyone/01-Welcome-to-Cursor.md)
+-   🧩 **Understanding Cursor Rules**
+    -   [What, Why, How?](./01-Cursor-for-Everyone/02-Understanding-Cursor-Rules/02a-What-Why-How.md)
+    -   [Interactive Rule Development](./01-Cursor-for-Everyone/02-Understanding-Cursor-Rules/02b-Interactive-Rule-Development.md)
+    -   [Rules for Stellar Documentation](./01-Cursor-for-Everyone/02-Understanding-Cursor-Rules/02c-Rules-for-Stellar-Documentation.md)
+-   🧠 [Choosing Your AI Model](./01-Cursor-for-Everyone/03-Choosing-Your-AI-Model.md)
+-   🎨 **Custom Modes: Tailoring Cursor to You**
+    -   [Introduction to Custom Modes](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04a-Introduction-to-Custom-Modes.md)
+    -   [Mode Spotlight: Learn](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04b-Mode-Spotlight-Learn.md)
+    -   [Mode Spotlight: Explain](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04c-Mode-Spotlight-Explain.md)
+    -   [Mode Spotlight: Research](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04d-Mode-Spotlight-Research.md)
+-   ⚙️ [Essential Cursor Settings](./01-Cursor-for-Everyone/05-Essential-Cursor-Settings.md)
+-   🔗 **The Multi-Connector Platform (MCP)**
+    -   [MCP: The Big Picture](./01-Cursor-for-Everyone/06-The-Multi-Connector-Platform-MCP/06a-MCP-The-Big-Picture.md)
+    -   [MCP in Action: Jira and Confluence](./01-Cursor-for-Everyone/06-The-Multi-Connector-Platform-MCP/06b-MCP-in-Action-Jira-and-Confluence.md)
+    -   [Exploring the MCP Ecosystem](./01-Cursor-for-Everyone/06-The-Multi-Connector-Platform-MCP/06c-Exploring-the-MCP-Ecosystem.md)
+-   📄 [Quick Look: The @Docs Feature](./01-Cursor-for-Everyone/07-Quick-Look-The-Docs-Feature.md)
 
-# My Standard Workflow
+---
 
-## Project Setup
-1. Pick and choose cursor rules from `.cursor/rules`
-2. Copy the chosen `.cursor/rules` to the root of your project
-3. Start with the `SpecsForge` custom mode and interactively define the specs for the project.
-4. Ask Cursor to edit the `SPECS.md` file to include an implementation plan broken down into granular phases.
-5. Iterate with the following prompt:
-```
-Study @SPECS.md for functional specifications.
-Study @.cursor for technical requirements
+### 💻 Part 2: Cursor for Developers
 
-Implement Phase X
+This section delves into advanced techniques and workflows tailored for developers. It covers topics like building tech-stack specific rules, the `SpecsForge` framework, and efficient implementation strategies. While aimed at developers, Product Managers and technical leads might also find these insights valuable.
 
-Create tests
-Run and evaluate tests
-```
-6. After each phase complete I like to run the following prompt (requires `pytest` and `pre-commit`):
-```
-Run pytest and fix issues. Afterwards run pre-commit run --all-files until it succeeds
-```
+-   宣言 [The Vibe Programmer Manifesto](./02-Cursor-for-Developers/00-The-Vibe-Programmer-Manifesto.md)
+-   📚 [Mastering the @Docs Feature](./02-Cursor-for-Developers/01-Mastering-the-Docs-Feature.md)
+-   🛠️ **Crafting Rules for Your Tech Stack**
+    -   [Why Tech-Specific Rules Matter](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/02a-Why-Tech-Specific-Rules-Matter.md)
+    -   [Auto-Generating Rules from @Docs](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/02b-Auto-Generating-Rules-from-Docs.md)
+    -   [Evolving Your Ruleset](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/02c-Evolving-Your-Ruleset.md)
+-   🛠️ [The SpecsForge Framework](./02-Cursor-for-Developers/03-The-SpecsForge-Framework.md)
+-   💡 [From Specs to Code: Implementation Strategies](./02-Cursor-for-Developers/04-From-Specs-to-Code-Implementation-Strategies.md)
+-   ⇄ [Working Across Repositories](./02-Cursor-for-Developers/05-Working-Across-Repositories.md)
 
-### 'SpecsForge' Custom Mode
+---
 
-Cursor custom modes are a way to extend Cursor's capabilities by adding custom agent modes with prompts and tool settings. I have built one for defining specs for my projects.
+## 🏁 Getting Started
 
-1. Enable Custom Modes in Cursor Settings (currently beta feature)
-2. Create a new mode named `SpecsForge`
-3. Add the following prompt:
-```
-SYSTEM  
-You are **SpecForge**, an expert software architect and full-stack engineer.  
-Your mission is to transform high-level product ideas into a precise, living *specification library* that powers automated "vibe-coding" in Cursor.
+1.  Explore **Part 1** to build a solid foundation in Cursor's core functionalities.
+2.  If you're a developer, proceed to **Part 2** to learn about my specific coding workflows and the `SpecsForge` framework.
+3.  Adapt and adopt what works for you! This is a living guide, and I encourage you to tailor these practices to your own needs.
 
-────────────────────────────────────────
-1 · Discovery loop  
-────────────────────────────────────────
-Ask targeted questions until you are confident about:
+---
 
-• business goals & success metrics  
-• feature scope & priorities  
-• architectural choices (DB tech, frontend stack, auth, APIs, coding standards, etc.)  
-• operational constraints (security, performance, compliance, budget)  
-• gaps, risks, and opportunities for improvement  
+## 📜 My Standard Cursor Rules
 
-**Always inspect any existing `.cursor/rules` directory first** and ask follow-up questions about the technical requirements it defines.
+I recommend always starting with these foundational rules in your `.cursor/rules` directory:
 
-────────────────────────────────────────
-2 · Spec-writing phase  
-────────────────────────────────────────
-When you have sufficient context, begin writing Markdown spec files under `specs/`, *one file per domain or technical topic*.
+-   [`00-cursor-rules.md`](./.cursor/rules/00-cursor-rules.md): Defines the general structure and guidelines for your cursor rules.
+-   [`01-mdc-guidelines.md`](./.cursor/rules/01-mdc-guidelines.md): Provides specific instructions for working with `.mdc` (Markdown Custom) rule files.
 
-────────────────────────────────────────
-3 · Root index (`SPECS.md`)  
-────────────────────────────────────────
-Maintain a root-level `SPECS.md` that contains:  
+Dive into the `.cursor/rules` directory in this repository to find my collection of reusable rules. Feel free to pick and choose what you need!
 
-1. Project overview  
-2. A table linking to every file in `specs/` (filename · short description)  
-3. Open questions / future work  
+---
 
-Keep this file perfectly in sync whenever specs change.
+## ⭐ Enjoying This Guide?
 
-────────────────────────────────────────
-4 · Iteration  
-────────────────────────────────────────
-Each time the user says **"continue"**:
+If you've found this framework helpful, I'd be incredibly grateful if you could leave a star on the GitHub repository! Your support helps motivate further development and makes it easier for others to discover this guide. Thank you! 🙏
 
-1. Re-read all current specs and `.cursor/rules`.  
-2. Ask any new clarifying questions.  
-3. Extend or refine spec files and update `SPECS.md`.  
-4. Stop and wait for the next instruction.
+---
 
-────────────────────────────────────────
-5 · Guiding principles  
-────────────────────────────────────────
-• **IMPORTANT** — *Write the specifications into the `specs/` folder with each domain topic (including technical topic) as a separate Markdown file, and keep the root-level `SPECS.md` overview table up to date.*  
-• Never emit implementation code or run commands; you produce **specifications only**.  
-• Generate task lists only if the user explicitly asks; otherwise the specs themselves are authoritative.  
-• Be concise yet unambiguous; these specs feed directly into automated coding tools.  
-• Propose architectural improvements proactively.
+## 🙏 Acknowledgements & Sources
 
-────────────────────────────────────────
-6 · Implementation Plan Generation
-────────────────────────────────────────
-After the specification files in `specs/` are defined and the root `SPECS.md` overview is complete, your final step is to generate a granular implementation plan within the `SPECS.md` file.
-This plan should be presented as a Markdown table with the following columns:
-| Phase | Focus Area | Key Deliverables | Related Specs | Status |
-Each row should represent a granular step towards implementing the project based on the defined specifications.
-The "Status" column should initially be set to "TBD" or a similar placeholder.
+-   [From Design doc to code: the Groundhog AI coding assistant (and new Cursor vibecoding meta)](https://ghuntley.com/specs/)
+-   [Cursor Rules Documentation](https://docs.cursor.com/context/rules)
+-   [Cursor Custom Modes Documentation](https://docs.cursor.com/chat/custom-modes)
 
-────────────────────────────────────────
-7 · Recommended SPEC template  
-────────────────────────────────────────
-```markdown
-# <Domain Topic> Specification
-## Purpose
-## Functional Requirements
-## Non-functional Requirements / Constraints
-## Architecture & Data Flow
-## Implementation Notes
-## Deployment Strategy & Environments
-## Acceptance Criteria
-## Out of Scope
-## Risks & Mitigations
-## Future Considerations
-```
-4. Add the following tools:
-- Search (everything)
-- Edit (everything)
-5. I can recommend claude-3.7-sonnet with thinking for this custom mode, but you can choose whatever you deem fit.
+---
 
-# Acknowledgements & Sources
+## 🤔 Future Considerations
 
-- [From Design doc to code: the Groundhog AI coding assistant (and new Cursor vibecoding meta)](https://ghuntley.com/specs/)
-- [Cursor Rules](https://docs.cursor.com/context/rules)
-- [Cursor Custom Modes](https://docs.cursor.com/chat/custom-modes)
+-   Explore Notion, Obsidian, Anytype, Figma, and Grafana MCP integrations more deeply.
+-   Develop more sophisticated custom modes for specialized tasks.
+-   Continuously refine rules based on new Cursor features and model capabilities.
+-   Expand the workshop materials.

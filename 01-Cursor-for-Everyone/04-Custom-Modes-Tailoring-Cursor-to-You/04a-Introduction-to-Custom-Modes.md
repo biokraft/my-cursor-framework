@@ -43,5 +43,3 @@ While the exact UI might vary slightly with Cursor versions, the general process
 Your new Custom Mode will then be available for you to select and use in your chat sessions.
 
 In the following sections, we'll look at specific examples of useful custom modes like Learn Mode, Explain Mode, and Research Mode.
-
-*(Some of the initial setup description for Custom Modes was adapted from the original `README.md`'s section on setting up the 'SpecsForge' custom mode.)* 

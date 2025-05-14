@@ -3,7 +3,6 @@ description: Bitbucket Pipelines structure: Guidelines for structuring bitbucket
 globs: **/bitbucket-pipelines.yml
 alwaysApply: false
 ---
-
 # Cursor Rule: Bitbucket Pipelines Best Practices
 
 ## Rule ID
@@ -23,7 +22,7 @@ This rule provides guidelines for structuring `bitbucket-pipelines.yml` files to
 1.  **Standard Structure:** Ensure your `bitbucket-pipelines.yml` follows the standard top-level structure:
     *   `image`: (Optional, but recommended) Defines the default Docker image for steps.
     *   `clone`: (Optional) Configures repository cloning behavior.
-    *   `options`: (Optional) Global options like `docker`, `max-time`.
+    *   `options`: (Optional) Global options like `docker`, `max-time`, `size`.
     *   `definitions`: (Optional, but recommended) Defines reusable components like `steps`, `services`, `caches`.
     *   `pipelines`: Defines the actual pipeline triggers and steps (e.g., `default`, `branches`, `pull-requests`, `custom`).
 
@@ -62,7 +61,9 @@ This rule provides guidelines for structuring `bitbucket-pipelines.yml` files to
 4.  **Reusability with YAML Anchors:**
     *   For steps used in multiple pipelines (e.g., test steps running on branches and pull requests), define them once under `definitions -> steps` using a YAML anchor (`&anchor_name`).
     *   Reference the step using the alias (`*anchor_name`) in your `pipelines` section. This keeps the configuration DRY (Don't Repeat Yourself).
-    *   Example:
+    *   You can also define reusable script snippets or common configurations (like runner settings) using anchors. It's a good practice to prefix custom data structure anchors with `x-` (e.g., `x-runner-config`, `x-script-anchors`).
+    *   To merge an anchor's properties into a step or another definition, use `<<: *anchor_name`.
+    *   Example (reusable step):
         ```yaml
         definitions:
           steps:
@@ -80,10 +81,147 @@ This rule provides guidelines for structuring `bitbucket-pipelines.yml` files to
             '**':
               - step: *test-step
         ```
+    *   Example (reusable runner config and script snippet):
+        ```yaml
+        definitions:
+          x-runner-config: &default-runner-config
+            runs-on:
+              - self.hosted
+              - my.custom.label
+
+          x-script-anchors:
+            setup-tools: &setup-tools |-
+              apt-get update
+              apt-get install -y jq curl
+
+          steps:
+            - my-custom-step: &my-custom-step
+                name: My Custom Step
+                <<: *default-runner-config # Merges runs-on configuration
+                script:
+                  - *setup-tools # Uses the script snippet
+                  - echo "Running custom logic..."
+        ```
 
 5.  **Validation:**
     *   Use the Bitbucket Pipelines Validator (available in the Bitbucket UI or via online tools) to check your `bitbucket-pipelines.yml` syntax before committing.
 
+6.  **Caching Strategies:**
+    *   Effectively use caches to speed up your pipelines by storing dependencies and build artifacts. Define caches under `definitions -> caches`.
+    *   **Key-based Caching:** Use `key` with `files` to invalidate the cache when specific files (e.g., dependency lock files) change.
+        ```yaml
+        definitions:
+          caches:
+            uv-global-cache:
+              key:
+                files:
+                  - pyproject.toml
+                  - uv.lock
+              path: $HOME/.cache/uv
+        ```
+    *   **Path-based Caching:** For static content or tools downloaded via scripts, a simple path-based cache can be effective.
+        ```yaml
+        definitions:
+          caches:
+            docker-buildx-plugin-cache:
+              path: $HOME/.docker/cli-plugins # For downloaded docker-buildx plugin
+            apt-packages-cache:
+              path: /var/cache/apt/archives # For apt package manager
+        ```
+    *   Bitbucket Pipelines supports several predefined caches (e.g., `node`, `pip`, `maven`). Custom caches offer more control.
+    *   Remember to prune caches periodically if necessary, especially for tools that manage their own cache (e.g., `uv cache prune --ci`).
+
+7.  **Building Docker Images:**
+    *   To build Docker images within your pipeline, enable Docker-in-Docker by defining a Docker service:
+        ```yaml
+        definitions:
+          services:
+            docker:
+              image: docker:dind
+              memory: 2048 # Adjust memory as needed
+        ```
+    *   In your step, include `services: - docker`.
+    *   It's common to set up `docker buildx` for more advanced builds. This can be done in a script anchor:
+        ```yaml
+        definitions:
+          x-script-anchors:
+            setup-docker-login-buildx-ecr: &setup-docker-login-buildx-ecr |-
+              # ... (docker login commands) ...
+              mkdir -p $HOME/.docker/cli-plugins
+              curl -SL https://github.com/docker/buildx/releases/download/v0.12.1/buildx-v0.12.1.linux-amd64 -o $HOME/.docker/cli-plugins/docker-buildx
+              chmod +x $HOME/.docker/cli-plugins/docker-buildx
+              docker buildx version
+              # ... (aws ecr login if needed) ...
+          steps:
+            - build-image: &build-image
+                name: Build Docker Image
+                services:
+                  - docker
+                caches: # Cache the downloaded buildx plugin
+                  - docker-buildx-plugin-cache
+                script:
+                  - *setup-docker-login-buildx-ecr
+                  - docker buildx build -t my-image .
+        ```
+
+8.  **Using `after-script`:**
+    *   The `after-script` section in a step runs after the main `script` block, regardless of the main script's success or failure (unless the step is terminated due to timeout or memory limits).
+    *   It's useful for cleanup tasks, reporting, or sending notifications.
+    *   Environment variables set in the `script` section are available in `after-script`.
+    *   The `BITBUCKET_EXIT_CODE` variable can be checked in `after-script` to determine the outcome of the main script.
+        ```yaml
+        pipelines:
+          default:
+            - step:
+                name: Deploy and Notify
+                script:
+                  - echo "Deploying..."
+                  # - exit 1 # Uncomment to simulate failure
+                after-script:
+                  - echo "BITBUCKET_EXIT_CODE: ${BITBUCKET_EXIT_CODE}"
+                  - sh -c '[ "${BITBUCKET_EXIT_CODE:-1}" -eq 0 ] || { echo "Main script failed."; exit 0; }' # Continue if main script failed for notification
+                  - echo "Preparing notification payload..."
+                  # - pipe: atlassian/slack-notify:2.3.0 ...
+        ```
+
+9.  **Using Bitbucket Pipes:**
+    *   Pipes are pre-packaged scripts that simplify common tasks and integrations (e.g., deploying to AWS, sending Slack notifications).
+    *   Reference them using the `pipe:` keyword.
+    *   Example (Slack notification):
+        ```yaml
+        # (within after-script or a dedicated step)
+        - export SLACK_PAYLOAD_SOURCE_FILE="infra/slack-payload-staging.json"
+        # - *prepare-slack-payload # Assuming this anchor prepares payload.json
+        - pipe: atlassian/slack-notify:2.3.0
+          variables:
+            WEBHOOK_URL: $SLACK_WEBHOOK_URL # Secured repository variable
+            PAYLOAD_FILE: payload.json
+            DEBUG: 'True'
+        ```
+
+10. **Documenting Repository Variables:**
+    *   It's a crucial best practice to comment at the end of your `bitbucket-pipelines.yml` file, listing all the repository variables (secret and non-secret) that the pipeline expects to be configured in Bitbucket settings.
+    *   This greatly improves maintainability and onboarding for new team members.
+    *   Categorize them if possible (e.g., general, staging-specific, prod-specific).
+        ```yaml
+        # ... (end of pipeline definitions) ...
+
+        # Variables to be configured in Bitbucket Repository settings:
+        # AWS_ACCESS_KEY_ID
+        # AWS_SECRET_ACCESS_KEY
+        # AWS_DEFAULT_REGION
+        # ECR_REPO
+        # SLACK_WEBHOOK_URL
+        #
+        # For Staging:
+        # ECS_CLUSTER_STAGING
+        # DATABASE_URL_STAGING
+        #
+        # For Production:
+        # ECS_CLUSTER_PROD
+        # DATABASE_URL_PROD
+        ```
+
 ## Rationale
 
-Following these guidelines helps avoid common pitfalls like misplacing the `runs-on` directive, leading to pipelines running in the default cloud environment instead of the intended self-hosted runner. Using definitions and anchors improves maintainability.
+Following these guidelines helps avoid common pitfalls like misplacing the `runs-on` directive, leading to pipelines running in the default cloud environment instead of the intended self-hosted runner. Using definitions, anchors, well-defined caches, and clear documentation improves pipeline speed, reliability, and maintainability.

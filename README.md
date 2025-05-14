@@ -74,6 +74,16 @@ Dive into the `.cursor/rules` directory in this repository to find my collection
 
 If you've found this framework helpful, I'd be incredibly grateful if you could leave a star on the GitHub repository! Your support helps motivate further development and makes it easier for others to discover this guide. Thank you! 🙏
 
+## Star History
+
+<a href="https://www.star-history.com/#biokraft/my-cursor-framework&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=biokraft/my-cursor-framework&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=biokraft/my-cursor-framework&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=biokraft/my-cursor-framework&type=Date" />
+ </picture>
+</a>
+
 ---
 
 ## 🙏 Acknowledgements & Sources

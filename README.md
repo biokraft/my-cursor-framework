@@ -1,4 +1,4 @@
-# My Personal Cursor Framework: A Comprehensive Guide 🚀
+# A Comprehensive Guide to 🚀 Cursor AI 🚀
 
 Welcome to this personal collection of best practices, rules, and workflows designed to maximize your productivity with Cursor. This framework aims to help everyone, from Product Managers to Developers, harness the full potential of AI-assisted coding and documentation.
 

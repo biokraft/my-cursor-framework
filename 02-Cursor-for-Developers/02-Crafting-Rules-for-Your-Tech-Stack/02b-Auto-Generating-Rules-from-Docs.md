@@ -4,7 +4,7 @@ Imagine this:
 > Instead of manually crafting every rule, you empower Cursor to do the heavy lifting.
 
 And here's the **masterstroke** 🍆  
-by guiding this process with your own foundational rule blueprints—like the essential [@00-cursor-rules.mdc](mdc:.cursor/rules/00-cursor-rules.mdc) for universal rule standards and [@01-mdc-guidelines.mdc](mdc:.cursor/rules/01-mdc-guidelines.mdc) for precise MDC file structure—you ensure every AI-generated rule is *born perfectly aligned* with your project's DNA.
+by guiding this process with your own foundational rule blueprints—like the essential [@00-cursor-rules.mdc](../../.cursor/rules/00-cursor-rules.mdc) for universal rule standards and [@01-mdc-guidelines.mdc](../../.cursor/rules/01-mdc-guidelines.mdc) for precise MDC file structure—you ensure every AI-generated rule is *born perfectly aligned* with your project's DNA.
 
 This isn't just automation; it's about **instilling your standards into the AI from the get-go**, ensuring consistency and *dramatically* speeding up your workflow.
 
@@ -77,8 +77,8 @@ You would then review this draft, add more details, clarify points, or include p
 
 When generating new rules, it's crucial to ensure they align with your established standards for rule creation. I use two master rules that define these standards:
 
-*   [@00-cursor-rules.mdc](mdc:.cursor/rules/00-cursor-rules.mdc): General guidelines for all Cursor rules.
-*   [@01-mdc-guidelines.mdc](mdc:.cursor/rules/01-mdc-guidelines.mdc): Specific guidelines for the structure and formatting of MDC (Markdown Configuration) files.
+*   [@00-cursor-rules.mdc](../../.cursor/rules/00-cursor-rules.mdc): General guidelines for all Cursor rules.
+*   [@01-mdc-guidelines.mdc](../../.cursor/rules/01-mdc-guidelines.mdc): Specific guidelines for the structure and formatting of MDC (Markdown Configuration) files.
 
 By referencing these master rules in your prompt, you instruct the AI to generate new rules that are consistent with your existing framework.
 

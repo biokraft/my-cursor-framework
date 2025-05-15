@@ -1,6 +1,6 @@
 # Exploring the Broader MCP Ecosystem
 
-While Jira and Confluence are common and powerful integrations for the Multi-Connector Platform (MCP), the vision for MCP extends to a much wider ecosystem of tools and services. The goal is to allow Cursor to connect with as many relevant parts of your digital workspace as possible.
+While Jira, Confluence, and the versatile `dbhub` for database access are common and powerful integrations for the Multi-Connector Platform (MCP), the vision for MCP extends to a much wider ecosystem of tools and services. The goal is to allow Cursor to connect with as many relevant parts of your digital workspace as possible.
 
 ## The Potential of MCP
 
@@ -23,12 +23,14 @@ Imagine Cursor being able to seamlessly interact with:
 
 ## Where to Find MCP Servers/Connectors
 
-The availability of MCP connectors depends on development by the Cursor team and potentially a community of third-party developers.
+The availability of MCP connectors depends on development by the Cursor team and potentially a community of third-party developers. Here are some good places to look:
 
 -   **Official Cursor Documentation:** This is always the first place to check. Cursor's official website and documentation will list supported MCP integrations and how to configure them.
 -   **Cursor's Settings/Integrations Panel:** Within the Cursor application itself, the MCP or Integrations section should show you currently available and configurable connectors.
 -   **Community Forums & Channels:** The Cursor community (e.g., Discord server, forums) can be a good place to learn about newly available MCPs, discuss desired integrations, or find community-driven projects.
 -   **GitHub:** Search GitHub for repositories related to "Cursor MCP" or "Cursor Connectors" as developers might share their own creations there.
+-   **Model Context Protocol Servers Repository:** A collection of reference implementations and community-built servers: [modelcontextprotocol/servers on GitHub](https://github.com/modelcontextprotocol/servers).
+-   **MCP.SO (MCP Servers Organization):** A curated directory of open-sourced MCP servers: [mcp.so](https://mcp.so/).
 
 ## The Future is Connected
 

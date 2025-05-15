@@ -31,9 +31,9 @@ This section is designed for *anyone* using Cursor, regardless of their technica
 -   🔗 **The Multi-Connector Platform (MCP)**
     -   [MCP: The Big Picture](./01-Cursor-for-Everyone/06-The-Multi-Connector-Platform-MCP/06a-MCP-The-Big-Picture.md)
     -   [MCP in Action: Jira and Confluence](./01-Cursor-for-Everyone/06-The-Multi-Connector-Platform-MCP/06b-MCP-in-Action-Jira-and-Confluence.md)
-    -   [MCP Spotlight: DBHub - Universal Database Access](./01-Cursor-for-Everyone/06-The-Multi-Connector-Platform-MCP/06d-MCP-Spotlight-DBHub.md)
-    -   [Exploring the MCP Ecosystem](./01-Cursor-for-Everyone/06-The-Multi-Connector-Platform-MCP/06c-Exploring-the-MCP-Ecosystem.md)
--   📄 [Quick Look: The @Docs Feature](./01-Cursor-for-Everyone/07-Quick-Look-The-Docs-Feature.md)
+    -   [MCP Spotlight: DBHub - Universal Database Access](./01-Cursor-for-Everyone/06-The-Multi-Connector-Platform-MCP/06c-MCP-Spotlight-DBHub.md)
+    -   [Exploring the MCP Ecosystem](./01-Cursor-for-Everyone/06-The-Multi-Connector-Platform-MCP/06d-Exploring-the-MCP-Ecosystem.md)
+    -   [Quick Look: The @Docs Feature](./01-Cursor-for-Everyone/07-Quick-Look-The-Docs-Feature.md)
 
 ---
 

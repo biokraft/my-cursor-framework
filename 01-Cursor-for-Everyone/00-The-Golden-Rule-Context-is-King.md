@@ -20,6 +20,7 @@ Throughout this guide, we'll explore various methods for providing context. Here
     *   Reference file names (`@file.py`) or symbols (`@my_function`) directly in the chat.
 2.  **Using Cursor's Context Features:**
     *   **`@` Mentions:** Use `@` to reference files, symbols, or folders in your workspace. Cursor will automatically pull in relevant code or information.
+    *   **`@folders`:** Include entire folders (or even your whole codebase) in the context. Enable "Full folder contents" in settings for this. A small icon will indicate if a folder is too large to be fully included.
     *   **The `@Docs` Feature:** Point Cursor to specific documentation (local files or web URLs) to ground its knowledge in your project's or library's specifics. (More on this later, especially for developers).
     *   **Multi-Connector Platform (MCP):** Integrate Cursor with external tools like Jira or Confluence to bring in context from issues, wikis, and other project management resources.
     *   **Search:** This is by default enabled in the agent mode and enables cursor to search the web if prompted to do so. Otherwise its also possible to paste in URLs straight from your browser and cursor will read those

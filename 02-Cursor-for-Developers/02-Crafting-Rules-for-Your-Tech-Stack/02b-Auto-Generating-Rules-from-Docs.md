@@ -43,7 +43,7 @@ Before you can reference documentation in chat, you need to add it to Cursor's s
 1. Go to Cursor's settings/preferences.
 2. Find the "Features" or "Docs" section.
 
-    ![Add Docs Sources UI](./assets/add_docs_sources_ui.png)
+    ![Add Docs Sources UI](../../assets/add_docs_sources_ui.png)
 
 3. Add the FastAPI documentation pages as sources:
     *   Name: "FastAPI Response Model", URL: `https://fastapi.tiangolo.com/tutorial/response-model/`

@@ -48,8 +48,7 @@ This section delves into advanced techniques and workflows tailored for develope
     -   [Auto-Generating Rules from @Docs](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/02b-Auto-Generating-Rules-from-Docs.md)
     -   [Evolving Your Ruleset](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/02c-Evolving-Your-Ruleset.md)
 -   🛠️ [The SpecsForge Framework](./02-Cursor-for-Developers/03-The-SpecsForge-Framework.md)
--   💡 [From Specs to Code: Implementation Strategies](./02-Cursor-for-Developers/04-From-Specs-to-Code-Implementation-Strategies.md)
--   ⇄ [Working Across Repositories](./02-Cursor-for-Developers/05-Working-Across-Repositories.md)
+-   ⇄ [Working Across Repositories](./02-Cursor-for-Developers/04-Working-Across-Repositories.md)
 
 ---
 

@@ -60,6 +60,8 @@ This section delves into advanced techniques and workflows tailored for develope
 
 ---
 
+**Hint:** Interested to see how to have fun with Cursor? Try the [Yolo mode](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04e-Mode-Spotlight-Yolo.md)! Here is what this can result in: [Yolo README](./Yolo-README.md).
+
 ## 📜 My Standard Cursor Rules
 
 I recommend always starting with these foundational rules in your `.cursor/rules` directory:

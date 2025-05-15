@@ -1,5 +1,7 @@
 # Working Across Repositories with Cursor (e.g., Git Submodules)
 
+**Alternative Approach:** Cursor now supports multi-root workspaces, allowing you to open multiple folders (repositories) in the same window. This provides a more integrated way to work across codebases compared to or alongside Git submodules. You can find more details in the [Cursor 0.50 changelog](https://www.cursor.com/changelog/0-50).
+
 Modern software projects often span multiple repositories. This could be due to microservice architectures, shared libraries, or modular project structures. When working in such an environment, providing Cursor with the right context from all relevant repositories is key to its effectiveness. One common way to manage multi-repository projects locally is through **Git Submodules**.
 
 ## The Challenge of Multi-Repo Context

@@ -21,6 +21,13 @@ Imagine Cursor being able to seamlessly interact with:
 -   **Other Developer Tools:**
     *   Log management systems, CI/CD platforms, artifact repositories.
 
+---
+**Honorable Mention:**
+
+-   **PowerPoint Presentation Generation:**
+    *   [supercurses/powerpoint](https://github.com/supercurses/powerpoint) — An open-source MCP server that enables automated creation of PowerPoint presentations via MCP tools. It supports adding slides, tables, charts, and even AI-generated images, making it a powerful integration for generating and managing presentations programmatically.
+---
+
 ## Where to Find MCP Servers/Connectors
 
 The availability of MCP connectors depends on development by the Cursor team and potentially a community of third-party developers. Here are some good places to look:

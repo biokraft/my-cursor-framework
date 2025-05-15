@@ -35,14 +35,21 @@ We will explore the `@Docs` feature in much greater depth in **Part 2: Cursor fo
 
 ## How to Use `@Docs` (Basic)
 
-Typically, you invoke it directly in the chat, often with a command like:
+To use the `@Docs` feature, you first need to add your documentation sources through Cursor's settings:
 
-```plaintext
-@Docs add [URL or path to local file/folder]
-```
+1.  Navigate to Cursor's settings/preferences.
+2.  Find the section related to "Features" or specifically "Docs".
+3.  Here, you can add a new documentation source. You'll typically provide:
+    *   A descriptive **name** for this documentation (e.g., "FastAPI Official Docs", "My Project's Style Guide"). This name is what you'll use to reference it later.
+    *   The **URL** to the online documentation or the **path** to a local file or folder.
 
-Or, Cursor might have a dedicated UI element for adding documentation sources.
+Once a documentation source is added and named in the settings, you can reference it in the chat:
 
-Once added, the AI will consider this documentation for subsequent queries in that chat session or until the `@Docs` context is cleared or changed.
+1.  Type `@Docs` in the chat input.
+2.  Press the **spacebar**.
+3.  A search interface or a list of your configured documentation sources will appear.
+4.  Select or type the **name** you gave to your documentation source.
+
+After selecting it, the AI will prioritize this documentation for subsequent queries in that chat session or until the `@Docs` context is cleared or changed. This ensures the AI uses the specific information you've pointed it to.
 
 This brief introduction should give you an idea of its potential. For now, just be aware that it's another powerful tool in Cursor's arsenal for providing critical context to the AI. 

@@ -30,7 +30,10 @@ Think of Custom Modes as saved configurations for the Cursor chat. Each mode can
 
 While the exact UI might vary slightly with Cursor versions, the general process is:
 
-1.  **Find the Custom Modes Setting:** Look for an option like "Custom Modes," "Agent Modes," or "Personalities" in Cursor's settings or chat panel. (You might need to enable beta features if it's a newer addition).
+1.  **Find the Custom Modes Setting:** Look for an option like "Custom Modes," "Agent Modes," or "Personalities" in Cursor's settings or chat panel.
+
+    ![Custom Modes Setup UI](../../assets/custom_modes_setup_ui.png)
+
 2.  **Create a New Mode:** There will usually be a button or option to "Create New Mode" or "Add Mode."
 3.  **Name Your Mode:** Choose a clear and descriptive name.
 4.  **Write the System Prompt:** This is the most crucial part. Carefully craft the instructions that will define this mode's behavior. You can iterate on this prompt over time.

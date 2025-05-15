@@ -42,6 +42,9 @@ For this example, let's assume we're interested in rules around path operation f
 Before you can reference documentation in chat, you need to add it to Cursor's settings:
 1. Go to Cursor's settings/preferences.
 2. Find the "Features" or "Docs" section.
+
+    ![Add Docs Sources UI](./assets/add_docs_sources_ui.png)
+
 3. Add the FastAPI documentation pages as sources:
     *   Name: "FastAPI Response Model", URL: `https://fastapi.tiangolo.com/tutorial/response-model/`
     *   Name: "FastAPI Body", URL: `https://fastapi.tiangolo.com/tutorial/body/`

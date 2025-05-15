@@ -36,6 +36,8 @@ Cursor also provides a built-in command to assist with rule generation:
 -   Type `/Generate Cursor Rules` in the chat.
 -   Cursor will often look at your recent interactions or ask clarifying questions to help draft a relevant rule.
 
+    ![Generate Cursor Rules Command](../../assets/generate_cursor_rules_command.png)
+
 This can be a great starting point, which you can then refine using the interactive method described above, ensuring the output is a valid `.mdc` file with correct frontmatter.
 
 ## The Role of a "Master Rule" for Rule Creation

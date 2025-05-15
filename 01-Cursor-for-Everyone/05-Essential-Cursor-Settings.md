@@ -15,6 +15,8 @@ This setting is a game-changer for ensuring your AI assistant always has the nec
     *   **Efficiency:** Reduces the need to manually remind the AI about your project's structure using `@` mentions for every file.
 -   **Recommendation:** Enable this to keep your AI consistently informed.
 
+    ![Include Project Structure Setting](../../assets/include_project_structure.png)
+
 ---
 
 ## 2. Enable auto-run mode
@@ -28,6 +30,8 @@ For those who want to fully embrace the "vibe" and work at speed, this setting s
     *   **Embrace the Vibes:** This is for users comfortable with letting the AI take more initiative.
 -   **Recommendation:** Consider enabling this if you're looking for maximum efficiency and trust in the AI's actions, but be mindful that it grants more autonomy.
 
+    ![Enable Auto-run Mode Setting](../../assets/auto_run_mode.png)
+
 ---
 
 ## 3. Play sound on finish (BETA)
@@ -39,6 +43,8 @@ A small but satisfying feature that adds a touch of positive reinforcement to yo
     *   **Auditory Cue:** Lets you know when a potentially longer AI operation has finished without needing to constantly watch the screen.
     *   **Dopamine Hits:** As I like to put it, "It just releases nice little amounts of dopamine when the vibe coding is progressing!"
 -   **Recommendation:** Enable this for a pleasant and informative auditory feedback loop.
+
+    ![Play Sound on Finish Setting](../../assets/play_sound_on_finish.png)
 
 ---
 
@@ -52,6 +58,8 @@ Empower your AI assistant with real-time information from the internet.
     *   **Broader Knowledge:** Expands the AI's knowledge base beyond its training data.
     *   **Research Power:** Turns your chat into a powerful research assistant.
 -   **Recommendation:** Definitely enable this to give your AI the broadest possible context and information access.
+
+    ![Web Search Tool Setting](../../assets/web_search_tool.png)
 
 ---
 

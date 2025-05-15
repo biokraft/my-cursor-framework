@@ -31,6 +31,45 @@ The availability of MCP connectors depends on development by the Cursor team and
 -   **GitHub:** Search GitHub for repositories related to "Cursor MCP" or "Cursor Connectors" as developers might share their own creations there.
 -   **Model Context Protocol Servers Repository:** A collection of reference implementations and community-built servers: [modelcontextprotocol/servers on GitHub](https://github.com/modelcontextprotocol/servers).
 -   **MCP.SO (MCP Servers Organization):** A curated directory of open-sourced MCP servers: [mcp.so](https://mcp.so/).
+-   **PulseMCP Server Directory:** A comprehensive directory of MCP servers, often with community ratings and classifications: [PulseMCP Servers](https://www.pulsemcp.com/servers).
+
+### Debugging MCP Servers with the MCP Inspector
+
+If you're developing or troubleshooting an MCP server, the **MCP Inspector** is an invaluable tool. It's an interactive developer utility designed specifically for testing and debugging MCP server implementations.
+
+You can run the Inspector directly via `npx` without needing a separate installation:
+
+```bash
+npx @modelcontextprotocol/inspector <command>
+```
+
+For instance, to inspect a server package from PyPi like `mcp-server-git`, you might use:
+
+```bash
+npx @modelcontextprotocol/inspector uvx mcp-server-git --repository ~/code/mcp/servers.git
+```
+
+Or, for a locally developed TypeScript server:
+
+```bash
+npx @modelcontextprotocol/inspector node path/to/server/index.js args...
+```
+
+The MCP Inspector provides several key features:
+
+*   **Server Connection Pane:** Allows you to select the transport and customize connection arguments.
+*   **Resources Tab:** Lists available resources, shows metadata, and allows content inspection and subscription testing.
+*   **Prompts Tab:** Displays prompt templates, arguments, and enables testing with custom inputs.
+*   **Tools Tab:** Lists available tools, shows their schemas, and allows for execution testing.
+*   **Notifications Pane:** Presents logs and notifications from the server.
+
+When debugging, a typical workflow involves:
+
+1.  **Starting the Inspector** with your server and verifying basic connectivity.
+2.  **Iteratively testing** as you make changes to your server, reconnecting the Inspector as needed.
+3.  **Testing edge cases** with invalid inputs or concurrent operations to ensure robust error handling.
+
+For more detailed information, refer to the [official MCP Inspector documentation](https://modelcontextprotocol.io/docs/tools/inspector).
 
 ## The Future is Connected
 

@@ -3,7 +3,7 @@ Unlock a **new level of AI-assisted development!** Cursor doesn't just *read* do
 Imagine this:
 > Instead of manually crafting every rule, you empower Cursor to do the heavy lifting.
 
-And here's the **masterstroke** 🍆: <br>
+And here's the **masterstroke** 🍆:  
 by guiding this process with your own foundational rule blueprints—like the essential [@00-cursor-rules.mdc](mdc:.cursor/rules/00-cursor-rules.mdc) for universal rule standards and [@01-mdc-guidelines.mdc](mdc:.cursor/rules/01-mdc-guidelines.mdc) for precise MDC file structure—you ensure every AI-generated rule is *born perfectly aligned* with your project's DNA.
 
 This isn't just automation; it's about **instilling your standards into the AI from the get-go**, ensuring consistency and *dramatically* speeding up your workflow.
@@ -117,33 +117,6 @@ When generating new rules, it's crucial to ensure they align with your establish
 *   [@01-mdc-guidelines.mdc](mdc:.cursor/rules/01-mdc-guidelines.mdc): Specific guidelines for the structure and formatting of MDC (Markdown Configuration) files.
 
 By referencing these master rules in your prompt, you instruct the AI to generate new rules that are consistent with your existing framework.
-
-
-**Example Prompt Referencing Master Rules:**
-
-Let's extend the FastAPI example. After providing the FastAPI documentation via `@Docs`, you would refine your rule generation prompt to include references to your master rules:
-
-```plaintext
-@Docs FastAPI Response Model
-@Docs FastAPI Body
-@Docs FastAPI Handling Errors
-[@00-cursor-rules.mdc](mdc:.cursor/rules/00-cursor-rules.mdc)
-[@01-mdc-guidelines.mdc](mdc:.cursor/rules/01-mdc-guidelines.mdc)
-
-Now that you have context from the FastAPI documentation and our master rule guidelines:
-
-Please draft a new Cursor Rule file named `python-fastapi-best-practices.mdc`.
-This rule should summarize key best practices for writing FastAPI applications, focusing on:
-1.  Usage of Pydantic models for request and response data validation.
-2.  Properly defining `response_model` in path operation functions.
-3.  Best practices for error handling, including using `HTTPException`.
-4.  Recommendations for dependency injection usage for cleaner code.
-
-Ensure the rule is formatted clearly with headings and examples where appropriate.
-Most importantly, the generated rule (including its frontmatter and content) MUST strictly adhere to the guidelines outlined in [@00-cursor-rules.mdc](mdc:.cursor/rules/00-cursor-rules.mdc) and [@01-mdc-guidelines.mdc](mdc:.cursor/rules/01-mdc-guidelines.mdc). For instance, ensure the frontmatter includes a `description` and valid `globs` (or is left empty if appropriate), and that the markdown content is well-structured.
-```
-
-By explicitly instructing the AI to follow these master rules, you ensure that newly generated rules will be correctly formatted, include necessary frontmatter, and integrate seamlessly into your existing rule structure. This reduces the amount of manual refinement needed.
 
 ## Tips for Effective Rule Generation from Docs
 

@@ -26,6 +26,7 @@ This section is designed for *anyone* using Cursor, regardless of their technica
     -   [Mode Spotlight: Learn](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04b-Mode-Spotlight-Learn.md)
     -   [Mode Spotlight: Explain](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04c-Mode-Spotlight-Explain.md)
     -   [Mode Spotlight: Research](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04d-Mode-Spotlight-Research.md)
+    -   [Mode Spotlight: Yolo](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04e-Mode-Spotlight-Yolo.md)
 -   ⚙️ [Essential Cursor Settings](./01-Cursor-for-Everyone/05-Essential-Cursor-Settings.md)
 -   🔗 **The Multi-Connector Platform (MCP)**
     -   [MCP: The Big Picture](./01-Cursor-for-Everyone/06-The-Multi-Connector-Platform-MCP/06a-MCP-The-Big-Picture.md)

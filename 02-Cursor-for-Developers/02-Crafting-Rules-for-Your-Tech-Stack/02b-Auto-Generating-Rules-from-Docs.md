@@ -69,43 +69,7 @@ Ensure the rule is formatted clearly with headings and examples where appropriat
 
 **Step 4: Refine and Save**
 
-Cursor will generate a draft rule. It might look something like this (abbreviated):
-
-```markdown
-# FastAPI Best Practices for Python Projects
-
-This rule outlines best practices when developing applications with FastAPI, based on official documentation.
-
-## 1. Pydantic for Data Validation
-- Always use Pydantic models to define the structure and validation for request bodies and response data.
-- Example:
-  ```python
-  from fastapi import FastAPI
-  from pydantic import BaseModel
-
-  class Item(BaseModel):
-      name: str
-      price: float
-  # ...
-  ```
-
-## 2. Explicit `response_model`
-- Clearly define the `response_model` in your path operation functions to ensure consistent and validated responses. This also aids OpenAPI schema generation.
-- Example:
-  ```python
-  @app.post("/items/", response_model=Item)
-  async def create_item(item: Item):
-      return item
-  ```
-
-## 3. Robust Error Handling
-- Use `fastapi.HTTPException` for standard HTTP errors.
-- ...
-
-## 4. Dependency Injection
-- Leverage FastAPI's dependency injection system for managing dependencies like database connections or authentication logic.
-- ...
-```
+Cursor will generate a draft rule.
 
 You would then review this draft, add more details, clarify points, or include project-specific adaptations before saving it as `.cursor/rules/python-fastapi-best-practices.md`.
 

@@ -1,6 +1,6 @@
 # MCP Spotlight: DBHub - Universal Database Access with Cursor
 
-The Multi-Connector Platform (MCP) extends Cursor's capabilities by connecting it to various external tools and data sources. This guide focuses on `dbhub`, a universal database MCP server that allows Cursor to interact with a wide range of popular databases. This integration is invaluable for both Product Managers needing quick data insights and Developers working directly with databases.
+The Model Context Protocol (MCP) extends Cursor's capabilities by connecting it to various external tools and data sources. This guide focuses on `dbhub`, a universal database MCP server that allows Cursor to interact with a wide range of popular databases. This integration is invaluable for both Product Managers needing quick data insights and Developers working directly with databases.
 
 [DBHub GitHub Repository](https://github.com/bytebase/dbhub)
 

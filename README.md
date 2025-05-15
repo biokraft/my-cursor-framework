@@ -28,11 +28,11 @@ This section is designed for *anyone* using Cursor, regardless of their technica
     -   [Mode Spotlight: Research](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04d-Mode-Spotlight-Research.md)
     -   [Mode Spotlight: Yolo](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04e-Mode-Spotlight-Yolo.md)
 -   ⚙️ [Essential Cursor Settings](./01-Cursor-for-Everyone/05-Essential-Cursor-Settings.md)
--   🔗 **The Multi-Connector Platform (MCP)**
-    -   [MCP: The Big Picture](./01-Cursor-for-Everyone/06-The-Multi-Connector-Platform-MCP/06a-MCP-The-Big-Picture.md)
-    -   [MCP in Action: Jira and Confluence](./01-Cursor-for-Everyone/06-The-Multi-Connector-Platform-MCP/06b-MCP-in-Action-Jira-and-Confluence.md)
-    -   [MCP Spotlight: DBHub - Universal Database Access](./01-Cursor-for-Everyone/06-The-Multi-Connector-Platform-MCP/06c-MCP-Spotlight-DBHub.md)
-    -   [Exploring the MCP Ecosystem](./01-Cursor-for-Everyone/06-The-Multi-Connector-Platform-MCP/06d-Exploring-the-MCP-Ecosystem.md)
+-   🔗 **The Model Context Protocol (MCP)**
+    -   [MCP: The Big Picture](./01-Cursor-for-Everyone/06-The-Model-Context-Protocol-MCP/06a-MCP-The-Big-Picture.md)
+    -   [MCP in Action: Jira and Confluence](./01-Cursor-for-Everyone/06-The-Model-Context-Protocol-MCP/06b-MCP-in-Action-Jira-and-Confluence.md)
+    -   [MCP Spotlight: DBHub - Universal Database Access](./01-Cursor-for-Everyone/06-The-Model-Context-Protocol-MCP/06c-MCP-Spotlight-DBHub.md)
+    -   [Exploring the MCP Ecosystem](./01-Cursor-for-Everyone/06-The-Model-Context-Protocol-MCP/06d-Exploring-the-MCP-Ecosystem.md)
     -   [Quick Look: The @Docs Feature](./01-Cursor-for-Everyone/07-Quick-Look-The-Docs-Feature.md)
 
 ---

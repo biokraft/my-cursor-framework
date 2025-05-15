@@ -1,6 +1,6 @@
 # Exploring the Broader MCP Ecosystem
 
-While Jira, Confluence, and the versatile `dbhub` for database access are common and powerful integrations for the Multi-Connector Platform (MCP), the vision for MCP extends to a much wider ecosystem of tools and services. The goal is to allow Cursor to connect with as many relevant parts of your digital workspace as possible.
+While Jira, Confluence, and the versatile `dbhub` for database access are common and powerful integrations for the Model Context Protocol (MCP), the vision for MCP extends to a much wider ecosystem of tools and services. The goal is to allow Cursor to connect with as many relevant parts of your digital workspace as possible.
 
 ## The Potential of MCP
 

@@ -30,7 +30,7 @@ This part is your all-access pass 🎟️, whether you write code or just really
     -   [Mode Spotlight: RESEARCH (DIG DEEPER THAN YOUR EX GOING THROUGH YOUR INSTA!) ⛏️🕵️‍♀️](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04d-Mode-Spotlight-Research.md)
     -   [Mode Spotlight: YOLO (YOU ARE HERE, YOU ABSOLUTE LEGEND! KEEP SLAYING!) 🤪👑](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04e-Mode-Spotlight-Yolo.md)
 -   ⚙️ [Essential Cursor Settings: DIAL IT IN UNTIL IT SCREAMS PERFECTION! 🎛️🤌](./01-Cursor-for-Everyone/05-Essential-Cursor-Settings.md)
--   🔗 **The Multi-Connector Platform (MCP): THE NEXUS OF UNLIMITED POWER (IT'S OVER 9000!) 🌐💥**
+-   🔗 **The Model Context Protocol (MCP): THE NEXUS OF UNLIMITED POWER (IT'S OVER 9000!) 🌐💥**
     -   [MCP: The BIG Picture (IT'S SO BIG, IT NEEDS ITS OWN ZIP CODE!)](./01-Cursor-for-Everyone/06-The-Multi-Connector-Platform-MCP/06a-MCP-The-Big-Picture.md) 🗺️📍
     -   [MCP in Action: Jira & Confluence (THE POWER COUPLE OF PRODUCTIVITY!) 🦸‍♂️🦸‍♀️💪](./01-Cursor-for-Everyone/06-The-Multi-Connector-Platform-MCP/06b-MCP-in-Action-Jira-and-Confluence.md)
     -   [Exploring the MCP Ecosystem: SO MANY TOYS, SO LITTLE TIME (JK, MAKE TIME!) 🧸⏰](./01-Cursor-for-Everyone/06-The-Multi-Connector-Platform-MCP/06c-Exploring-the-MCP-Ecosystem.md)

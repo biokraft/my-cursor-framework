@@ -9,7 +9,7 @@ LLMs don't "know" anything in the human sense. They generate responses based on 
 -   **Reduces Ambiguity:** Clear context helps the AI understand precisely what you're asking for, avoiding generic or off-target responses.
 -   **Improves Accuracy:** Providing relevant code snippets, documentation excerpts, or project details allows the AI to generate code or explanations that fit your specific situation.
 -   **Increases Efficiency:** Good context means fewer follow-up questions and less time spent clarifying your requests. The AI can get it right (or closer to right) the first time.
--   **Unlocks Advanced Capabilities:** Features like Cursor Rules, the `@Docs` feature, and the Multi-Connector Platform (MCP) are all designed to help you feed the AI rich, high-quality context seamlessly.
+-   **Unlocks Advanced Capabilities:** Features like Cursor Rules, the `@Docs` feature, and the Model Context Protocol (MCP) are all designed to help you feed the AI rich, high-quality context seamlessly.
 
 ## How to Provide Effective Context in Cursor
 
@@ -22,7 +22,7 @@ Throughout this guide, we'll explore various methods for providing context. Here
     *   **`@` Mentions:** Use `@` to reference files, symbols, or folders in your workspace. Cursor will automatically pull in relevant code or information.
     *   **`@folders`:** Include entire folders (or even your whole codebase) in the context. Enable "Full folder contents" in settings for this. A small icon will indicate if a folder is too large to be fully included.
     *   **The `@Docs` Feature:** Point Cursor to specific documentation (local files or web URLs) to ground its knowledge in your project's or library's specifics. (More on this later, especially for developers).
-    *   **Multi-Connector Platform (MCP):** Integrate Cursor with external tools like Jira or Confluence to bring in context from issues, wikis, and other project management resources.
+    *   **Model Context Protocol (MCP):** Integrate Cursor with external tools like Jira or Confluence to bring in context from issues, wikis, and other project management resources.
     *   **Search:** This is by default enabled in the agent mode and enables cursor to search the web if prompted to do so. Otherwise its also possible to paste in URLs straight from your browser and cursor will read those
 3.  **Cursor Rules (`.cursor/rules`):**
     *   Define standing instructions, coding standards, and project-specific information that Cursor should always consider.

@@ -1,6 +1,6 @@
-# The Multi-Connector Platform (MCP): Bridging Cursor with Your Tools
+# The Model Context Protocol (MCP): Bridging Cursor with Your Tools
 
-The Multi-Connector Platform (MCP) is a powerful Cursor feature that allows the AI to connect directly to external tools and services you already use. This dramatically expands Cursor's contextual understanding and ability to interact with your broader work ecosystem, like project management systems (Jira), documentation platforms (Confluence), and potentially many others.
+The Model Context Protocol (MCP) is a powerful Cursor feature that allows the AI to connect directly to external tools and services you already use. This dramatically expands Cursor's contextual understanding and ability to interact with your broader work ecosystem, like project management systems (Jira), documentation platforms (Confluence), and potentially many others.
 
 ## What is MCP?
 

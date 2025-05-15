@@ -1,6 +1,6 @@
 # MCP in Action: Jira and Confluence Integration
 
-Now that we understand the general concept of the Multi-Connector Platform (MCP), let's look at how it works with two common and powerful Atlassian tools: Jira for project and issue tracking, and Confluence for documentation and knowledge sharing.
+Now that we understand the general concept of the Model Context Protocol (MCP), let's look at how it works with two common and powerful Atlassian tools: Jira for project and issue tracking, and Confluence for documentation and knowledge sharing.
 
 ## Connecting to Jira
 
@@ -60,7 +60,7 @@ By integrating these tools, MCP makes Cursor a much more powerful and contextual
 
 ### Detailed Setup Guide for Atlassian MCP Integration (Jira & Confluence)
 
-This guide provides step-by-step instructions for integrating Jira Cloud and Confluence with Cursor AI using the Multi-Connector Platform (MCP). This setup allows you to leverage Jira and Confluence information directly within your Cursor AI chats.
+This guide provides step-by-step instructions for integrating Jira Cloud and Confluence with Cursor AI using the Model Context Protocol (MCP). This setup allows you to leverage Jira and Confluence information directly within your Cursor AI chats.
 
 **Prerequisites and General Information:**
 

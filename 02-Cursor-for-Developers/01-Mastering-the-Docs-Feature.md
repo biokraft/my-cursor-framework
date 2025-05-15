@@ -49,8 +49,17 @@ Let's say you need to integrate a new data visualization library, `Plotly Expres
 
 ## `@Docs` and Cursor Rules
 
-You can even reference best practices learned from `@Docs` within your Cursor Rules. For instance, a rule might state: "When generating code for API endpoints, always follow the security guidelines outlined in the official FastAPI documentation (refer to `@Docs` if provided)."
+A powerful workflow emerges when you combine `@Docs` with the creation of new Cursor Rules. When defining a rule that pertains to a specific library, framework, or API, you can use `@Docs` to provide the AI with the relevant documentation *during the rule definition process itself*.
 
-This synergy ensures that the AI not only has access to the documentation but is also consistently reminded to use it according to your project's standards.
+For example, imagine you want to create a Cursor Rule that outlines best practices for using the Jira Multi-Connector Platform (MCP) tools. You could:
+
+1.  Add the official Atlassian MCP documentation to Cursor:
+    *   `@Docs add <URL to Atlassian MCP documentation>`
+2.  Then, when prompting Cursor to help you draft the rule, you can instruct it to base the rule on the provided documentation:
+    *   "Help me create a Cursor Rule for Jira MCP usage. It should emphasize best practices for searching issues and creating new ones, based on the Atlassian MCP documentation I just added with `@Docs`."
+
+This approach allows you to create highly accurate and context-aware rules. The AI can extract key principles, function names, and recommended patterns directly from the authoritative source you provide, leading to more effective and precise custom rules for your projects.
+
+This synergy—using `@Docs` to inform the creation of Cursor Rules—ensures that your custom instructions are not only well-defined but also grounded in the latest official guidelines for the technologies you use. It's a way to go full circle, leveraging documentation to build better, more intelligent rules for Cursor.
 
 By mastering the `@Docs` feature, you transform Cursor from a general-purpose AI into a highly specialized assistant that understands the nuances of your specific tech stack, leading to more efficient and accurate development. 

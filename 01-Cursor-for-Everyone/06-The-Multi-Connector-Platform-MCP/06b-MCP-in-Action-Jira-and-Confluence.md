@@ -13,7 +13,7 @@ Jira is a staple for many teams to manage tasks, bugs, and sprints. Integrating 
 -   **Context for Coding:** When working on a feature or bug, pull the relevant Jira ticket details directly into Cursor to give the AI (and yourself) full context.
 -   **Add Comments (if enabled/permitted):** After drafting a solution or having a discussion in Cursor, ask it to add a summary comment back to the Jira ticket.
 
-**Example Interactions (Conceptual - exact commands may vary):
+**Example Interactions** (Conceptual - exact commands may vary):
 
 *   **Using Natural Language:**
     *   "What are the details for Jira ticket PROJ-123?"
@@ -37,7 +37,7 @@ Confluence is widely used for team collaboration, project documentation, knowled
 -   **Answer Questions Based on Docs:** Ask Cursor questions that can be answered by information within your Confluence instance.
 -   **Draft New Pages (if enabled/permitted):** Start drafting a new Confluence page based on discussions or code developed in Cursor.
 
-**Example Interactions (Conceptual - exact commands may vary):
+**Example Interactions** (Conceptual - exact commands may vary):
 
 *   **Using Natural Language:**
     *   "Find the Confluence page about our deployment process in the 'DEVOPS' space."
@@ -56,4 +56,112 @@ Confluence is widely used for team collaboration, project documentation, knowled
 -   **Developers:** Can get immediate context from Jira tickets when starting work, or reference technical documentation from Confluence without leaving their IDE.
 -   **Technical Writers:** Can search Confluence for related articles or verify information before updating documentation.
 
-By integrating these tools, MCP makes Cursor a much more powerful and contextually aware assistant, deeply embedded in your team's existing workflows. 
+By integrating these tools, MCP makes Cursor a much more powerful and contextually aware assistant, deeply embedded in your team's existing workflows.
+
+### Detailed Setup Guide for Atlassian MCP Integration (Jira & Confluence)
+
+This guide provides step-by-step instructions for integrating Jira Cloud and Confluence with Cursor AI using the Multi-Connector Platform (MCP). This setup allows you to leverage Jira and Confluence information directly within your Cursor AI chats.
+
+**Prerequisites and General Information:**
+
+*   **MCP Overview:** The Model Context Protocol (MCP) is an open protocol standardizing how applications provide context and tools to LLMs. It acts as a plugin system for Cursor, extending the Agent's capabilities by connecting it to various data sources and tools. For more details, see the [official MCP documentation](https://docs.cursor.com/context/model-context-protocol).
+*   **Atlassian MCP Basis:** This integration utilizes the `mcp-atlassian` project available on [GitHub](https://github.com/sooperset/mcp-atlassian).
+
+**Setup Steps:**
+
+1.  **Cursor AI Installation:**
+    *   **Important:** Ensure you have the ARM64 version of Cursor AI installed. The integration may not function correctly with other versions. (Refer to your internal "Cursor AI - Account Erstellung und Installation" guide for details).
+
+2.  **Create Jira Cloud API Token:**
+    *   Navigate to [Atlassian API Tokens](https://id.atlassian.com/manage-profile/security/api-tokens).
+    *   Create a new API token.
+    *   **Action:** Copy the generated token immediately and store it securely (e.g., in 1Password, KeePass, or your company's preferred password manager).
+    *   **Label/Name:** Give it a descriptive name, for example, "Cursor AI".
+    *   **Expiry:** Set an appropriate expiration date (e.g., six months in the future, like 01/10/2025).
+
+3.  **Create Confluence Personal Access Token (PAT):**
+    *   Go to your Confluence PAT settings: `https://confluence.[YOUR_COMPANY_DOMAIN].de/plugins/personalaccesstokens/usertokens.action` (Replace `confluence.[YOUR_COMPANY_DOMAIN].de` with your Confluence instance URL if different).
+    *   Create a new token.
+    *   **Action:** Copy the token and store it securely.
+    *   **Token Name:** Use a clear name, such as "Cursor AI".
+    *   **Expiry:** Choose "No expiry date" or set an expiry date (e.g., 180 days).
+
+4.  **Install Homebrew (Package Manager for macOS):**
+    *   1.  Open your Terminal application.
+    *   2.  Execute the following command:
+        ```bash
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        ```
+    *   3.  Verify the installation by running:
+        ```bash
+        brew -v
+        ```
+        You should see the Homebrew version output (e.g., `Homebrew 4.4.29`).
+
+5.  **Install `uv` (Python Package Manager):**
+    *   In your Terminal, run:
+        ```bash
+        brew install uv
+        ```
+    *   If you encounter an error (especially on ARM-based Macs), try:
+        ```bash
+        arch -arm64 brew install uv
+        ```
+
+6.  **Configure MCP for Jira Cloud and Confluence in Cursor AI:**
+    *   1.  Open Cursor AI Settings.
+    *   2.  Select "MCP" from the settings menu.
+    *   3.  Click "Add new global MCP Server". This will open an `mcp.json` file.
+    *   4.  Paste the following JSON configuration into the `mcp.json` file:
+
+        ```json
+        {
+            "mcpServers": {
+              "mcp-atlassian (Jira Cloud)": {
+                "command": "uvx",
+                "args": [
+                  "mcp-atlassian",
+                  "--verbose",
+                  "--read-only",
+                  "--jira-url=[YOUR JIRA INSTANCE]",
+                  "--jira-username=[YOUR_EMAIL]@[YOUR_COMPANY_DOMAIN]",
+                  "--jira-token=[YOUR JIRA ACCESS TOKEN]"
+                ]
+              },
+              "mcp-atlassian (Confluence)": {
+                "command": "uvx",
+                "args": [
+                  "mcp-atlassian",
+                  "--verbose",
+                  "--read-only",
+                  "--confluence-url=https://[YOUR_CONFLUENCE_URL]/",
+                  "--confluence-username=[YOUR_EMAIL]@[YOUR_COMPANY_DOMAIN]",
+                  "--confluence-personal-token=[YOUR CONFLUENCE ACCESS TOKEN]"
+                ]
+              }
+            }
+          }
+        ```
+    *   5.  **Customize the placeholders** in the JSON (remove the square brackets):
+        *   `[YOUR JIRA INSTANCE]`: Your Jira Cloud URL (e.g., `https://your-company.atlassian.net`, `https://another-project.atlassian.net`).
+        *   `[YOUR_EMAIL]@[YOUR_COMPANY_DOMAIN]`: Your email address associated with your Jira/Confluence accounts.
+        *   `[YOUR JIRA ACCESS TOKEN]`: The Jira API token you created in Step 2.
+        *   `[YOUR CONFLUENCE ACCESS TOKEN]`: The Confluence PAT you created in Step 3.
+        *   `[YOUR_CONFLUENCE_URL]`: Ensure this matches your Confluence instance URL if it's different (e.g., `your-company.atlassian.net/wiki`).
+    *   6.  Save the `mcp.json` file (e.g., Cmd+S on macOS).
+    *   7.  Return to the Cursor AI Settings (MCP Servers screen).
+    *   8.  **Recommendation:** Keep `--read-only` enabled in the `args` for both configurations. Removing it would allow Cursor AI to potentially write to Jira and Confluence, which should only be done with caution and full understanding of the implications.
+    *   9.  The MCP server entries should now appear in the list. A green status indicator means the connection is likely successful. A red indicator suggests a configuration error (double-check your URLs, email, and tokens).
+
+7.  **Enable/Disable MCP Servers:**
+    *   In the Cursor AI MCP settings, you can toggle the switches for "mcp-atlassian (Jira Cloud)" and "mcp-atlassian (Confluence)" to enable or disable the respective integrations as needed. Ensure they are enabled for use.
+
+8.  **Test in Chat:**
+    *   Activate "Agent" mode in Cursor AI chat.
+    *   You can now use natural language queries or specific MCP commands to interact with your Jira and Confluence instances. Examples:
+        *   "Get details for Jira ticket PROJ-123"
+        *   "@jira search jql='assignee = currentUser() and status = Open'"
+        *   "Find Confluence pages about 'API documentation' in the DEV space"
+        *   "@confluence get_page page_id=123456789"
+
+This detailed setup guide should provide comprehensive instructions for users to integrate their Atlassian tools with Cursor. 

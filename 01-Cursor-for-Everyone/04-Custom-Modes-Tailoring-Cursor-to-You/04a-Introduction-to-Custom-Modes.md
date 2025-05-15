@@ -35,6 +35,8 @@ While the exact UI might vary slightly with Cursor versions, the general process
     ![Custom Modes Setup UI](../../assets/custom_modes_setup_ui.png)
 
 2.  **Create a New Mode:** There will usually be a button or option to "Create New Mode" or "Add Mode."
+
+    ![Create New Mode Button](../../assets/create_new_mode_button.png)
 3.  **Name Your Mode:** Choose a clear and descriptive name.
 4.  **Write the System Prompt:** This is the most crucial part. Carefully craft the instructions that will define this mode's behavior. You can iterate on this prompt over time.
     *   Start with a clear role: "You are a..."

@@ -4,14 +4,14 @@ The Multi-Connector Platform (MCP) is a powerful Cursor feature that allows the 
 
 ## What is MCP?
 
+![MCP Illustrated: like USB-C for your tools](../../assets/mcp-illustrated.png)
+
+*Image source: [Composio Blog](https://composio.dev/blog/what-is-model-context-protocol-mcp-explained/)*
+
 At its core, MCP enables Cursor to:
 
 -   **Access External Data:** Read information from connected services (e.g., retrieve issue details from Jira, fetch page content from Confluence).
 -   **Perform Actions (with permission):** In some cases, and always with user approval for actions, MCP can allow Cursor to make changes in external systems (e.g., add a comment to a Jira issue, create a new Confluence page).
-
-![MCP Illustrated: like USB-C for your tools](../../assets/mcp-illustrated.png)
-
-*Image source: [Composio Blog](https://composio.dev/blog/what-is-model-context-protocol-mcp-explained/)*
 
 -   **Enrich Context:** Seamlessly bring relevant information from these external sources directly into your Cursor chat and AI workflows, providing richer context than just your local codebase.
 

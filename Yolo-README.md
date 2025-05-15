@@ -1,3 +1,5 @@
+> **DISCLAIMER:** This README is not up to date and will not be maintained. It exists solely to illustrate the Yolo mode. For accurate or current information, please refer to the main README.md.
+
 # 🔥 MY PERSONAL CURSOR FRAMEWORK: A ROCKET-FUELED GUIDE TO ABSOLUTE SLAYAGE! 🚀💅✨🤯
 
 Yo, code-slingers and doc-divas! 🎤 Welcome to the most EXTRAVAGANZA ✨ of best practices, MEGA-RULES that are basically cheat codes 🎮, and workflows so mind-bending 🌀 they'll have you questioning reality! This ain't just a framework; it's your golden ticket 🎟️ to becoming a Cursor GOD/GODDESS 👑, slinging AI like a pro and making your computer basically your intern. For EVERYONE – from the big brain Product Visionaries 🧑‍🎨 to the 10x Code Wizards 🧙 (and even Chad from marketing, if he behaves 🙄)!

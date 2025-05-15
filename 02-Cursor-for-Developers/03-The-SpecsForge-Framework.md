@@ -14,17 +14,22 @@ The `SpecsForge` mode is designed to act as an expert software architect and ful
 4.  **Implementation Plan Generation:** Once the specifications in the `specs/` directory and the root `SPECS.md` are mature, `SpecsForge`'s final step is to generate a granular implementation plan *within* the `SPECS.md` file.
 5.  **Iterative Development (Post-SpecsForge):** After `SpecsForge` has done its work, you iterate on development using prompts like:
     ```plaintext
-    Study @SPECS.md for functional specifications and the implementation plan.
-    Study @.cursor/rules for technical requirements and coding standards.
+    Study @SPECS.md for functional specifications.
+    Study @.cursor for technical requirements
 
-    Implement Phase X of the plan.
+    Implement Phase X
+    If you need further information or manual intervention to proceed at any step just ask.
 
-    Create tests for the implemented features.
-    Run and evaluate tests.
+    Create tests
+    Run and evaluate tests
     ```
 6.  **Post-Phase Refinement:** After each phase, I often run a prompt like the following (assuming `pytest` and `pre-commit` are set up):
     ```plaintext
-    Run pytest and fix any issues that arise. Afterwards, run pre-commit run --all-files and address any linting or formatting problems until it succeeds.
+    Run pytest and fix issues as well as warnings. Afterwards run pre-commit run --all-files until it succeeds. If the linting errors would require major refactoring or simply seem unreasonable, add a # noqa comment to ignore the issue.
+    ```
+7.  **Quality Control:** (🗣️ Migoooos)
+    ```plaintext
+    @SPECS.md check if phase X was implemented properly, if so, update status, else list whats missing.
     ```
 
 ## The 'SpecsForge' Custom Mode Explained
@@ -121,7 +126,7 @@ Here's a breakdown of the `SpecsForge` custom mode prompt and its components.
 -   **Tools Configuration:**
     *   Enable: Search (everything)
     *   Enable: Edit (everything)
--   **Recommended Model:** I suggest `claude-3-opus-20240229` (or a similar high-capability model with "thinking" enabled) for this mode, but you can experiment.
+-   **Recommended Model:** I suggest `gemini-2.5-pro-preview-05-06` (or a similar high-capability model with "thinking" enabled) for this mode, but you can experiment.
 
 ### Core Ideas Behind SpecsForge
 
@@ -131,5 +136,3 @@ Here's a breakdown of the `SpecsForge` custom mode prompt and its components.
 -   **Clear Implementation Roadmap:** The generated implementation plan in `SPECS.md` provides a clear, phased approach to development.
 
 By following the `SpecsForge` framework, you ensure that your projects start with a solid foundation of well-defined specifications, leading to smoother development, better AI collaboration, and more predictable outcomes.
-
-*(The `SpecsForge` custom mode prompt and workflow are adapted from my original README and inspired by concepts from Ghuntley's "Groundhog AI" approach.)* 

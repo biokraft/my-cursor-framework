@@ -13,7 +13,7 @@ Crafting Cursor Rules for your technology stack is not a one-time task. Librarie
 ## Strategies for Maintaining and Evolving Rules
 
 1.  **Interactive Refinement (Revisit from Part 1):**
-    *   The principle of [Interactive Rule Development](../01-Cursor-for-Everyone/02-Understanding-Cursor-Rules/02b-Interactive-Rule-Development.md) is paramount here. When you notice Cursor deviating from an intended practice (even if a rule exists), or when you learn a new, better way:
+    *   The principle of Interactive Rule Development is paramount here. When you notice Cursor deviating from an intended practice (even if a rule exists), or when you learn a new, better way:
         1.  Correct the AI in chat.
         2.  Immediately ask Cursor to help you **update the relevant existing rule** or create a new, more specific one.
     *   *Prompt Example:* "Based on our last interaction where we decided to use `NewApproachX` instead of `OldApproachY` for handling Z, please help me update the rule `@.cursor/rules/my-tech-stack-feature-Z.md` to reflect this new best practice."

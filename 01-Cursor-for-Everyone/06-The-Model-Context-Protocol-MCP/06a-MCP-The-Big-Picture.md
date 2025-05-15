@@ -4,7 +4,7 @@ The Model Context Protocol (MCP) is a powerful Cursor feature that allows the AI
 
 ## What is MCP?
 
-![MCP Illustrated: like USB-C for your tools](../../assets/mcp-illustrated.png)
+![MCP Illustrated: like USB-C for your tools](../../assets/mcp-illustrated.jpg)
 
 *Image source: [Composio Blog](https://composio.dev/blog/what-is-model-context-protocol-mcp-explained/)*
 

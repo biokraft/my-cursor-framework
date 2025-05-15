@@ -62,18 +62,8 @@ Let's say you need to integrate a new data visualization library, `Plotly Expres
 
 ## `@Docs` and Cursor Rules
 
-A powerful workflow emerges when you combine `@Docs` with the creation of new Cursor Rules. When defining a rule that pertains to a specific library, framework, or API, you can use `@Docs` to provide the AI with the relevant documentation *during the rule definition process itself*.
+A powerful workflow emerges when you combine `@Docs` with the creation of new Cursor Rules. This involves using `@Docs` to provide the AI with relevant documentation *during the rule definition process itself*, helping to create highly accurate and context-aware rules.
 
-For example, imagine you want to create a Cursor Rule that outlines best practices for using the Jira Multi-Connector Platform (MCP) tools. You could:
-
-1.  Add the official Atlassian MCP documentation to Cursor settings:
-    *   Name: "Atlassian MCP Docs", URL: `<URL to Atlassian MCP documentation>`
-2.  Then, when prompting Cursor to help you draft the rule, reference it in chat:
-    *   `@Docs Atlassian MCP Docs`
-    *   Then prompt: "Help me create a Cursor Rule for Jira MCP usage. It should emphasize best practices for searching issues and creating new ones, based on the Atlassian MCP documentation I just referenced."
-
-This approach allows you to create highly accurate and context-aware rules. The AI can extract key principles, function names, and recommended patterns directly from the authoritative source you provide, leading to more effective and precise custom rules for your projects.
-
-This synergy—using `@Docs` to inform the creation of Cursor Rules—ensures that your custom instructions are not only well-defined but also grounded in the latest official guidelines for the technologies you use. It's a way to go full circle, leveraging documentation to build better, more intelligent rules for Cursor.
+For a detailed guide on how to leverage `@Docs` for auto-generating rules from documentation, please see [Auto-Generating Rules from @Docs](./02-Crafting-Rules-for-Your-Tech-Stack/02b-Auto-Generating-Rules-from-Docs.md).
 
 By mastering the `@Docs` feature, you transform Cursor from a general-purpose AI into a highly specialized assistant that understands the nuances of your specific tech stack, leading to more efficient and accurate development. 

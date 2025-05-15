@@ -9,9 +9,10 @@ The `@Docs` feature allows you to feed specific documentation directly to the AI
 **The Workflow:**
 
 1.  **Identify Key Documentation:** Pinpoint the official documentation pages that cover best practices, core APIs, common patterns, or important conventions for the library/framework you want a rule for.
-2.  **Load Documentation with `@Docs`:** Use the `@Docs add [URL or path]` command to load this documentation into Cursor's context.
-3.  **Prompt for Rule Generation:** Ask Cursor to generate a rule based on the provided documentation.
-4.  **Refine and Save:** Review the AI-generated rule, make any necessary adjustments for clarity, completeness, or project-specific nuances, and then save it to your `.cursor/rules/` directory.
+2.  **Add Documentation Sources:** Add the identified documentation to Cursor's settings, giving each source a memorable name and providing its URL or local path.
+3.  **Reference Documentation with `@Docs`:** In the chat, use `@Docs [Name]` to select the documentation source(s) you added in settings.
+4.  **Prompt for Rule Generation:** Ask Cursor to generate a rule based on the provided documentation.
+5.  **Refine and Save:** Review the AI-generated rule, make any necessary adjustments for clarity, completeness, or project-specific nuances, and then save it to your `.cursor/rules/` directory.
 
 ## Example: Generating a Rule for FastAPI Best Practices
 
@@ -26,19 +27,24 @@ You might find relevant information in sections like:
 
 For this example, let's assume we're interested in rules around path operation functions and Pydantic models.
 
-**Step 2: Load with `@Docs`**
+**Step 2: Add Documentation Sources to Cursor Settings**
+
+Before you can reference documentation in chat, you need to add it to Cursor's settings:
+1. Go to Cursor's settings/preferences.
+2. Find the "Features" or "Docs" section.
+3. Add the FastAPI documentation pages as sources:
+    *   Name: "FastAPI Response Model", URL: `https://fastapi.tiangolo.com/tutorial/response-model/`
+    *   Name: "FastAPI Body", URL: `https://fastapi.tiangolo.com/tutorial/body/`
+    *   Name: "FastAPI Handling Errors", URL: `https://fastapi.tiangolo.com/tutorial/handling-errors/`
+(You might also add the main FastAPI documentation as a single, broader source, e.g., named "FastAPI Official".)
+
+**Step 3: Reference Docs in Chat and Prompt for Rule Generation**
 
 ```plaintext
-@Docs add https://fastapi.tiangolo.com/tutorial/response-model/
-@Docs add https://fastapi.tiangolo.com/tutorial/body/
-@Docs add https://fastapi.tiangolo.com/tutorial/handling-errors/
-```
+@Docs FastAPI Response Model
+@Docs FastAPI Body
+@Docs FastAPI Handling Errors
 
-(You might add more specific pages or the main documentation URL.)
-
-**Step 3: Prompt for Rule Generation**
-
-```plaintext
 Now that you have context from the FastAPI documentation via `@Docs`:
 
 Please draft a new Cursor Rule file named `python-fastapi-best-practices.md`.
@@ -92,6 +98,41 @@ This rule outlines best practices when developing applications with FastAPI, bas
 ```
 
 You would then review this draft, add more details, clarify points, or include project-specific adaptations before saving it as `.cursor/rules/python-fastapi-best-practices.md`.
+
+## Incorporating Master Rules
+
+When generating new rules, it's crucial to ensure they align with your established standards for rule creation and formatting. I use two master rules that define these standards:
+
+*   [@00-cursor-rules.mdc](mdc:.cursor/rules/00-cursor-rules.mdc): General guidelines for all Cursor rules.
+*   [@01-mdc-guidelines.mdc](mdc:.cursor/rules/01-mdc-guidelines.mdc): Specific guidelines for the structure and formatting of MDC (Markdown Configuration) files.
+
+By referencing these master rules in your prompt, you instruct the AI to generate new rules that are consistent with your existing framework.
+
+**Example Prompt Referencing Master Rules:**
+
+Let's extend the FastAPI example. After providing the FastAPI documentation via `@Docs`, you would refine your rule generation prompt to include references to your master rules:
+
+```plaintext
+@Docs FastAPI Response Model
+@Docs FastAPI Body
+@Docs FastAPI Handling Errors
+[@00-cursor-rules.mdc](mdc:.cursor/rules/00-cursor-rules.mdc)
+[@01-mdc-guidelines.mdc](mdc:.cursor/rules/01-mdc-guidelines.mdc)
+
+Now that you have context from the FastAPI documentation and our master rule guidelines:
+
+Please draft a new Cursor Rule file named `python-fastapi-best-practices.mdc`.
+This rule should summarize key best practices for writing FastAPI applications, focusing on:
+1.  Usage of Pydantic models for request and response data validation.
+2.  Properly defining `response_model` in path operation functions.
+3.  Best practices for error handling, including using `HTTPException`.
+4.  Recommendations for dependency injection usage for cleaner code.
+
+Ensure the rule is formatted clearly with headings and examples where appropriate.
+Most importantly, the generated rule (including its frontmatter and content) MUST strictly adhere to the guidelines outlined in [@00-cursor-rules.mdc](mdc:.cursor/rules/00-cursor-rules.mdc) and [@01-mdc-guidelines.mdc](mdc:.cursor/rules/01-mdc-guidelines.mdc). For instance, ensure the frontmatter includes a `description` and valid `globs` (or is left empty if appropriate), and that the markdown content is well-structured.
+```
+
+By explicitly instructing the AI to follow these master rules, you ensure that newly generated rules will be correctly formatted, include necessary frontmatter, and integrate seamlessly into your existing rule structure. This reduces the amount of manual refinement needed.
 
 ## Tips for Effective Rule Generation from Docs
 

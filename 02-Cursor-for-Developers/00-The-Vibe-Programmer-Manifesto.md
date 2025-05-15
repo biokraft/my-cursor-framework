@@ -13,7 +13,7 @@ Instead, we advocate for becoming a **"Vibe Programmer."**
 -   **Directs the AI with Clarity:** You provide clear, well-thought-out specifications and context.
 -   **Critically Reviews AI Output:** You don't blindly accept generated code. You read it, understand it, and question it.
 -   **Owns the Code:** Ultimately, you are responsible for the code that gets committed, regardless of who or what wrote the initial draft.
--   **Learns Continuously:** You use the AI as an opportunity to learn. If it generates a pattern you don't understand, you ask it to explain (perhaps using your "[Learn Mode](../01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04b-Mode-Spotlight-Learn.md)" or "Explain Mode"!).
+-   **Learns Continuously:** You use the AI as an opportunity to learn. If it generates a pattern you don't understand, you ask it to explain (perhaps using your "[Learn Mode](../01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04b-Mode-Spotlight-Learn.md)" or "[Explain Mode](../01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04c-Mode-Spotlight-Explain.md)"!).
 -   **Maintains High Standards:** You ensure that AI-generated code meets your project's quality standards, follows best practices, and is adequately tested.
 -   **Is the Debugger-in-Chief:** When bugs arise, you don't just ask the AI to "fix it." You engage in the debugging process, using the AI as a sophisticated assistant to help identify and resolve issues.
 

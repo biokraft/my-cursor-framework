@@ -3,7 +3,7 @@ Unlock a **new level of AI-assisted development!** Cursor doesn't just *read* do
 Imagine this:
 > Instead of manually crafting every rule, you empower Cursor to do the heavy lifting.
 
-And here's the **masterstroke** 🍆:  
+And here's the **masterstroke** 🍆  
 by guiding this process with your own foundational rule blueprints—like the essential [@00-cursor-rules.mdc](mdc:.cursor/rules/00-cursor-rules.mdc) for universal rule standards and [@01-mdc-guidelines.mdc](mdc:.cursor/rules/01-mdc-guidelines.mdc) for precise MDC file structure—you ensure every AI-generated rule is *born perfectly aligned* with your project's DNA.
 
 This isn't just automation; it's about **instilling your standards into the AI from the get-go**, ensuring consistency and *dramatically* speeding up your workflow.

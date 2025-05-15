@@ -34,6 +34,7 @@ This section is designed for *anyone* using Cursor, regardless of their technica
     -   [MCP Spotlight: DBHub - Universal Database Access](./01-Cursor-for-Everyone/06-The-Model-Context-Protocol-MCP/06c-MCP-Spotlight-DBHub.md)
     -   [Exploring the MCP Ecosystem](./01-Cursor-for-Everyone/06-The-Model-Context-Protocol-MCP/06d-Exploring-the-MCP-Ecosystem.md)
     -   [Quick Look: The @Docs Feature](./01-Cursor-for-Everyone/07-Quick-Look-The-Docs-Feature.md)
+-   💡 [Markdown-Driven Planning & Brainstorming](./01-Cursor-for-Everyone/08-Markdown-Driven-Planning.md)
 
 ---
 

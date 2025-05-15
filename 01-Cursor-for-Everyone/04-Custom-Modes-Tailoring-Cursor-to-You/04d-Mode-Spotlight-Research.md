@@ -59,4 +59,34 @@ Tool Usage:
     *   "Find information on the best practices for API security in 2024."
     *   "Investigate the company 'Acme Corp' and summarize their main products."
 
-Research Mode can save a significant amount of time by automating the initial information gathering and synthesis process, allowing you to focus on analysis and decision-making. 
+Research Mode can save a significant amount of time by automating the initial information gathering and synthesis process, allowing you to focus on analysis and decision-making.
+
+## Recommended Usage Scenarios
+
+Here are some situations where Research Mode excels:
+
+*   **Technology Exploration:** "Investigate the latest advancements in quantum computing and their potential impact on cryptography."
+*   **Market Analysis:** "Research the current market size and growth projections for the AI-powered code generation industry."
+*   **Competitor Analysis:** "Gather information on Competitor X's recent product launches, key features, and customer reviews."
+*   **Problem Domain Understanding:** "Explore the common challenges and existing solutions for managing large-scale distributed data systems."
+*   **Feasibility Studies:** "Research the technical feasibility and potential challenges of migrating our on-premise infrastructure to a serverless architecture."
+*   **Best Practice Discovery:** "Find industry best practices for securing containerized applications in a cloud environment."
+*   **Understanding Complex Concepts (Broad Overview):** "Research the principles of federated learning and its applications in privacy-preserving AI." (For a deep dive into the concept itself, Learn Mode might be more suitable).
+
+## When to Use Research Mode vs. Learn Mode
+
+While both modes help you acquire knowledge, they serve different primary purposes:
+
+*   **Use Research Mode when:**
+    *   You need to gather information broadly on a topic from external sources.
+    *   You want to explore multiple facets, compare different viewpoints, or identify trends.
+    *   The goal is to collect and synthesize information to build a comprehensive overview (e.g., for a report, decision-making, or feature investigation).
+    *   You need to understand the "what" and "why" across a landscape.
+
+*   **Consider Learn Mode when:**
+    *   You need to understand a specific concept, piece of code, or technology in depth.
+    *   The goal is direct comprehension and skill acquisition.
+    *   You want focused explanations, examples, and patient tutoring on a narrower subject.
+    *   You need to understand the "how" of something specific.
+
+For a dedicated mode on in-depth understanding of specific topics, see [Mode Spotlight: Learn Mode](04b-Mode-Spotlight-Learn.md). 

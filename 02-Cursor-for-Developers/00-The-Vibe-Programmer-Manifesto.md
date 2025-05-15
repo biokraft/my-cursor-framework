@@ -13,7 +13,7 @@ Instead, we advocate for becoming a **"Vibe Programmer."**
 -   **Directs the AI with Clarity:** You provide clear, well-thought-out specifications and context.
 -   **Critically Reviews AI Output:** You don't blindly accept generated code. You read it, understand it, and question it.
 -   **Owns the Code:** Ultimately, you are responsible for the code that gets committed, regardless of who or what wrote the initial draft.
--   **Learns Continuously:** You use the AI as an opportunity to learn. If it generates a pattern you don't understand, you ask it to explain (perhaps using your "Learn Mode" or "Explain Mode"!).
+-   **Learns Continuously:** You use the AI as an opportunity to learn. If it generates a pattern you don't understand, you ask it to explain (perhaps using your "[Learn Mode](../01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04b-Mode-Spotlight-Learn.md)" or "Explain Mode"!).
 -   **Maintains High Standards:** You ensure that AI-generated code meets your project's quality standards, follows best practices, and is adequately tested.
 -   **Is the Debugger-in-Chief:** When bugs arise, you don't just ask the AI to "fix it." You engage in the debugging process, using the AI as a sophisticated assistant to help identify and resolve issues.
 
@@ -30,7 +30,7 @@ In essence: **Yes, the AI can write a lot of the code, BUT you, the developer, m
 
 As we explore advanced techniques for using Cursor in development:
 
--   **Embrace Augmentation, Not Abdication:** Think of Cursor as an incredibly smart pair programmer, a research assistant, and a productivity multiplier – but you are still the lead architect and quality assurance.
+-   **Embrace Augmentation, Not Abdication:** Think of Cursor as an incredibly smart pair programmer, a [research assistant](../01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04d-Mode-Spotlight-Research.md), and a productivity multiplier – but you are still the lead architect and quality assurance.
 -   **Leverage, Learn, Lead:** Leverage the AI's capabilities, learn from its outputs and explanations, and lead the development process with your expertise and critical judgment.
 
 This manifesto sets the stage for how we'll approach topics like mastering the `@Docs` feature, crafting tech-stack specific rules, and using the `SpecsForge` framework. The goal is not just to get Cursor to write code, but to help *you* write *better* code, faster and more intelligently.

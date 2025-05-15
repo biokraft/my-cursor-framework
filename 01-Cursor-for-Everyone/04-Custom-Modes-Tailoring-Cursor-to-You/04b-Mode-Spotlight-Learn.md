@@ -62,3 +62,21 @@ Tool Usage:
     *   "Tell me about the basics of Docker."
 
 By creating a dedicated Learn Mode, you make the process of acquiring new knowledge more interactive, efficient, and enjoyable within your Cursor environment. 
+
+## When to Use Learn Mode vs. Research Mode
+
+While both modes help you acquire knowledge, they serve different primary purposes:
+
+*   **Use Learn Mode when:**
+    *   You need to understand a specific concept, piece of code, or technology in depth.
+    *   The goal is direct comprehension and skill acquisition.
+    *   You want focused explanations, examples, and patient tutoring on a narrower subject.
+    *   You need to understand the "how" of something specific.
+
+*   **Consider Research Mode when:**
+    *   You need to gather information broadly on a topic from external sources.
+    *   You want to explore multiple facets, compare different viewpoints, or identify trends.
+    *   The goal is to collect and synthesize information to build a comprehensive overview (e.g., for a report, decision-making, or feature investigation).
+    *   You need to understand the "what" and "why" across a landscape.
+
+For a dedicated mode on gathering and synthesizing information broadly, see [Mode Spotlight: Research Mode](04d-Mode-Spotlight-Research.md). 

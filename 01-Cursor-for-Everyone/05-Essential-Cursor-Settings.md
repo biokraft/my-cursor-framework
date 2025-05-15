@@ -41,7 +41,7 @@ A small but satisfying feature that adds a touch of positive reinforcement to yo
 -   **What it is (as per Cursor settings):** "Play sound on finish (BETA) - Play a sound when a chat response is completed."
 -   **Why it's nice:**
     *   **Auditory Cue:** Lets you know when a potentially longer AI operation has finished without needing to constantly watch the screen.
-    *   **Dopamine Hits:** As I like to put it, "It just releases nice little amounts of dopamine when the vibe coding is progressing!"
+    *   **Dopamine Hits:** As I like to put it, "It releases nice little bumps of dopamine when you realise progress is being made!"
 -   **Recommendation:** Enable this for a pleasant and informative auditory feedback loop.
 
     ![Play Sound on Finish Setting](../assets/play_sound_on_finish.png)

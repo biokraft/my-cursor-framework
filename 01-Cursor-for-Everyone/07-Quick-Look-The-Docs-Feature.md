@@ -9,7 +9,6 @@ Essentially, the `@Docs` feature lets you tell Cursor: "Hey, when you're helping
 You can typically point `@Docs` to:
 
 -   **Web URLs:** Links to online documentation pages (e.g., official library APIs, framework guides, standards specifications).
--   **Local Files/Folders:** Markdown files, text files, or even entire folders of documentation within your project or on your local system.
 
 When you use `@Docs`, Cursor will prioritize the information from these specified sources when generating responses, code, or explanations related to your query.
 

@@ -40,7 +40,7 @@ To use the `@Docs` feature, you first need to add your documentation sources thr
 2.  Find the section related to "Features" or specifically "Docs".
 3.  Here, you can add a new documentation source. You'll typically provide:
     *   A descriptive **name** for this documentation (e.g., "FastAPI Official Docs", "My Project's Style Guide"). This name is what you'll use to reference it later.
-    *   The **URL** to the online documentation or the **path** to a local file or folder.
+    *   The **URL** to the online documentation 
 
 Once a documentation source is added and named in the settings, you can reference it in the chat:
 

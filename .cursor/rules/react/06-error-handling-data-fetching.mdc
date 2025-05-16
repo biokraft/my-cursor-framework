@@ -1,0 +1,270 @@
+---
+description: React Error Handling & Data Fetching: Patterns for API calls, loading states, and error display.
+globs: **/*.tsx,**/*.jsx
+alwaysApply: false
+---
+# React: Error Handling & Data Fetching Patterns
+
+Consistent error handling and data fetching make applications more robust and user-friendly.
+
+## 1. Data Fetching
+
+- **Use `useEffect` for data fetching** in functional components when the component mounts or specific dependencies change.
+- Maintain loading, data, and error states using `useState`.
+
+```typescript jsx
+import React, { useState, useEffect } from 'react';
+
+interface Post {
+  id: number;
+  title: string;
+  body: string;
+}
+
+const PostViewer: React.FC<{ postId: number }> = ({ postId }) => {
+  const [post, setPost] = useState<Post | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data: Post = await response.json();
+        setPost(data);
+      } catch (e: any) {
+        setError(e.message || 'Failed to fetch post.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPost();
+  }, [postId]); // Re-fetch if postId changes
+
+  if (loading) {
+    return <p>Loading post...</p>;
+  }
+
+  if (error) {
+    return <p style={{ color: 'red' }}>Error: {error}</p>;
+  }
+
+  if (!post) {
+    return <p>No post found.</p>;
+  }
+
+  return (
+    <div>
+      <h1>{post.title}</h1>
+      <p>{post.body}</p>
+    </div>
+  );
+};
+
+export default PostViewer;
+```
+
+### 1.1. Aborting Fetches
+- For fetch requests in `useEffect`, provide a cleanup mechanism to abort the request if the component unmounts or dependencies change before the request completes. This prevents attempting to update state on an unmounted component.
+
+```typescript jsx
+useEffect(() => {
+  const controller = new AbortController();
+  const signal = controller.signal;
+
+  const fetchPost = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`, { signal });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data: Post = await response.json();
+      setPost(data);
+    } catch (e: any) {
+      if (e.name === 'AbortError') {
+        console.log('Fetch aborted');
+      } else {
+        setError(e.message || 'Failed to fetch post.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchPost();
+
+  return () => {
+    controller.abort(); // Abort fetch on cleanup
+  };
+}, [postId]);
+```
+
+### 1.2. Abstracting Data Fetching Logic
+- For complex applications, consider abstracting data fetching logic into custom hooks (e.g., `useFetch`, `useQuery`) or using a dedicated data fetching library (e.g., React Query, SWR) to handle caching, refetching, and other advanced features.
+
+```typescript jsx
+// Example: Simplified custom hook for fetching
+function useFetch<T>(url: string, options?: RequestInit) {
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(url, { ...options, signal });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const result: T = await response.json();
+        setData(result);
+      } catch (e: any) {
+        if (e.name !== 'AbortError') {
+          setError(e.message || 'Failed to fetch data.');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      controller.abort();
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url]); // Consider stringifying options if it can change and should trigger refetch
+
+  return { data, loading, error };
+}
+
+// Usage of custom hook
+const UserProfile: React.FC<{ userId: string }> = ({ userId }) => {
+  const { data: user, loading, error } = useFetch<User>(`/api/users/${userId}`);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+  if (!user) return <p>No user found.</p>;
+
+  return <div>{user.name}</div>;
+};
+```
+
+## 2. Error Handling in Components
+
+### 2.1. Displaying Errors
+- Clearly communicate errors to the user.
+- Provide user-friendly error messages instead of technical details where appropriate.
+- Consider dedicated UI components for displaying errors (e.g., toast notifications, inline messages).
+
+### 2.2. Error Boundaries
+- Use Error Boundaries to catch JavaScript errors anywhere in their child component tree, log those errors, and display a fallback UI instead of the component tree that crashed.
+- Error Boundaries are React components that implement either or both of the lifecycle methods `static getDerivedStateFromError()` or `componentDidCatch()`.
+- **Error Boundaries do not catch errors for:**
+  - Event handlers (use regular try/catch)
+  - Asynchronous code (e.g., `setTimeout` or `requestAnimationFrame` callbacks)
+  - Server-side rendering
+  - Errors thrown in the error boundary itself (rather than its children)
+
+```typescript jsx
+// Example Error Boundary Component (Class Component required for these lifecycle methods)
+import React, { Component, ErrorInfo, ReactNode } from 'react';
+
+interface Props {
+  children: ReactNode;
+  fallbackUI?: ReactNode;
+}
+
+interface State {
+  hasError: boolean;
+  error?: Error;
+}
+
+class ErrorBoundary extends Component<Props, State> {
+  public state: State = {
+    hasError: false,
+  };
+
+  public static getDerivedStateFromError(error: Error): State {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true, error };
+  }
+
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    // You can also log the error to an error reporting service
+    console.error("Uncaught error:", error, errorInfo);
+    // Sentry.captureException(error, { extra: errorInfo });
+  }
+
+  public render() {
+    if (this.state.hasError) {
+      return this.props.fallbackUI || <h1>Something went wrong. Details: {this.state.error?.message}</h1>;
+    }
+
+    return this.props.children;
+  }
+}
+
+// How to use it:
+// <ErrorBoundary fallbackUI={<p>Sorry, this section is unavailable.</p>}>
+//   <MyWidget />
+// </ErrorBoundary>
+```
+
+## 3. Input Validation Errors
+
+- Display validation errors close to the respective input fields.
+- Provide clear messages on how to correct the error.
+- Consider using a form management library (e.g., React Hook Form, Formik) for handling complex form validation and error display.
+
+```typescript jsx
+const RegistrationForm: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState<string | null>(null);
+
+  const handleSubmit = () => {
+    if (!email.includes('@')) {
+      setEmailError('Please enter a valid email address.');
+      return;
+    }
+    setEmailError(null);
+    // Proceed with form submission
+    console.log('Form submitted with email:', email);
+  };
+
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+      <div>
+        <label htmlFor="email">Email:</label>
+        <input 
+          type="email" 
+          id="email" 
+          value={email} 
+          onChange={(e) => setEmail(e.target.value)} 
+          aria-describedby={emailError ? "email-error" : undefined}
+        />
+        {emailError && <p id="email-error" style={{ color: 'red' }}>{emailError}</p>}
+      </div>
+      <button type="submit">Register</button>
+    </form>
+  );
+};
+```
+
+## 4. Logging and Monitoring
+
+- Integrate with an error tracking service (e.g., Sentry, Bugsnag) to capture and monitor errors in production.
+- Log relevant context with errors to help with debugging.

@@ -1,0 +1,164 @@
+---
+description: TypeScript Coding Style: Guidelines for general TypeScript code style, consistency, and readability.
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
+---
+# TypeScript Coding Style
+
+## Introduction
+This guide outlines general coding style conventions for TypeScript to ensure consistency, readability, and maintainability across the project. Many of these may also be enforced by linters (like ESLint) and formatters (like Prettier).
+
+## Guidelines
+
+### Use `let` and `const` Appropriately
+- Prefer `const` for variables whose values will not be reassigned.
+- Use `let` only for variables that need to be reassigned.
+- Avoid using `var`.
+
+```typescript
+// Good
+const MAX_RETRIES = 3;
+let currentRetryCount = 0;
+
+// Avoid
+var oldStyleVariable = "someValue"; // Avoid var
+```
+
+### Arrow Functions
+- Prefer arrow functions (`=>`) for anonymous functions and when you need to preserve the lexical `this` context.
+- Use regular `function` declarations for top-level functions or methods in classes where `this` context is important and should be dynamic (though arrow functions in class properties are also common for auto-binding `this`).
+
+```typescript
+// Good: Arrow function for a callback
+const numbers = [1, 2, 3];
+const doubled = numbers.map(num => num * 2);
+
+// Good: Arrow function as a class property for auto-binding `this`
+class MyComponent {
+  private count = 0;
+  handleClick = () => {
+    this.count++; // 'this' correctly refers to the class instance
+  };
+}
+
+// Good: Regular function for a method that might be extended or called with super()
+class BaseClass {
+  log() {
+    console.log("Base log");
+  }
+}
+```
+
+### Strict Equality (`===` and `!==`)
+- Always use strict equality (`===`) and strict inequality (`!==`) operators instead of loose equality (`==`) and loose inequality (`!=`) to avoid type coercion issues.
+
+```typescript
+// Good
+if (value === 5) { /* ... */ }
+if (input !== null) { /* ... */ }
+
+// Avoid
+if (value == 5) { /* Potential type coercion issues */ }
+```
+
+### Code Formatting (Consistency is Key)
+- While Prettier usually handles this, be mindful of:
+  - **Indentation**: Consistent use of spaces or tabs (project typically decides, often 2 or 4 spaces).
+  - **Line Length**: Keep lines to a reasonable length (e.g., 80-120 characters).
+  - **Braces**: Use braces for all control flow statements (`if`, `for`, `while`), even for single lines, to improve clarity and prevent errors.
+  - **Spacing**: Consistent spacing around operators, commas, and colons.
+
+```typescript
+// Good: Consistent formatting
+if (isValid) {
+  for (const item of items) {
+    processItem(item);
+  }
+}
+
+// Avoid: Inconsistent or unclear formatting
+if(isValid) // Missing braces, can lead to errors if another line is added
+for (let i=0;i<items.length;i++) processItem(items[i]); // Hard to read
+```
+
+### Comments
+- Write clear and concise comments to explain complex logic, assumptions, or workarounds.
+- Avoid commenting obvious code.
+- Use `//` for single-line comments and `/* ... */` for multi-line comments.
+- Use JSDoc-style comments (`/** ... */`) for functions, classes, and interfaces to describe their purpose, parameters, and return values. This aids in documentation generation and editor intellisense.
+
+```typescript
+/**
+ * Calculates the total price of items in a shopping cart.
+ * @param items - An array of cart items.
+ * @param discount - An optional discount percentage (e.g., 0.10 for 10%).
+ * @returns The total price after applying the discount.
+ */
+function calculateTotalPrice(items: CartItem[], discount?: number): number {
+  // Ensure discount is valid, default to 0 if not provided or invalid
+  const effectiveDiscount = (discount && discount > 0 && discount < 1) ? discount : 0;
+  let total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  total = total * (1 - effectiveDiscount);
+  return total;
+}
+```
+
+### Destructuring
+- Use destructuring for objects and arrays to improve readability and make it easier to access properties or elements.
+
+```typescript
+// Good: Object destructuring
+const { userName, email } = userProfile;
+
+function printCoordinates({ x, y }: { x: number; y: number }) {
+  console.log(`(${x}, ${y})`);
+}
+
+// Good: Array destructuring
+const [first, second] = myArray;
+```
+
+### Null and Undefined Handling
+- Be explicit about handling `null` and `undefined` values.
+- Use optional chaining (`?.`) and nullish coalescing (`??`) where appropriate (requires ES2020 or later target in `tsconfig.json`).
+
+```typescript
+// Optional Chaining
+const streetName = user.address?.street?.name;
+
+// Nullish Coalescing (provides a default if left-hand side is null or undefined)
+const displayName = user.nickname ?? "Guest";
+
+// Explicit checks
+if (user.name !== null && user.name !== undefined) {
+  // ...
+}
+```
+
+### Prefer `for...of` for Arrays
+- For iterating over array values, prefer `for...of` over traditional `for` loops with an index, unless you specifically need the index for other purposes.
+- For iterating over object keys, use `for...in` (with `hasOwnProperty` check if necessary) or `Object.keys()`, `Object.values()`, `Object.entries()`.
+
+```typescript
+const colors = ["red", "green", "blue"];
+
+// Good: for...of
+for (const color of colors) {
+  console.log(color);
+}
+
+// If index is needed
+for (let i = 0; i < colors.length; i++) {
+  console.log(`Color at index ${i}: ${colors[i]}`);
+}
+// or
+colors.forEach((color, index) => {
+  console.log(`Color at index ${index}: ${color}`);
+});
+```
+
+## Tools
+- **ESLint**: Configure ESLint with appropriate TypeScript plugins (`@typescript-eslint/eslint-plugin`) to enforce many of these style rules automatically.
+- **Prettier**: Use Prettier for consistent code formatting.
+
+Ensure your project has these tools configured and that they are run regularly (e.g., via pre-commit hooks).

@@ -1,0 +1,95 @@
+---
+description: TypeScript Naming Conventions: Guidelines for naming variables, functions, classes, interfaces, enums, and type aliases in TypeScript.
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
+---
+# TypeScript Naming Conventions
+
+## Introduction
+Consistent naming conventions are crucial for code readability and maintainability. This guide outlines the standard naming practices for TypeScript projects.
+
+## Guidelines
+
+### General Rules
+- Use descriptive and meaningful names.
+- Avoid abbreviations that are not widely understood.
+- Be consistent across the codebase.
+
+### Variables and Functions
+- Use **camelCase** for variable and function names.
+  - Example: `let itemCount: number;`, `function calculateTotal(): number;`
+- For private or internal variables/functions, consider prefixing with an underscore `_` if it aligns with team conventions (though TypeScript's `private` keyword is preferred for class members).
+  - Example: `private _internalCounter: number;`
+
+### Constants
+- Use **UPPER_CASE_SNAKE_CASE** for constants (values that are truly immutable and global or widely used).
+  - Example: `const MAX_USERS = 100;`
+- For constants defined within a local scope or class that are not intended to be globally unique, camelCase is often acceptable.
+  - Example: `class MyComponent { private readonly defaultTimeout = 5000; }`
+
+### Classes and Enums
+- Use **PascalCase** (also known as UpperCamelCase) for class and enum names.
+  - Example: `class UserAccount {}`, `enum UserRole { Admin, Editor, Viewer }`
+
+### Interfaces and Type Aliases
+- Use **PascalCase** for interface and type alias names.
+  - Example: `interface UserProfile {}`, `type UserId = string | number;`
+- Some teams prefer prefixing interfaces with `I` (e.g., `IUserProfile`). Follow project/team conventions if established. However, the official TypeScript guidance does not recommend `I` prefixes.
+
+### Generic Type Parameters
+- Use **PascalCase**, often single uppercase letters like `T`, `U`, `K`, `V`, `E`.
+- For more descriptive generic parameters, use PascalCase.
+  - Example: `function identity<Type>(arg: Type): Type { return arg; }`
+  - Example: `interface Dictionary<KeyType, ValueType> { ... }`
+
+### File Names
+- Use **kebab-case** for file names (e.g., `user-profile.component.ts`, `api-client.ts`).
+- For React components, **PascalCase** (e.g., `UserProfile.tsx`) is also common and acceptable, especially if the file exports a single component of that name. Choose one style and stick to it.
+
+## Examples
+
+### Good Examples
+```typescript
+// Variables and Functions
+let userName: string = "testUser";
+function getUserDetails(userId: string): UserProfile {
+  // ...
+}
+
+// Constants
+const DEFAULT_TIMEOUT: number = 5000;
+
+// Classes and Enums
+class ProductService {
+  // ...
+}
+enum PaymentStatus {
+  Pending,
+  Completed,
+  Failed
+}
+
+// Interfaces and Type Aliases
+interface Order {
+  orderId: string;
+  items: Product[];
+}
+type ProductId = string;
+
+// File Name: user-service.ts or Product.tsx
+```
+
+### Examples to Avoid
+```typescript
+// Variables and Functions
+let USERNAME: string; // Should be camelCase
+function Get_User_Details(USER_ID: string) {} // Should be camelCase, PascalCase for parameters
+
+// Classes and Enums
+class product_service {} // Should be PascalCase
+enum payment_status {} // Should be PascalCase
+
+// Interfaces and Type Aliases
+interface order_details {} // Should be PascalCase
+type PRODUCT_ID = string; // Should be PascalCase for types
+```

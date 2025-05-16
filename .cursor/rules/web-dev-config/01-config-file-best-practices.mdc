@@ -1,0 +1,113 @@
+---
+description: Web Development Configuration Files: Best practices for consistency, clarity, and maintainability in project configuration files
+globs: vite.config.ts,vite.config.js,eslint.config.js,eslint.config.cjs,postcss.config.js,tailwind.config.js,tailwind.config.ts,tsconfig.json,tsconfig.*.json,babel.config.js,babel.config.cjs,.prettierrc.js,.prettierrc.cjs,.prettierrc.json,*.config.js,*.config.ts
+alwaysApply: false
+---
+# Configuration File Best Practices
+
+## Introduction
+
+Configuration files are critical to any web development project. They define how tools build, lint, test, and manage the codebase. Adhering to best practices for these files ensures consistency, maintainability, and easier collaboration. This rule applies to common configuration files like `vite.config.ts`, `eslint.config.js`, `postcss.config.js`, `tailwind.config.js`, `tsconfig.json`, etc.
+
+## Guidelines
+
+### 1. Consistency
+- **Across Projects**: Where applicable and sensible, strive for similar configuration structures and conventions across different projects. This reduces the learning curve when switching contexts.
+- **Within a Project**: Maintain a consistent style and approach within all configuration files of a single project.
+
+### 2. Clarity and Readability
+- **Descriptive Naming**: Use clear and descriptive names for configuration options, variables, and custom scripts.
+- **Formatting**: Ensure consistent formatting (indentation, spacing) to improve readability. Consider using a formatter if applicable (e.g., Prettier for JSON or JS-based configs).
+- **Modularity**: For complex configurations (e.g., Webpack, sometimes Vite or ESLint), break them down into smaller, manageable, and potentially reusable parts.
+
+### 3. Comments and Documentation
+- **Explain Non-Obvious Configurations**: Add comments to explain parts of the configuration that are not immediately obvious. This includes:
+    - The reasoning behind a specific setting.
+    - Links to relevant documentation or discussions.
+    - Workarounds for known issues.
+- **Avoid Over-Commenting**: Do not comment on obvious settings that are standard for the tool.
+- **Keep Comments Up-to-Date**: Ensure comments are updated or removed when the configuration changes.
+
+### 4. Version Control
+- **Track Changes**: Always commit configuration files to version control.
+- **Review Changes**: Carefully review changes to configuration files during code reviews, as they can have significant impact on the project.
+
+### 5. Environment-Specific Configurations
+- **Use Environment Variables**: For settings that differ between environments (development, staging, production) or contain sensitive information (API keys), use environment variables (e.g., via `.env` files loaded by tools like Vite). Do not commit sensitive data directly into configuration files.
+- **Clear Separation**: If multiple configuration files are used for different environments, ensure the mechanism for selecting the correct one is clear and robust.
+
+### 6. Dependency Management
+- **Explicit Versions**: Ensure that versions of tools and plugins referred to in configurations are explicitly managed in your project's `package.json`.
+- **Stay Updated**: Regularly review and update configuration-related dependencies to benefit from new features and security patches, but test thoroughly after updates.
+
+## Examples
+
+### Commenting in `vite.config.ts`
+
+```typescript
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    port: 3000, // Changed from default 5173 for consistency with other services
+  },
+  resolve: {
+    alias: {
+      // Purpose: To simplify import paths for commonly used directories
+      '@': '/src',
+      '@components': '/src/components',
+      // Add other aliases as needed
+    },
+  },
+  // Example of a more complex or non-obvious setting that warrants a comment
+  build: {
+    rollupOptions: {
+      // This optimization is added to reduce chunk size for legacy browser support.
+      // See: [link to relevant issue or documentation]
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return id.toString().split('node_modules/')[1].split('/')[0].toString();
+          }
+        }
+      }
+    }
+  }
+})
+```
+
+### Commenting in `eslint.config.js` (using the new flat config format)
+
+```javascript
+// eslint.config.js
+import globals from "globals";
+import pluginJs from "@eslint/js";
+import pluginReactConfig from "eslint-plugin-react/configs/recommended.js";
+
+export default [
+  { languageOptions: { globals: globals.browser } },
+  pluginJs.configs.recommended,
+  pluginReactConfig,
+  {
+    files: ["**/*.jsx", "**/*.js"], // Apply React rules only to JS/JSX files
+    settings: {
+      react: {
+        version: "detect", // Automatically detect the React version
+      },
+    },
+    rules: {
+      "react/react-in-jsx-scope": "off", // Not needed with modern React/Vite
+      "react/prop-types": "warn",      // Prefer TypeScript for prop types, but warn if JS props are missing
+      // This rule is disabled because it conflicts with our auto-formatter.
+      // The formatter handles this aspect of code style.
+      "indent": "off",
+    }
+  }
+];
+```
+
+## Review and Maintenance
+Regularly review your project's configuration files to ensure they are still relevant, optimal, and align with current best practices and project needs.

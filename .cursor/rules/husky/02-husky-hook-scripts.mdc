@@ -1,0 +1,122 @@
+---
+description: Husky Git Hooks: Best practices for writing, maintaining, and optimizing pre-commit/pre-push hook scripts using Husky.
+globs: .husky/*,package.json
+alwaysApply: false
+---
+# Husky Hook Script Guidelines
+
+## Introduction
+
+Git hooks are scripts that Git executes before or after events such as `commit`, `push`, and `receive`. Husky is a popular tool that makes it easy to manage and share Git hooks in your project by integrating them into your `package.json` and `.husky/` directory.
+
+These guidelines help ensure your Husky-managed Git hooks are effective, maintainable, and don't unduly slow down your development workflow.
+
+## Guidelines
+
+### 1. Keep Hooks Focused and Fast
+- **Single Responsibility**: Each hook script should ideally perform a single, well-defined task (e.g., linting, testing, commit message validation).
+- **Performance**: Hooks, especially `pre-commit` and `pre-push`, should run as quickly as possible. Slow hooks can frustrate developers and discourage their use.
+    - For `pre-commit` hooks, use tools like `lint-staged` to run linters/formatters only on staged files, not the entire project.
+    - Defer long-running tasks (e.g., extensive test suites) to `pre-push` hooks or CI pipelines if they significantly slow down commits.
+
+### 2. Script Readability and Maintenance
+- **Clarity**: Write clear, understandable shell scripts or Node.js scripts.
+- **Comments**: Add comments to explain complex logic or non-obvious commands within your hook scripts.
+- **Error Handling**: Ensure scripts exit with a non-zero status code if a check fails. This prevents the Git action (e.g., commit, push) from proceeding.
+    - Provide clear error messages that help the developer understand what went wrong and how to fix it.
+
+### 3. Cross-Platform Compatibility
+- If your team uses different operating systems (Windows, macOS, Linux), ensure your hook scripts are cross-platform compatible.
+    - Prefer Node.js scripts or use shell features available across common shells (like Bash, Zsh, and Git Bash on Windows).
+    - Be mindful of path differences and command availability.
+
+### 4. Managing Dependencies
+- If hook scripts rely on specific Node.js packages (e.g., `eslint`, `prettier`, `commitlint`), ensure these are listed as project dependencies (`devDependencies`) in `package.json`.
+- Use `npx` or scripts defined in `package.json` to run these tools, ensuring the project-local versions are used.
+
+### 5. Recommended Hooks and Tools
+
+- **`pre-commit`**: Ideal for:
+    - **Linting and Formatting**: Use `lint-staged` to run tools like ESLint, Prettier, Stylelint on staged files.
+        Example `lint-staged` configuration in `package.json` or `.lintstagedrc.js`:
+        ```json
+        {
+          "*.{js,jsx,ts,tsx}": ["eslint --fix", "prettier --write"],
+          "*.{css,scss}": ["stylelint --fix", "prettier --write"],
+          "*.json": "prettier --write"
+        }
+        ```
+        Your `.husky/pre-commit` hook would then simply be:
+        ```sh
+        #!/bin/sh
+        . "$(dirname -- "$0")/_/husky.sh"
+
+        npx lint-staged
+        ```
+    - **Simple pre-checks**: Quick tests or checks that don't take much time.
+
+- **`commit-msg`**: Ideal for:
+    - **Commit Message Validation**: Enforce commit message conventions (e.g., Conventional Commits) using tools like `commitlint`.
+        Example `.husky/commit-msg` hook:
+        ```sh
+        #!/bin/sh
+        . "$(dirname -- "$0")/_/husky.sh"
+
+        npx --no-install commitlint --edit "$1"
+        ```
+        Ensure you have a `commitlint.config.js` (or similar) defining your rules.
+        Refer to the [Commit Message Conventions Rule](mdc:.cursor/rules/husky/01-commit-message-conventions.mdc).
+
+- **`pre-push`**: Ideal for:
+    - **Running Tests**: Execute your test suite (or a subset of critical tests) before pushing code to a remote repository.
+        Example `.husky/pre-push` hook:
+        ```sh
+        #!/bin/sh
+        . "$(dirname -- "$0")/_/husky.sh"
+
+        npm run test # Or your specific test command
+        ```
+    - **Security Checks**: Run vulnerability scanners or other security-related checks.
+
+### 6. Bypassing Hooks (Use with Caution)
+- Developers can bypass hooks using Git options like `git commit --no-verify` or `git push --no-verify`.
+- While sometimes necessary, frequent bypassing might indicate that hooks are too slow or overly restrictive. It's better to address the root cause.
+
+### 7. Husky Configuration
+- Ensure Husky is correctly installed and configured as per its documentation (`npm install husky --save-dev` and `npx husky init`).
+- Hooks should be executable (`chmod +x .husky/*`). Husky usually handles this.
+
+## Example: `.husky/pre-commit` with `lint-staged`
+
+```sh
+#!/bin/sh
+# .husky/pre-commit
+
+# Load Husky environment
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Check if lint-staged is installed
+if ! command -v npx &> /dev/null || ! npx lint-staged --version &> /dev/null; then
+  echo "lint-staged is not available. Please install it (npm install --save-dev lint-staged) or ensure npx can find it."
+  exit 1
+fi
+
+echo "Running lint-staged..."
+npx lint-staged
+
+# Check the exit code of lint-staged
+if [ $? -ne 0 ]; then
+  echo "lint-staged found issues. Please fix them before committing."
+  exit 1
+fi
+
+echo "lint-staged completed successfully."
+exit 0
+```
+
+## Testing Hooks
+
+- Manually trigger hooks by attempting the Git action (e.g., make a change and try to commit).
+- For more complex hooks, consider writing small test scripts that simulate the conditions under which the hook runs.
+
+By following these guidelines, you can leverage Husky and Git hooks to improve code quality and development practices without hindering productivity.

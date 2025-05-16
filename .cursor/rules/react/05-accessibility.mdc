@@ -1,0 +1,175 @@
+---
+description: React Accessibility (a11y): Guidelines for creating accessible components using semantic HTML, ARIA, and keyboard navigation.
+globs: **/*.tsx,**/*.jsx
+alwaysApply: false
+---
+# React: Accessibility (a11y) Guidelines
+
+Building accessible web applications is crucial to ensure that people of all abilities can use them. These guidelines provide a starting point for creating accessible React components.
+
+## 1. Semantic HTML
+
+- **Use semantic HTML elements** whenever possible. Native browser elements often have built-in accessibility features (e.g., keyboard navigation, ARIA roles).
+  - Use `<button>` for clickable actions, not `<div>` or `<span>` with click handlers.
+  - Use `<nav>` for navigation sections, `<main>` for main content, `<aside>` for sidebars, `<footer>` for footers, etc.
+  - Use heading elements (`<h1>` - `<h6>`) to structure content hierarchically.
+
+```typescript jsx
+// Good - semantic button
+const SubmitButton = ({ onClick, children }) => (
+  <button onClick={onClick}>{children}</button>
+);
+
+// Bad - non-semantic element for action
+const BadSubmitButton = ({ onClick, children }) => (
+  <div onClick={onClick} role="button" tabIndex={0}>{children}</div>
+  // Requires manual ARIA role, tabIndex, and keyboard event handling (e.g., Enter/Space)
+);
+
+// Good - semantic list
+const NavMenu = ({ items }) => (
+  <nav aria-label="Main navigation">
+    <ul>
+      {items.map(item => (
+        <li key={item.id}><a href={item.href}>{item.label}</a></li>
+      ))}
+    </ul>
+  </nav>
+);
+```
+
+## 2. ARIA (Accessible Rich Internet Applications)
+
+- Use ARIA attributes to enhance accessibility when semantic HTML alone is not sufficient, especially for custom components or dynamic UI updates.
+- **Do not overuse ARIA.** Incorrect ARIA is worse than no ARIA.
+- Common ARIA attributes:
+  - `role`: Defines the type of widget or structure (e.g., `role="dialog"`, `role="tablist"`).
+  - `aria-label`, `aria-labelledby`: Provide accessible names for elements.
+  - `aria-describedby`: Provides additional descriptive text.
+  - `aria-hidden`: Hides an element from assistive technologies.
+  - `aria-expanded`, `aria-selected`, `aria-checked`, `aria-disabled`: Indicate the state of interactive elements.
+
+```typescript jsx
+// Example: Custom Checkbox with ARIA
+const CustomCheckbox = ({ id, label, checked, onChange }) => (
+  <div className="custom-checkbox">
+    <input 
+      type="checkbox" 
+      id={id} 
+      checked={checked} 
+      onChange={onChange} 
+      className="visually-hidden" // Hide default, style custom one
+    />
+    <label htmlFor={id} className="checkbox-label">
+      <span 
+        role="checkbox"
+        aria-checked={checked}
+        tabIndex={0} // Make the span focusable
+        onKeyDown={(e) => (e.key === ' ' || e.key === 'Enter') && onChange(!checked)}
+        className={`checkbox-visual ${checked ? 'checked' : ''}`}
+      ></span>
+      {label}
+    </label>
+  </div>
+);
+```
+
+## 3. Image `alt` Text
+
+- **Always provide descriptive `alt` text for `<img>` elements.**
+  - If the image is purely decorative and adds no information, use an empty alt attribute (`alt=""`).
+  - If the image conveys content, the `alt` text should describe the image's purpose or meaning.
+
+```typescript jsx
+// Good - descriptive alt text
+<img src="/user-avatar.jpg" alt="User Jane Doe's avatar" />
+
+// Good - decorative image
+<img src="/decorative-swoosh.png" alt="" />
+
+// Bad - missing or unhelpful alt text
+<img src="/graph.png" alt="graph" /> // Needs more description of what the graph shows
+```
+
+## 4. Keyboard Navigation & Focus Management
+
+- Ensure all interactive elements are focusable and operable via the keyboard.
+  - Native elements like `<button>`, `<a>`, `<input>` are focusable by default.
+  - For custom interactive elements (e.g., a `<div>` acting as a button), add `tabIndex="0"` to make it focusable.
+  - Use `tabIndex="-1"` to make an element programmatically focusable but not part of the default tab order.
+- **Visible focus indicators are crucial.** Do not remove default browser outlines (`outline: none;`) without providing a clear, custom alternative.
+- Manage focus programmatically when UI changes occur (e.g., opening/closing modals, navigating between views).
+
+```typescript jsx
+// Example: Modal focus management (simplified)
+const Modal = ({ isOpen, onClose, children }) => {
+  const modalRef = React.useRef(null);
+  const previousFocusRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      previousFocusRef.current = document.activeElement;
+      modalRef.current?.focus(); // Focus the modal itself or a focusable element within
+      // Implement focus trap here
+    } else {
+      previousFocusRef.current?.focus(); // Return focus to previously focused element
+    }
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div ref={modalRef} tabIndex={-1} role="dialog" aria-modal="true">
+      {/* Trap focus within this div */} 
+      {children}
+      <button onClick={onClose}>Close</button>
+    </div>
+  );
+};
+```
+
+## 5. Form Labels & Inputs
+
+- **All form inputs (`<input>`, `<textarea>`, `<select>`) must have associated labels.**
+  - Use `<label htmlFor="inputId">` and ensure the `id` matches the input's `id`.
+  - Alternatively, wrap the input within the `<label>` element.
+- Use `fieldset` and `legend` to group related form controls.
+- Provide clear instructions and error messages.
+
+```typescript jsx
+// Good - explicit label association
+<div>
+  <label htmlFor="username">Username:</label>
+  <input type="text" id="username" name="username" />
+</div>
+
+// Good - implicit label association
+<label>
+  Email:
+  <input type="email" name="email" />
+</label>
+
+// Grouping related inputs
+<fieldset>
+  <legend>Contact Information</legend>
+  <div>
+    <label htmlFor="phone">Phone:</label>
+    <input type="tel" id="phone" name="phone" />
+  </div>
+  <div>
+    <label htmlFor="address">Address:</label>
+    <input type="text" id="address" name="address" />
+  </div>
+</fieldset>
+```
+
+## 6. Testing
+
+- Use accessibility testing tools (e.g., Axe, Lighthouse, ESLint plugins like `eslint-plugin-jsx-a11y`) during development.
+- Perform manual keyboard navigation and screen reader testing.
+
+## Resources
+
+- [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/)
+- [Web Content Accessibility Guidelines (WCAG)](https://www.w3.org/WAI/standards-guidelines/wcag/)
+- [React Accessibility Documentation](https://reactjs.org/docs/accessibility.html)

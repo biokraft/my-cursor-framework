@@ -1,0 +1,94 @@
+---
+description: HTML Accessibility (a11y): Basic checks for accessible HTML, including alt attributes and ARIA roles.
+globs: **/*.html,**/*.htm
+alwaysApply: false
+---
+# HTML Accessibility (a11y) Best Practices
+
+## Introduction
+
+Web accessibility (often abbreviated as a11y) means that websites, tools, and technologies are designed and developed so that people with disabilities can use them. This rule covers basic checks to make your HTML more accessible.
+
+## Guidelines
+
+- **Provide `alt` attributes for all `<img>` tags:**
+    - **Informative images:** The `alt` text should convey the meaning or purpose of the image.
+        ```html
+        <img src="logo.png" alt="Our Company Logo">
+        ```
+    - **Decorative images:** If an image is purely decorative and provides no information, use an empty `alt` attribute (`alt=""`).
+        ```html
+        <img src="background-pattern.png" alt="">
+        ```
+    - **Complex images (charts, graphs):** Provide a brief description in `alt` and a more detailed explanation nearby or linked.
+
+- **Use ARIA roles and attributes sparingly:**
+    - Prioritize using native HTML semantic elements, as they have built-in accessibility features.
+    - Use ARIA (Accessible Rich Internet Applications) roles and attributes to enhance accessibility for custom controls or dynamic content where HTML semantics are insufficient.
+    - Example: Adding a role to a custom button made with `<div>`s:
+        ```html
+        <div role="button" tabindex="0">Click me</div>
+        ```
+    - Ensure ARIA attributes are used correctly (e.g., `aria-label`, `aria-describedby`, `aria-hidden`).
+
+- **Ensure keyboard accessibility:**
+    - All interactive elements (links, buttons, form inputs) must be operable with a keyboard.
+    - Ensure a visible focus indicator for keyboard users (avoid `outline: none;` without providing an alternative).
+    - Logical tab order: The tab order should follow the visual flow of the page.
+
+- **Provide text alternatives for non-text content:**
+    - For audio and video, provide captions and/or transcripts.
+    - For icons that convey meaning, ensure they have a text alternative (e.g., via `aria-label` or visually hidden text).
+
+- **Associate `<label>` tags with form elements:**
+    - Every form input (`<input>`, `<textarea>`, `<select>`) should have an associated `<label>`.
+    - Use the `for` attribute on the `<label>` to match the `id` of the input element, or wrap the input within the `<label>`.
+        ```html
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username">
+
+        <label>
+          Email:
+          <input type="email" name="email">
+        </label>
+        ```
+
+- **Use sufficient color contrast:**
+    - Ensure that text and important visual elements have enough contrast against their background to be easily readable for users with low vision.
+
+- **Write clear and concise link text:**
+    - Avoid generic link text like "Click Here" or "Learn More." The link text should describe the destination or purpose of the link.
+
+## Examples
+
+### `alt` Attribute Usage
+
+```html
+<!-- Good: Informative image -->
+<img src="chart.png" alt="Bar chart showing Q3 sales figures increasing by 15%">
+
+<!-- Good: Decorative image -->
+<img src="decorative-border.png" alt="">
+
+<!-- Bad: Missing alt attribute -->
+<img src="important-icon.svg">
+
+<!-- Bad: Unhelpful alt attribute -->
+<img src="photo.jpg" alt="image">
+```
+
+### Form Labeling
+
+```html
+<!-- Good: Using for and id -->
+<label for="password">Password:</label>
+<input type="password" id="password" name="password">
+
+<!-- Good: Wrapping input -->
+<label>Subscribe to newsletter:
+  <input type="checkbox" name="subscribe">
+</label>
+
+<!-- Bad: No label -->
+<input type="text" name="search_query" placeholder="Search...">
+```

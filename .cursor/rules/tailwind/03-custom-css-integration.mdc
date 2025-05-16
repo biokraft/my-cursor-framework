@@ -1,0 +1,186 @@
+---
+description: CSS Best Practices: Guidelines for writing and organizing custom CSS, especially when used alongside Tailwind CSS. Covers naming, specificity, and Tailwind layers.
+globs: **/*.css
+alwaysApply: false
+---
+# Custom CSS Integration with Tailwind CSS
+
+## Introduction
+
+While Tailwind CSS promotes a utility-first approach, there are scenarios where custom CSS is necessary or preferable. This guide provides best practices for writing, organizing, and integrating custom CSS with a Tailwind CSS project, ensuring maintainability and avoiding conflicts.
+
+## 1. When to Use Custom CSS
+
+Consider custom CSS when:
+
+-   **Complex Animations or Transitions**: For intricate animations not easily achievable with Tailwind's animation utilities.
+-   **Third-Party Library Overrides**: Styling elements from third-party libraries that don't expose enough customization hooks.
+-   **Highly Specific Selectors**: When you need to target elements in ways that are difficult or verbose with utility classes (e.g., complex `:nth-child` patterns, styling generated content).
+-   **Base Styles/Resets**: Applying global base styles or more comprehensive resets beyond Tailwind's `preflight`.
+-   **Print Stylesheets**: Dedicated styles for printing.
+-   **Fallback for Non-JS Environments**: If critical styles depend on JS-driven class changes, custom CSS might provide a baseline.
+-   **Using CSS Features Not Yet in Tailwind**: For cutting-edge CSS properties or selectors that Tailwind doesn't yet have utilities for.
+
+## 2. Naming Conventions (e.g., BEM)
+
+When writing custom CSS, adopt a consistent naming convention to avoid class name collisions and improve readability. BEM (Block, Element, Modifier) is a popular choice, but other conventions can also work.
+
+**BEM Example:**
+
+```css
+/* Block */
+.card {
+  /* ... */
+}
+
+/* Element */
+.card__title {
+  /* ... */
+}
+
+/* Modifier */
+.card--dark {
+  /* ... */
+}
+.card__title--large {
+  /* ... */
+}
+```
+
+**Why use a naming convention?**
+-   **Scope**: Helps to visually scope styles to a component or block.
+-   **Specificity**: Encourages lower specificity, making overrides easier and reducing unexpected side effects.
+-   **Clarity**: Makes the relationship between HTML structure and CSS rules clearer.
+
+If not using BEM, ensure your chosen convention is documented and followed by the team.
+
+## 3. Managing Selector Specificity
+
+Tailwind utilities are designed to be easily overridden. When writing custom CSS, be mindful of selector specificity to avoid unintentionally overriding Tailwind classes or making your custom styles too difficult to override later.
+
+-   **Keep Selectors Simple**: Prefer single class selectors where possible.
+-   **Avoid Over-qualifying Selectors**: `div.my-class` is more specific than `.my-class`. Use the latter if `div` isn't strictly necessary.
+-   **Avoid `!important`**: Use `!important` as a last resort. It often indicates an issue with specificity or CSS architecture.
+-   **Leverage Tailwind's Layers**: Use `@layer` to control the order and specificity of your custom styles in relation to Tailwind's base, components, and utilities layers.
+
+## 4. Organizing CSS Files
+
+Structure your custom CSS files logically:
+
+-   **Components**: Create separate CSS files for larger, reusable UI components that require significant custom styling (e.g., `src/components/MyComponent/MyComponent.css`).
+-   **Layouts**: Styles specific to major layout sections of your application.
+-   **Pages**: Styles unique to specific pages, if necessary.
+-   **Themes**: If you have multiple themes.
+-   **Utilities/Helpers**: Custom utility classes that aren't covered by Tailwind but are reused globally.
+-   **Base/Global**: Global styles, typography, CSS variable definitions.
+
+Import these files into your main CSS entry point (e.g., `src/index.css`).
+
+```css
+/* src/index.css */
+
+/* Tailwind directives (must come first) */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom base styles */
+@import "./base/global.css";
+@import "./base/typography.css";
+
+/* Custom layout styles */
+@import "./layout/header.css";
+@import "./layout/sidebar.css";
+
+/* Custom component styles */
+@import "./components/buttons.css";
+@import "./components/cards.css";
+
+/* Custom utility classes */
+@import "./utils/helpers.css";
+```
+
+## 5. Using Tailwind CSS Layers (`@layer`)
+
+Tailwind uses layers to control the order in which styles are generated, which affects specificity. You can tap into these layers for your custom CSS.
+
+-   `@layer base`: For base styles, resets, or element defaults (e.g., styling raw `<a>` tags).
+-   `@layer components`: For custom component classes that you want to be overrideable by utilities.
+-   `@layer utilities`: For custom utility classes that should behave like Tailwind's own utilities.
+
+**Example:**
+
+```css
+/* src/index.css or a dedicated custom CSS file */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  h1 {
+    @apply text-2xl font-bold mb-4; /* Example of applying Tailwind utilities within a layer */
+  }
+  a {
+    @apply text-blue-600 hover:text-blue-800 underline;
+  }
+}
+
+@layer components {
+  .custom-btn {
+    @apply py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600;
+    /* Additional custom CSS for .custom-btn */
+    transition: transform 0.1s ease-in-out;
+  }
+  .custom-btn:active {
+    transform: scale(0.95);
+  }
+}
+
+@layer utilities {
+  .text-shadow-sm {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+}
+```
+
+**Benefits of using layers:**
+-   **Predictable Specificity**: Ensures your custom styles integrate well with Tailwind's cascade.
+-   **Purging**: Styles defined within `@layer` directives are also subject to Tailwind's purging process if they are not used in your template files.
+
+## 6. Scoped Styles in Frameworks
+
+If you are using a JavaScript framework like Vue, Svelte, or CSS Modules with React, leverage their scoped styling mechanisms. This naturally encapsulates styles and helps avoid global conflicts.
+
+**Vue Scoped CSS Example:**
+
+```vue
+<template>
+  <div class="my-component">
+    <p class="text">Styled with scoped CSS and Tailwind.</p>
+  </div>
+</template>
+
+<style scoped>
+.my-component {
+  @apply p-4 border border-gray-300;
+  /* Scoped custom styles */
+  background-color: #f0f0f0;
+}
+.text {
+  @apply text-red-500;
+  font-style: italic;
+}
+</style>
+```
+
+Even with scoped styles, you can still use Tailwind utilities within the `<style>` block if your setup allows (often requiring PostCSS processing).
+
+## Summary
+
+-   Use custom CSS judiciously when Tailwind utilities are insufficient or less practical.
+-   Adopt a consistent naming convention (like BEM) for your custom classes.
+-   Manage selector specificity carefully, aiming for low specificity.
+-   Organize your custom CSS files logically.
+-   Utilize Tailwind's `@layer` directive to control the cascade and ensure proper integration.
+-   Leverage framework-specific scoped styling features where available.

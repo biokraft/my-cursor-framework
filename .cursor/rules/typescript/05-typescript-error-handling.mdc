@@ -1,0 +1,212 @@
+---
+description: TypeScript Error Handling: Best practices for handling errors and exceptions in TypeScript applications.
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
+---
+# TypeScript Error Handling
+
+## Introduction
+Robust error handling is crucial for creating reliable applications. This guide outlines best practices for handling errors and exceptions in TypeScript.
+
+## Guidelines
+
+### Use `try...catch` for Synchronous Errors
+- For operations that might throw synchronous errors, wrap them in `try...catch` blocks.
+- Catch specific error types if possible, or handle generic `Error` objects.
+- In `catch` blocks, the error object is typed as `unknown` by default (if `useUnknownInCatchVariables` is true in `tsconfig.json`, which is recommended). You must perform type narrowing before accessing its properties.
+
+```typescript
+function mightThrow() {
+  if (Math.random() > 0.5) {
+    throw new Error("Something went wrong!");
+  }
+  return "Success";
+}
+
+try {
+  const result = mightThrow();
+  console.log(result);
+} catch (error: unknown) {
+  if (error instanceof Error) {
+    console.error("Caught an error:", error.message);
+  } else {
+    console.error("Caught an unknown error:", error);
+  }
+}
+```
+
+### Handle Promise Rejections for Asynchronous Errors
+- For asynchronous operations returning Promises, use `.catch()` on the promise chain or `try...catch` with `async/await`.
+
+```typescript
+// Using .catch()
+fetchData()
+  .then(data => console.log(data))
+  .catch((error: unknown) => {
+    if (error instanceof Error) {
+      console.error("Failed to fetch data:", error.message);
+    } else {
+      console.error("Unknown fetch error:", error);
+    }
+  });
+
+// Using async/await with try...catch
+async function fetchDataAndProcess() {
+  try {
+    const data = await fetchData();
+    console.log(data);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Failed to fetch data (async/await):", error.message);
+    } else {
+      console.error("Unknown fetch error (async/await):", error);
+    }
+  }
+}
+```
+
+### Custom Error Types
+- Create custom error classes by extending the built-in `Error` class for more specific error handling and to convey more information.
+
+```typescript
+class NetworkError extends Error {
+  constructor(message: string, public statusCode?: number) {
+    super(message);
+    this.name = "NetworkError";
+    // Ensure the prototype chain is set correctly
+    Object.setPrototypeOf(this, NetworkError.prototype);
+  }
+}
+
+class ValidationError extends Error {
+  constructor(message: string, public field?: string) {
+    super(message);
+    this.name = "ValidationError";
+    Object.setPrototypeOf(this, ValidationError.prototype);
+  }
+}
+
+async function submitForm(data: FormData) {
+  if (!data.get("email")) {
+    throw new ValidationError("Email is required", "email");
+  }
+  try {
+    // Simulate API call
+    await new Promise((_, reject) => setTimeout(() => reject(new NetworkError("Service unavailable", 503)), 100));
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      console.error(`Validation Error [${error.field}]: ${error.message}`);
+    } else if (error instanceof NetworkError) {
+      console.error(`Network Error (Status ${error.statusCode || 'N/A'}): ${error.message}`);
+    } else if (error instanceof Error) {
+      console.error(`Generic Error: ${error.message}`);
+    } else {
+      console.error("An unexpected error occurred");
+    }
+    throw error; // Re-throw or handle appropriately
+  }
+}
+```
+
+### Avoid Swallowing Errors
+- Do not catch errors without proper handling or logging. If you catch an error, either handle it meaningfully, log it, or re-throw it (or a more specific error).
+
+```typescript
+// Bad: Error is swallowed
+try {
+  // ... some operation ...
+} catch (e) {
+  // No logging, no re-throwing, no handling
+}
+
+// Good: Logging the error
+try {
+  // ... some operation ...
+} catch (error: unknown) {
+  console.error("Operation failed:", error);
+  // Potentially re-throw or throw a new, more specific error
+  // throw new OperationFailedError("The operation could not be completed due to an internal error.");
+}
+```
+
+### Centralized Error Handling
+- For applications (especially backend or complex frontend ones), consider a centralized error handling mechanism (e.g., middleware in Express, global error handlers in frontend frameworks) to log errors, send notifications, or return standardized error responses.
+
+### `finally` Block
+- Use the `finally` block for cleanup code that must execute regardless of whether an error occurred or not (e.g., releasing resources, closing connections).
+
+```typescript
+let resource: Resource | null = null;
+try {
+  resource = acquireResource();
+  resource.use();
+} catch (error: unknown) {
+  console.error("Error using resource:", error);
+} finally {
+  if (resource) {
+    resource.release();
+    console.log("Resource released.");
+  }
+}
+```
+
+### Error Boundaries (React)
+- In React applications, use Error Boundaries (class components with `componentDidCatch` or `static getDerivedStateFromError`) to catch JavaScript errors in their child component tree, log those errors, and display a fallback UI.
+
+```typescript
+// Simplified React Error Boundary example
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode; fallbackUI: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error("ErrorBoundary caught an error:", error, errorInfo);
+    // You can also log the error to an error reporting service
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallbackUI;
+    }
+    return this.props.children;
+  }
+}
+```
+
+## Consider Result Types / Discriminated Unions
+- For functions where failure is a common or expected outcome (not truly exceptional), consider returning a result type (a discriminated union) instead of throwing errors. This forces the caller to explicitly handle success and failure cases.
+
+```typescript
+type Success<T> = { type: 'success'; value: T };
+type Failure<E> = { type: 'failure'; error: E };
+type Result<T, E> = Success<T> | Failure<E>;
+
+function parseJson(jsonString: string): Result<unknown, SyntaxError> {
+  try {
+    return { type: 'success', value: JSON.parse(jsonString) };
+  } catch (e) {
+    if (e instanceof SyntaxError) {
+      return { type: 'failure', error: e };
+    }
+    // Should not happen if JSON.parse only throws SyntaxError
+    throw e;
+  }
+}
+
+const result = parseJson('{ "name": "Test", "value": 123 }');
+if (result.type === 'success') {
+  console.log("Parsed data:", result.value);
+} else {
+  console.error("Failed to parse JSON:", result.error.message);
+}
+```
+This pattern is common in languages like Rust and can be very effective in TypeScript for robust error handling.

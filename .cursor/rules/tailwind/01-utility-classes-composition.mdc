@@ -1,0 +1,174 @@
+---
+description: Tailwind CSS: Guidelines for using utility classes, composing them, and deciding when to create components.
+globs: **/*.tsx, **/*.jsx, **/*.vue, **/*.svelte, **/*.html, **/*.js
+alwaysApply: false
+---
+# Tailwind CSS: Utility Classes & Composition
+
+## Introduction
+
+This guide provides best practices for using Tailwind CSS utility classes, composing them for complex styling, and determining when to extract repeated patterns into reusable components. The goal is to maintain a clean, scalable, and maintainable codebase.
+
+## 1. Embrace Utility-First
+
+Tailwind's core philosophy is utility-first. Strive to style elements by applying pre-existing utility classes directly in your markup.
+
+**Good Example:**
+
+```html
+<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+  Save Changes
+</button>
+```
+
+**Avoid:** Prematurely writing custom CSS for styles achievable with utilities.
+
+```html
+<!-- Avoid this if utilities can do the job -->
+<button class="custom-button">Save Changes</button>
+```
+```css
+/* styles.css - Less ideal if Tailwind utilities suffice */
+.custom-button {
+  background-color: #3b82f6; /* blue-500 */
+  color: white;
+  font-weight: bold;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-radius: 0.25rem;
+}
+.custom-button:hover {
+  background-color: #1d4ed8; /* blue-700 */
+}
+```
+
+## 2. Composing Utilities
+
+For more complex styling, combine multiple utility classes. Tailwind is designed for this.
+
+**Example:** Creating a card component look.
+
+```html
+<div class="bg-white shadow-md rounded-lg p-6 border border-gray-200">
+  <h2 class="text-xl font-semibold mb-2">Card Title</h2>
+  <p class="text-gray-700">This is some card content composed with Tailwind utilities.</p>
+</div>
+```
+
+## 3. When to Create Custom Components vs. Composing Utilities
+
+The decision to extract a pattern of utilities into a dedicated component (e.g., a React, Vue, or Svelte component) depends on several factors:
+
+### 3.1. Repetition (DRY Principle)
+
+-   **Extract**: If you find yourself repeating the exact same string of utility classes in multiple places for the same UI element.
+-   **Keep Utilities**: If the variations are frequent and the base set of utilities is small or changes often per instance.
+
+**Example: Button Component**
+
+If you have many buttons styled identically:
+
+```html
+<!-- Repetitive utilities -->
+<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Action 1</button>
+<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Action 2</button>
+```
+
+Create a component:
+
+```jsx
+// Button.jsx (React example)
+function Button({ children, onClick }) {
+  return (
+    <button
+      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+}
+
+// Usage
+<Button>Action 1</Button>
+<Button>Action 2</Button>
+```
+
+### 3.2. Complexity and Readability
+
+-   **Extract**: If a long string of utility classes makes the markup hard to read or understand.
+-   **Keep Utilities**: If the utilities clearly describe the element's styling and the string isn't excessively long.
+
+**Example: Complex Card Layout**
+
+A card with many styles might benefit from component extraction for better readability of the parent component.
+
+### 3.3. Dynamic Styling Based on Props/State
+
+-   **Extract**: If the styling needs to change dynamically based on component props or state. Managing conditional classes within a component is cleaner.
+
+**Example: Button Variants**
+
+```jsx
+// Button.jsx (React example with variants)
+function Button({ children, onClick, variant = 'primary' }) {
+  const baseStyles = "font-bold py-2 px-4 rounded";
+  const variants = {
+    primary: "bg-blue-500 hover:bg-blue-700 text-white",
+    secondary: "bg-gray-500 hover:bg-gray-700 text-white",
+    danger: "bg-red-500 hover:bg-red-700 text-white",
+  };
+  return (
+    <button
+      className={`${baseStyles} ${variants[variant]}`}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+}
+```
+
+### 3.4. Semantic Meaning
+
+-   **Extract**: If a combination of styles represents a clear, reusable UI concept (e.g., `UserProfileCard`, `ModalDialog`).
+
+## 4. Avoid Overuse of `@apply`
+
+While Tailwind provides the `@apply` directive to extract utility patterns into custom CSS classes, it should be used sparingly.
+
+-   **Prefer Component Extraction**: In component-based frameworks (React, Vue, Svelte), extracting the markup and utilities into a reusable component is often a better approach than using `@apply`. This keeps the styling co-located with the component's logic and structure.
+-   **When `@apply` might be acceptable**:
+    -   For very small, highly reusable utility combinations that don't warrant a full component (e.g., `btn-icon-base`).
+    -   When working in HTML-centric projects without a component framework.
+    -   For abstracting complex variant groups if component props become too numerous.
+
+**Example: Limited use of `@apply`**
+
+```css
+/* styles.css */
+.btn-base {
+  @apply font-bold py-2 px-4 rounded;
+}
+.btn-primary {
+  @apply btn-base bg-blue-500 text-white hover:bg-blue-700;
+}
+.btn-secondary {
+  @apply btn-base bg-gray-200 text-gray-800 hover:bg-gray-300;
+}
+```
+
+Using this in HTML:
+```html
+<button class="btn-primary">Primary Action</button>
+```
+
+However, again, consider if a `<Button variant="primary" />` component achieves this more cleanly in your project context.
+
+## Summary
+
+-   Prioritize using utility classes directly in your markup.
+-   Extract to components when you see repetition, complexity, dynamic styling needs, or clear semantic UI patterns.
+-   Use `@apply` sparingly; prefer component-based abstractions in modern JavaScript frameworks.

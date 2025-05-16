@@ -1,0 +1,153 @@
+---
+description: Vitest Assertion Styles: Guidelines for consistent use of assertion styles (expect(...).toBe(...)).
+globs: **/*.test.ts, **/*.test.tsx
+alwaysApply: false
+---
+# Vitest Assertion Styles
+
+## Introduction
+
+Consistent use of assertion styles is key to writing readable and maintainable tests. Vitest uses an `expect` API similar to Jest, offering a wide range of matchers. This rule provides guidelines for using these assertion styles effectively.
+
+## Guidelines
+
+### 1. Standard Assertion Syntax
+
+The primary assertion syntax in Vitest is `expect(value).[matcher](expectedValue)`.
+
+-   **`expect(value)`**: Takes the value that your code produces (the "actual" value).
+-   **`.[matcher](expectedValue)`**: A matcher function that compares the actual value to an expected value or condition.
+
+### 2. Common Matchers
+
+Strive for consistency by using the most appropriate matcher for each assertion.
+
+-   **Equality**:
+    -   `toBe(value)`: Strict equality (`Object.is` or `===`). Use for primitive values or to check if two objects are the same instance.
+    -   `toEqual(value)`: Deep equality. Use for comparing objects or arrays by their content.
+-   **Truthiness/Falsiness**:
+    -   `toBeTruthy()`: Checks if a value is truthy (not `false`, `0`, `''`, `null`, `undefined`, `NaN`).
+    -   `toBeFalsy()`: Checks if a value is falsy.
+    -   `toBeNull()`: Checks if a value is `null`.
+    -   `toBeUndefined()`: Checks if a value is `undefined`.
+    -   `toBeDefined()`: Checks if a value is not `undefined`.
+    -   `toBeNaN()`: Checks if a value is `NaN`.
+-   **Numbers**:
+    -   `toBeGreaterThan(number)`
+    -   `toBeGreaterThanOrEqual(number)`
+    -   `toBeLessThan(number)`
+    -   `toBeLessThanOrEqual(number)`
+    -   `toBeCloseTo(number, numDigits?)`: For floating-point numbers, to avoid precision issues.
+-   **Strings**:
+    -   `toMatch(regexp | string)`: Checks if a string matches a regular expression or contains a substring.
+-   **Arrays/Iterables**:
+    -   `toContain(item)`: Checks if an array or iterable contains a specific item.
+    -   `toHaveLength(number)`: Checks the length of an array or string.
+-   **Objects**:
+    -   `toHaveProperty(keyPath, value?)`: Checks if an object has a property at a given path, optionally checking its value.
+    -   `toMatchObject(object)`: Checks if an object matches a subset of the properties of an expected object.
+-   **Exceptions**:
+    -   `toThrow(error?)`: Checks if a function throws an error. Can optionally check the error message or type.
+-   **Mocks**:
+    -   `toHaveBeenCalled()`
+    -   `toHaveBeenCalledTimes(number)`
+    -   `toHaveBeenCalledWith(...args)`
+    -   `toHaveBeenLastCalledWith(...args)`
+    -   `toHaveReturned()`
+    -   `toHaveReturnedTimes(number)`
+    -   `toHaveReturnedWith(value)`
+    -   `toHaveLastReturnedWith(value)`
+
+### 3. Asynchronous Assertions
+
+For asynchronous code, use `async/await` with `expect` or return the promise.
+
+-   **Promises**:
+    -   `resolves`: Use `expect(promise).resolves.[matcher](value)` to assert on the resolved value of a promise.
+    -   `rejects`: Use `expect(promise).rejects.[matcher](error)` to assert on the rejection reason of a promise.
+
+### 4. Negative Assertions (`.not`)
+
+Use the `.not` chain to assert the opposite of a matcher.
+Example: `expect(value).not.toBe(otherValue);`
+
+### 5. Custom Matchers
+
+If needed, you can extend `expect` with custom matchers using `expect.extend({...})` for project-specific assertions, but use this sparingly and ensure they are well-documented and widely understood by the team.
+
+## Examples
+
+```typescript
+import { describe, it, expect, vi } from 'vitest';
+
+describe('Assertion Examples', () => {
+  it('should demonstrate basic equality', () => {
+    expect(1 + 1).toBe(2);
+    expect({ a: 1 }).toEqual({ a: 1 });
+    expect({ a: 1 }).not.toBe({ a: 1 }); // Different object instances
+  });
+
+  it('should demonstrate truthiness', () => {
+    expect('hello').toBeTruthy();
+    expect(null).toBeNull();
+    expect(undefined).toBeUndefined();
+    expect('').toBeFalsy();
+  });
+
+  it('should demonstrate number comparisons', () => {
+    expect(5).toBeGreaterThan(3);
+    expect(0.1 + 0.2).toBeCloseTo(0.3); // For floating point numbers
+  });
+
+  it('should demonstrate string matching', () => {
+    expect('Teamwork makes the dream work').toMatch(/team/i);
+    expect('hello world').toContain('world');
+  });
+
+  it('should demonstrate array/iterable checks', () => {
+    const arr = ['apple', 'banana', 'cherry'];
+    expect(arr).toContain('banana');
+    expect(arr).toHaveLength(3);
+  });
+
+  it('should demonstrate object property checks', () => {
+    const obj = { name: 'Alice', age: 30, address: { city: 'Wonderland' } };
+    expect(obj).toHaveProperty('name');
+    expect(obj).toHaveProperty('age', 30);
+    expect(obj).toHaveProperty('address.city', 'Wonderland');
+    expect(obj).toMatchObject({ name: 'Alice', address: { city: 'Wonderland' } });
+  });
+
+  it('should demonstrate error throwing', () => {
+    const throwErrorFn = () => { throw new Error('Oops!'); };
+    expect(() => throwErrorFn()).toThrow();
+    expect(() => throwErrorFn()).toThrow('Oops!');
+    expect(() => throwErrorFn()).toThrow(Error);
+  });
+
+  it('should demonstrate async assertions', async () => {
+    const promise = Promise.resolve('success');
+    await expect(promise).resolves.toBe('success');
+
+    const failingPromise = Promise.reject(new Error('failure'));
+    await expect(failingPromise).rejects.toThrow('failure');
+  });
+
+  it('should demonstrate mock function calls', () => {
+    const mockFn = vi.fn();
+    mockFn('arg1', 'arg2');
+    expect(mockFn).toHaveBeenCalled();
+    expect(mockFn).toHaveBeenCalledTimes(1);
+    expect(mockFn).toHaveBeenCalledWith('arg1', 'arg2');
+  });
+});
+```
+
+## Best Practices
+
+-   **Be Specific**: Choose the matcher that most accurately describes the condition you are checking.
+    -   Instead of `expect(arr.length === 0).toBe(true)`, use `expect(arr).toHaveLength(0)`.
+    -   Instead of `expect(val === null).toBe(true)`, use `expect(val).toBeNull()`.
+-   **Readability**: Write assertions that are easy to understand at a glance. The error messages from well-chosen matchers are also typically more informative.
+-   **Avoid Redundant Assertions**: One precise assertion is often better than multiple weaker ones for the same check.
+-   **Consistency**: Adhere to a consistent style of assertions across the project.

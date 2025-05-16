@@ -1,0 +1,180 @@
+---
+description: TypeScript Types and Interfaces: Best practices for defining and using types, interfaces, generics, and utility types.
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
+---
+# TypeScript Types and Interfaces
+
+## Introduction
+Effective use of TypeScript's type system is key to writing robust and maintainable code. This guide covers best practices for defining and using types, interfaces, generics, and utility types.
+
+## Guidelines
+
+### Prefer `interface` for Object Shapes and `type` for Primitives/Unions/Tuples
+- **Interfaces (`interface`)**: Primarily use for defining the shape of objects or classes. They can be extended and implemented.
+- **Type Aliases (`type`)**: Use for aliasing primitive types, union types, intersection types, tuples, or more complex types that don't represent an object structure directly.
+
+```typescript
+// Good: Interface for an object shape
+interface User {
+  id: number;
+  name: string;
+  isActive?: boolean;
+}
+
+// Good: Type alias for a union type
+type Status = "success" | "error" | "pending";
+
+// Good: Type alias for a function signature
+type GreetFunction = (name: string) => string;
+
+// Okay: Type alias for an object shape (less common for extensibility)
+type Point = {
+  x: number;
+  y: number;
+};
+```
+
+### Use `readonly` for Immutable Properties
+- Mark properties as `readonly` if their values should not be changed after object creation.
+
+```typescript
+interface Configuration {
+  readonly apiKey: string;
+  readonly endpoint: string;
+}
+```
+
+### Use Specific Types Over `any`
+- Avoid using `any` as much as possible. It disables type checking for that part of the code.
+- If the type is truly unknown, use `unknown` and perform type checks before operations.
+- If you need a flexible object, consider `Record<string, unknown>` or `Record<string, any>` (with caution for the `any`).
+
+```typescript
+// Avoid
+function processData(data: any) {
+  data.doSomething(); // No type safety
+}
+
+// Better: Use unknown and type guards
+function processDataSafely(data: unknown) {
+  if (typeof data === "string") {
+    console.log(data.toUpperCase());
+  } else if (typeof data === "object" && data !== null && "property" in data) {
+    // Access data.property safely
+  }
+}
+```
+
+### Generics for Reusable Components/Functions
+- Use generics to create components, functions, and classes that can work with a variety of types while maintaining type safety.
+
+```typescript
+function identity<T>(arg: T): T {
+  return arg;
+}
+
+let outputString = identity<string>("myString");
+let outputNumber = identity<number>(100);
+
+interface ResponseWrapper<Data> {
+  data: Data;
+  status: number;
+}
+```
+
+### Utility Types
+- Leverage built-in utility types like `Partial<T>`, `Required<T>`, `Readonly<T>`, `Record<K, T>`, `Pick<T, K>`, `Omit<T, K>`, etc., to transform and create new types without redundant definitions.
+
+```typescript
+interface Todo {
+  title: string;
+  description: string;
+  completed: boolean;
+}
+
+// All properties of Todo are optional
+type PartialTodo = Partial<Todo>;
+
+// Creates a type with only 'title' and 'completed' from Todo
+type TodoPreview = Pick<Todo, "title" | "completed">;
+
+// Creates a type representing an object with string keys and number values
+type StringToNumberMap = Record<string, number>;
+const scores: StringToNumberMap = { alice: 100, bob: 90 };
+```
+
+### Enums for Discrete Sets of Values
+- Use `enum` for a small, fixed set of named constants.
+- Consider `string enums` for better debuggability or when values are serialized.
+- For simple cases or when interoperability with JavaScript is a concern, `const` assertions with string unions can be an alternative.
+
+```typescript
+// Numeric Enum (default)
+enum Direction {
+  Up,    // 0
+  Down,  // 1
+  Left,  // 2
+  Right  // 3
+}
+
+// String Enum
+enum LogLevel {
+  Error = "ERROR",
+  Warning = "WARN",
+  Info = "INFO"
+}
+
+// Alternative: const assertions for string unions
+const HTTP_METHODS = ["GET", "POST", "PUT", "DELETE"] as const;
+type HttpMethod = typeof HTTP_METHODS[number]; // "GET" | "POST" | ...
+```
+
+### Type Assertions (`as Type`)
+- Use type assertions sparingly, only when you have more information about a type than TypeScript does.
+- Prefer type guards or more specific type definitions where possible.
+- The `as` keyword is preferred over the `<Type>value` syntax for JSX compatibility.
+
+```typescript
+const myCanvas = document.getElementById("main_canvas") as HTMLCanvasElement;
+```
+
+## Examples
+
+### Good Example: User Profile
+```typescript
+interface UserProfile {
+  readonly userId: string;
+  username: string;
+  email?: string; // Optional property
+  lastLogin: Date;
+  settings: UserSettings;
+}
+
+interface UserSettings {
+  theme: "light" | "dark";
+  notificationsEnabled: boolean;
+}
+
+function updateUser(profile: UserProfile, updates: Partial<UserProfile>): UserProfile {
+  return { ...profile, ...updates };
+}
+```
+
+### Example: Generic Data Fetcher
+```typescript
+interface ApiResponse<T> {
+  data: T;
+  statusCode: number;
+  errorMessage?: string;
+}
+
+async function fetchData<ResultType>(url: string): Promise<ApiResponse<ResultType>> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    return { data: null as any, statusCode: response.status, errorMessage: "Fetch failed" }; // Be careful with null as any
+  }
+  const data: ResultType = await response.json();
+  return { data, statusCode: response.status };
+}
+```

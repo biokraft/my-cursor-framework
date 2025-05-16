@@ -1,0 +1,96 @@
+---
+description: Vitest Test Structure: Guidelines for Arrange-Act-Assert pattern and descriptive test names.
+globs: **/*.test.ts, **/*.test.tsx
+alwaysApply: false
+---
+# Vitest Test Structure
+
+## Introduction
+
+This rule outlines best practices for structuring your Vitest tests to ensure they are readable, maintainable, and clearly convey their intent. It focuses on the Arrange-Act-Assert (AAA) pattern and the importance of descriptive test names.
+
+## Guidelines
+
+### 1. Arrange-Act-Assert (AAA) Pattern
+
+All tests should follow the AAA pattern:
+
+-   **Arrange**: Set up the test conditions. This includes initializing variables, mocking dependencies, and preparing the environment for the specific scenario you are testing.
+-   **Act**: Execute the code under test. This is typically a single function call or an interaction with a component.
+-   **Assert**: Verify the outcome. Check that the actual result matches the expected result using assertion functions.
+
+Separating these three phases with a blank line can improve readability.
+
+### 2. Descriptive Test Names
+
+Test names should clearly and concisely describe what the test is verifying. A good test name should make it easy to understand the test's purpose without needing to read its implementation.
+
+**Bad Examples:**
+-   `test1`
+-   `sum function`
+-   `should return a value`
+
+**Good Examples:**
+-   `should return the sum of two positive numbers`
+-   `should throw an error if the input array is empty`
+-   `should render the correct text content for the primary button`
+
+Consider using a consistent naming convention, such as "should [expected behavior] when [condition]".
+
+## Examples
+
+```typescript
+import { describe, it, expect } from 'vitest';
+
+// Example for a simple utility function
+describe('sum', () => {
+  it('should return the sum of two positive numbers', () => {
+    // Arrange
+    const num1 = 5;
+    const num2 = 10;
+    const expectedSum = 15;
+
+    // Act
+    const result = sum(num1, num2);
+
+    // Assert
+    expect(result).toBe(expectedSum);
+  });
+
+  it('should return zero when summing zero and a positive number', () => {
+    // Arrange
+    const num1 = 0;
+    const num2 = 7;
+
+    // Act
+    const result = sum(num1, num2);
+
+    // Assert
+    expect(result).toBe(7); // Assuming sum(0, x) = x
+  });
+});
+
+// Example for a React component (conceptual)
+describe('MyComponent', () => {
+  it('should render the loading spinner when isLoading is true', () => {
+    // Arrange
+    // (e.g., mock props, setup component with isLoading=true)
+    const props = { isLoading: true, data: null };
+
+    // Act
+    // (e.g., render the component: render(<MyComponent {...props} />))
+    const { getByTestId } = render(<MyComponent {...props} />);
+
+
+    // Assert
+    // (e.g., expect loading spinner to be visible: expect(getByTestId('loading-spinner')).toBeVisible())
+    expect(getByTestId('loading-spinner')).toBeInTheDocument();
+  });
+});
+```
+
+## Best Practices
+
+-   Keep tests focused: Each test should ideally verify a single piece of functionality or behavior.
+-   Avoid logic in tests: Tests should be straightforward and easy to understand. Avoid complex conditional logic or loops within your test cases.
+-   Use comments sparingly: Well-named tests and clear AAA structure should minimize the need for comments. If a test is complex enough to require extensive comments, consider refactoring it.

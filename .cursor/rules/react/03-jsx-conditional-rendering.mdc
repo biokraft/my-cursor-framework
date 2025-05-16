@@ -1,0 +1,210 @@
+---
+description: React JSX & Conditional Rendering: Guidelines for JSX syntax, list keys, and conditional rendering patterns.
+globs: **/*.tsx,**/*.jsx
+alwaysApply: false
+---
+# React: JSX Best Practices & Conditional Rendering
+
+## 1. JSX Readability
+
+- **Wrap multi-line JSX in parentheses `()`** for better readability and to avoid automatic semicolon insertion issues.
+- Indent nested JSX elements consistently.
+- Keep JSX within components concise. If it becomes too complex, consider breaking it down into smaller components.
+
+```typescript jsx
+// Good
+const UserCard = ({ user }) => (
+  <div className="user-card">
+    <h2>{user.name}</h2>
+    <p>Email: {user.email}</p>
+    {user.isAdmin && <span className="admin-badge">Admin</span>}
+  </div>
+);
+
+// Bad - hard to read
+const UserCardBad = ({ user }) => <div className="user-card"><h2>{user.name}</h2><p>Email: {user.email}</p>{user.isAdmin && <span className="admin-badge">Admin</span>}</div>;
+```
+
+## 2. Keys in Lists
+
+- **Always provide a unique `key` prop** to elements inside an array or iterator (e.g., when using `map()`).
+- Keys help React identify which items have changed, are added, or are removed, which is crucial for efficient updates and maintaining component state.
+- **Use stable, unique identifiers** as keys (e.g., an `id` from your data).
+- **Avoid using array `index` as a key if the order of items may change**, as this can lead to issues with component state and incorrect rendering. Use it only if the list is static and will never reorder.
+
+```typescript jsx
+// Good - using stable ID
+const TodoList = ({ todos }) => (
+  <ul>
+    {todos.map(todo => (
+      <TodoItem key={todo.id} text={todo.text} />
+    ))}
+  </ul>
+);
+
+// Okay - if list is static and items have no IDs
+const StaticList = ({ items }) => (
+  <ul>
+    {items.map((item, index) => (
+      <li key={index}>{item.name}</li>
+    ))}
+  </ul>
+);
+
+// Bad - using index for a dynamic list
+// If todos reorder, or items are added/deleted from the middle,
+// this can lead to incorrect behavior.
+const BadTodoList = ({ todos }) => (
+  <ul>
+    {todos.map((todo, index) => (
+      <TodoItem key={index} text={todo.text} /> // This component instance might get wrong state/props
+    ))}
+  </ul>
+);
+```
+
+## 3. Conditional Rendering
+
+Choose the method that makes your component most readable for the specific scenario.
+
+### 3.1. Ternary Operator (`condition ? exprIfTrue : exprIfFalse`)
+- Suitable for simple conditional logic directly within JSX.
+
+```typescript jsx
+const Greeting = ({ isLoggedIn }) => (
+  <div>
+    {isLoggedIn ? <UserGreeting /> : <GuestGreeting />}
+  </div>
+);
+```
+
+### 3.2. Logical `&&` Operator (`condition && expression`)
+- Use when you want to render something only if a condition is true, otherwise render nothing.
+
+```typescript jsx
+const AdminPanel = ({ isAdmin }) => (
+  <div>
+    <h1>Dashboard</h1>
+    {isAdmin && <button>Manage Users</button>}
+  </div>
+);
+```
+
+### 3.3. `if` Statements (outside JSX or in helper functions/variables)
+- For more complex conditional logic, use `if` statements outside of the JSX or extract logic into variables or helper render functions.
+
+```typescript jsx
+const UserStatus = ({ status }) => {
+  let statusMessage;
+  if (status === 'active') {
+    statusMessage = <p>User is active.</p>;
+  } else if (status === 'pending') {
+    statusMessage = <p>User account is pending approval.</p>;
+  } else {
+    statusMessage = <p>User status unknown.</p>;
+  }
+
+  return <div>{statusMessage}</div>;
+};
+
+// Or using a helper function
+const renderUserActions = (user) => {
+  if (!user) return null;
+  if (user.isBanned) return <p>Account Suspended</p>;
+  return <button>Edit Profile</button>;
+};
+
+const UserProfileActions = ({ user }) => (
+  <div>
+    {renderUserActions(user)}
+  </div>
+);
+```
+
+### 3.4. Enum or Object Lookups
+- For mapping a value to a specific component or JSX output, an object lookup can be cleaner than multiple `if/else if` or `switch` statements.
+
+```typescript jsx
+const NotificationIcon = ({ type }) => {
+  const ICONS = {
+    success: <SuccessIcon />,
+    error: <ErrorIcon />,
+    warning: <WarningIcon />,
+    info: <InfoIcon />,
+  };
+
+  return ICONS[type] || <DefaultIcon />;
+};
+```
+
+## 4. Inline Functions in JSX
+
+- **Avoid creating new functions directly in JSX props if it can be avoided**, especially in components that re-render frequently or within loops. This is because a new function instance is created on every render, which can lead to unnecessary re-renders of child components if those functions are passed as props.
+- Define event handlers or callback functions outside the JSX, typically within the component body.
+
+```typescript jsx
+const ItemList = ({ items, onDelete }) => {
+  // Good: Define handler outside JSX, pass item ID
+  const handleDelete = (itemId) => {
+    onDelete(itemId);
+  };
+
+  return (
+    <ul>
+      {items.map(item => (
+        <li key={item.id}>
+          {item.name}
+          {/* Arrow function here is generally fine if handleDelete is stable (e.g., memoized with useCallback or defined outside component) */}
+          {/* or if ItemList itself is not performance critical. */}
+          <button onClick={() => handleDelete(item.id)}>Delete</button>
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+// Potentially problematic in performance-sensitive components or deep trees:
+const BadItem = ({ itemData, updateItem }) => {
+  // Creates a new function on every render of BadItem
+  return <button onClick={() => updateItem(itemData.id, { ...itemData, count: itemData.count + 1 })}>Increment</button>;
+};
+
+// Better: (if updateItem is memoized or stable, or if BetterItem is memoized)
+const BetterItem = ({ itemData, updateItem }) => {
+  const handleIncrement = () => {
+    updateItem(itemData.id, { ...itemData, count: itemData.count + 1 });
+  };
+  return <button onClick={handleIncrement}>Increment</button>;
+};
+```
+- Use `useCallback` to memoize functions passed as props if they are causing performance issues in child components that rely on prop reference equality (e.g., those wrapped with `React.memo`).
+
+## 5. React Fragments (`<>...</>`)
+
+- Use `React.Fragment` or the shorter `<>...</>` syntax when you need to return multiple elements from a component without adding an extra node to the DOM.
+
+```typescript jsx
+// Good
+const UserDetails = ({ user }) => (
+  <>
+    <h2>{user.name}</h2>
+    <p>Email: {user.email}</p>
+  </>
+);
+
+// Also good (older syntax, or when a key is needed for a list of fragments)
+const UserDetailsLong = ({ user }) => (
+  <React.Fragment>
+    <h2>{user.name}</h2>
+    <p>Email: {user.email}</p>
+  </React.Fragment>
+);
+
+// Bad - unnecessary div wrapper, unless the div serves a styling or structural purpose.
+const UserDetailsWrapped = ({ user }) => (
+  <div> 
+    <h2>{user.name}</h2>
+    <p>Email: {user.email}</p>
+  </div>
+);
+```

@@ -1,0 +1,115 @@
+---
+description: Vitest Mocking: Best practices for mocking dependencies in Vitest.
+globs: **/*.test.ts, **/*.test.tsx
+alwaysApply: false
+---
+# Vitest Mocking Dependencies
+
+## Introduction
+
+Mocking is a crucial technique in unit testing. It allows you to isolate the code under test by replacing its dependencies with controlled, predictable substitutes (mocks). This rule provides guidelines for effectively mocking dependencies in Vitest.
+
+## Guidelines
+
+### 1. When to Mock
+
+-   **External Services**: Mock API calls, database interactions, or any external system to avoid flakiness and speed up tests.
+-   **Complex Dependencies**: If a dependency has complex internal logic not relevant to the current test, mock it to simplify the test setup.
+-   **Side Effects**: Mock functions that produce side effects (e.g., writing to localStorage, DOM manipulations outside the component being tested) to keep tests deterministic.
+-   **Date/Time**: Mock `Date` or similar time-sensitive objects for predictable outcomes.
+
+### 2. How to Mock with Vitest
+
+Vitest provides several ways to mock modules and functions:
+
+-   `vi.mock('module-path', factory?)`:
+    -   Used to mock entire modules. The factory function (optional) should return an object with the mocked implementation.
+    -   Hoisted to the top of the file, so `import` statements for mocked modules will refer to the mock.
+-   `vi.fn()`: Creates a generic mock function. Useful for spying on calls, providing return values, or custom implementations.
+-   `vi.spyOn(object, 'methodName')`: Similar to `vi.fn()`, but spies on an existing method of an object. Useful for verifying that a specific method was called.
+
+### 3. Mocking Strategies
+
+-   **Keep Mocks Simple**: Mocks should be as simple as possible. Only mock the behavior necessary for the test.
+-   **Explicit is Better than Implicit**: Clearly define the behavior of your mocks (e.g., what they should return, whether they should throw an error).
+-   **Avoid Over-Mocking**: Don't mock everything. If a dependency is simple and doesn't have side effects, it might be better to use the real implementation.
+-   **Reset Mocks**: Ensure mocks are reset between tests to avoid interference. Vitest typically handles this for `vi.mock` when configured correctly (e.g., `clearMocks: true` in Vitest config or `vi.clearAllMocks()` in `beforeEach` or `afterEach`).
+
+## Examples
+
+```typescript
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { fetchData } from './apiService'; // Assume this makes an API call
+import { processData } from './dataProcessor'; // Assume this uses fetchData
+
+// Mocking an entire module (e.g., apiService.ts)
+vi.mock('./apiService', () => ({
+  fetchData: vi.fn(),
+}));
+
+describe('processData', () => {
+  beforeEach(() => {
+    // Reset mocks before each test
+    vi.mocked(fetchData).mockReset();
+  });
+
+  it('should process data successfully when fetchData returns valid data', async () => {
+    // Arrange
+    const mockApiResponse = { id: 1, value: 'test data' };
+    vi.mocked(fetchData).mockResolvedValue(mockApiResponse);
+
+    // Act
+    const result = await processData();
+
+    // Assert
+    expect(fetchData).toHaveBeenCalledTimes(1);
+    expect(result).toEqual({ processed: 'TEST DATA' }); // Assuming processData transforms to uppercase
+  });
+
+  it('should throw an error if fetchData fails', async () => {
+    // Arrange
+    vi.mocked(fetchData).mockRejectedValue(new Error('API Error'));
+
+    // Act & Assert
+    await expect(processData()).rejects.toThrow('API Error');
+    expect(fetchData).toHaveBeenCalledTimes(1);
+  });
+});
+
+// Example of spying on a method of an object
+class Greeter {
+  constructor(private prefix: string) {}
+  greet(name: string) {
+    return `${this.prefix} ${name}`;
+  }
+}
+
+describe('Greeter', () => {
+  it('should call greet method with correct name', () => {
+    // Arrange
+    const greeterInstance = new Greeter('Hello');
+    const greetSpy = vi.spyOn(greeterInstance, 'greet');
+
+    // Act
+    greeterInstance.greet('World');
+
+    // Assert
+    expect(greetSpy).toHaveBeenCalledWith('World');
+    greetSpy.mockRestore(); // Important to restore original method after spying
+  });
+});
+```
+
+## Best Practices for `vi.mock`
+
+-   Place `vi.mock` calls at the top level of your test file, before any imports from the mocked module.
+-   When providing a factory function, ensure it returns an object whose structure matches the original module's exports.
+-   Use `vi.mocked()` utility to get TypeScript typings for your mocked functions if you're using TypeScript.
+
+## Cleaning Up Mocks
+
+-   **`mockClear()`**: Resets all information stored in the mock (e.g., `calls`, `instances`). Does not reset the implementation.
+-   **`mockReset()`**: Does everything `mockClear()` does, and also resets the mock implementation to a generic `vi.fn()` that returns `undefined`. Removes any `mockReturnValueOnce`, `mockResolvedValueOnce`, etc.
+-   **`mockRestore()`**: Does everything `mockReset()` does, and also restores the original (non-mocked) implementation. Only works for mocks created with `vi.spyOn`.
+
+Choose the appropriate cleanup method based on your needs. `mockReset()` is often a good default for `vi.fn()` mocks between tests, and `mockRestore()` for `vi.spyOn`.

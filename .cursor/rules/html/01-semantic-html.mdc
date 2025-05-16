@@ -1,0 +1,99 @@
+---
+description: HTML Semantic Elements: Guidelines for using appropriate HTML5 semantic tags.
+globs: **/*.html,**/*.htm
+alwaysApply: false
+---
+# HTML Semantic Element Guidelines
+
+## Introduction
+
+Semantic HTML refers to the use of HTML tags that convey the meaning (or semantics) of the content they enclose, rather than just its presentation. Using semantic tags correctly improves SEO, accessibility for assistive technologies, and code maintainability by making the structure of the document clearer to both browsers and developers.
+
+## Guidelines
+
+- **Structure your page logically:**
+    - Use `<header>` for introductory content or navigational links for a section or the entire page.
+    - Use `<footer>` for footer content for a section or the entire page (e.g., copyright information, related links).
+    - Use `<nav>` for major navigation blocks.
+    - Use `<main>` to encapsulate the dominant content of the `<body>` of a document. There should only be one `<main>` element per page.
+    - Use `<article>` for self-contained compositions like blog posts, news articles, or forum posts.
+    - Use `<section>` to group thematically related content. Sections should typically have a heading.
+    - Use `<aside>` for content that is tangentially related to the content around it (e.g., sidebars, call-out boxes).
+
+- **Prefer semantic tags over generic `<div>` and `<span>`:**
+    - Only use `<div>` for grouping content for styling or layout purposes when no semantic element is appropriate.
+    - Only use `<span>` for inline styling or targeting small pieces of text when no other semantic inline element is suitable.
+
+- **Use `<figure>` and `<figcaption>` for images and their captions:**
+    - `<figure>` can be used for any self-contained content that is referenced from the main content, such as images, diagrams, code snippets, etc.
+    - `<figcaption>` provides a caption or legend for the `<figure>`.
+
+- **Use heading tags (`<h1>` to `<h6>`) hierarchically:**
+    - Start with an `<h1>` for the main title of the page or section.
+    - Do not skip heading levels (e.g., an `<h1>` followed by an `<h3>`).
+    - Use headings to outline the content structure, not just for styling text.
+
+- **Other important semantic elements:**
+    - `<blockquote>` for long quotations.
+    - `<cite>` for citing a creative work.
+    - `<em>` for emphasis.
+    - `<strong>` for strong importance.
+    - `<time>` for dates and times.
+    - `<address>` for contact information.
+    - `<mark>` for highlighted text.
+
+## Examples
+
+### Bad Example (Non-Semantic)
+
+```html
+<div id="header">
+  <div id="nav">
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+  </div>
+</div>
+<div id="main-content">
+  <div class="article">
+    <div class="article-title">My Blog Post</div>
+    <p>This is the content of my blog post.</p>
+  </div>
+</div>
+<div id="footer">
+  <p>&copy; 2024 My Website</p>
+</div>
+```
+
+### Good Example (Semantic)
+
+```html
+<header>
+  <nav>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+  </nav>
+</header>
+<main>
+  <article>
+    <h1>My Blog Post</h1>
+    <p>This is the content of my blog post.</p>
+    <figure>
+      <img src="image.jpg" alt="Descriptive text for the image">
+      <figcaption>A caption for the image.</figcaption>
+    </figure>
+  </article>
+  <aside>
+    <h3>Related Links</h3>
+    <ul>
+      <li><a href="#">Link 1</a></li>
+    </ul>
+  </aside>
+</main>
+<footer>
+  <p>&copy; 2024 My Website</p>
+</footer>
+```

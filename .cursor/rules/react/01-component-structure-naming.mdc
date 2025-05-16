@@ -1,0 +1,154 @@
+---
+description: React Component Structure & Naming: Guidelines for component naming, props, functional components, and file naming.
+globs: **/*.tsx,**/*.jsx
+alwaysApply: false
+---
+# React: Component Structure & Naming Conventions
+
+## 1. Component Naming
+
+- **Use PascalCase** for React component names.
+- If a component is a higher-order component (HOC), consider a prefix like `with` (e.g., `withAuthentication`).
+
+```typescript jsx
+// Good
+function UserProfile(props) {
+  // ...
+}
+
+// Good
+const ShoppingCart = ({ items }) => {
+  // ...
+};
+
+// Bad
+function user_profile(props) {
+  // ...
+}
+const shopping_cart = ({ items }) => {
+  // ...
+}
+```
+
+## 2. File Naming
+
+- Use **PascalCase** for component filenames, matching the component name.
+  - Example: `UserProfile.tsx`, `ShoppingCart.jsx`
+- For files containing hooks, utility functions, or types related to a specific component, consider co-locating them or using a descriptive name (e.g., `useUserProfile.ts`, `UserProfile.types.ts`).
+
+## 3. Functional Components with Hooks
+
+- **Prefer functional components with Hooks** over class components for new code.
+- They are more concise and easier to reason about.
+
+```typescript jsx
+// Good - Functional Component
+import React, { useState, useEffect } from 'react';
+
+interface UserProfileProps {
+  userId: string;
+}
+
+const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Fetch user data
+  }, [userId]);
+
+  if (!user) {
+    return <p>Loading...</p>;
+  }
+
+  return <div>{user.name}</div>;
+};
+
+export default UserProfile;
+```
+
+## 4. Props
+
+### 4.1. Prop Naming
+- Use **camelCase** for prop names.
+
+```typescript jsx
+// Good
+<UserProfile userId="123" isActive={true} />
+
+// Bad
+<UserProfile UserID="123" is_active={true} />
+```
+
+### 4.2. Prop Destructuring
+- **Destructure props** at the beginning of the component for better readability and explicitness.
+
+```typescript jsx
+// Good
+const UserProfile = ({ userId, userName, isActive }) => {
+  // ...
+};
+
+// Okay, but less readable for many props
+const UserProfile = (props) => {
+  const { userId, userName, isActive } = props;
+  // ...
+};
+
+// Bad - repetitive access
+const UserProfile = (props) => {
+  return (
+    <div>
+      <p>{props.userName}</p>
+      {props.isActive && <p>Active</p>}
+    </div>
+  );
+};
+```
+
+### 4.3. Prop Types (TypeScript)
+- **Always define types or interfaces** for component props when using TypeScript.
+- Prefer `interface` for public APIs and `type` for internal or more complex types.
+
+```typescript jsx
+interface UserProfileProps {
+  userId: string;
+  userName: string;
+  isActive?: boolean; // Optional prop
+  onUpdate: (data: UserData) => void; // Function prop
+}
+
+type UserData = {
+  name: string;
+  email: string;
+};
+
+const UserProfile: React.FC<UserProfileProps> = ({ userId, userName, isActive, onUpdate }) => {
+  // ...
+};
+```
+
+### 4.4. Boolean Props
+- For boolean props, aim for positive naming (e.g., `isActive` instead of `isNotActive`).
+- Omit the value for `true` boolean props (shorthand).
+
+```typescript jsx
+// Good
+<Button primary /> // Instead of <Button primary={true} />
+<Modal isOpen />
+
+// Avoid
+<Button isNotPrimary />
+```
+
+## 5. Default Props
+- For functional components, use default parameter values for props.
+
+```typescript jsx
+interface GreeterProps {
+  name?: string;
+}
+
+const Greeter: React.FC<GreeterProps> = ({ name = 'Guest' }) => {
+  return <h1>Hello, {name}!</h1>;
+};
+```

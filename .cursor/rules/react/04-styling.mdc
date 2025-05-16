@@ -1,0 +1,147 @@
+---
+description: React Styling: Guidelines for using Tailwind CSS, avoiding inline styles, and organizing custom CSS.
+globs: **/*.tsx,**/*.jsx,tailwind.config.js,postcss.config.js,**/*.css
+alwaysApply: false
+---
+# React: Styling Guidelines
+
+This project primarily uses Tailwind CSS for styling. These guidelines aim to ensure consistent and maintainable styling practices.
+
+## 1. Tailwind CSS
+
+- **Prefer utility classes** for most styling needs. Tailwind's utility-first approach is designed to build complex UIs without writing custom CSS.
+- **Compose utilities** directly in your JSX to style elements.
+- Strive for readability by keeping class strings manageable. If an element has an excessive number of utility classes, consider extracting a sub-component.
+
+```typescript jsx
+// Good - using Tailwind utilities
+const AlertButton = ({ message, type }) => {
+  const baseClasses = "font-bold py-2 px-4 rounded";
+  const typeClasses = type === 'success' 
+    ? "bg-green-500 hover:bg-green-700 text-white"
+    : "bg-red-500 hover:bg-red-700 text-white";
+
+  return (
+    <button className={`${baseClasses} ${typeClasses}`}>
+      {message}
+    </button>
+  );
+};
+```
+
+### 1.1. Conditional Classes
+- Use template literals or a utility library like `clsx` or `classnames` to conditionally apply Tailwind classes.
+
+```typescript jsx
+import clsx from 'clsx'; // Assuming clsx is installed
+
+const StatusBadge = ({ status }) => {
+  const badgeClasses = clsx(
+    'px-2 py-1 text-xs font-semibold rounded-full',
+    {
+      'bg-green-100 text-green-800': status === 'active',
+      'bg-yellow-100 text-yellow-800': status === 'pending',
+      'bg-red-100 text-red-800': status === 'inactive',
+      'bg-gray-100 text-gray-800': !status
+    }
+  );
+
+  return <span className={badgeClasses}>{status || 'Unknown'}</span>;
+};
+```
+
+### 1.2. Customizing Tailwind (`tailwind.config.js`)
+- Extend Tailwind's default theme (`theme.extend` in `tailwind.config.js`) for project-specific design tokens like colors, spacing, fonts, or breakpoints.
+- Avoid overriding the entire default theme unless necessary.
+- Keep `tailwind.config.js` organized and well-commented.
+
+```javascript
+// Example tailwind.config.js excerpt
+module.exports = {
+  content: [/* ... */],
+  theme: {
+    extend: {
+      colors: {
+        primary: '#1DA1F2',
+        secondary: '#14171A',
+        accent: '#657786',
+      },
+      spacing: {
+        '128': '32rem',
+      }
+    },
+  },
+  plugins: [],
+};
+```
+
+### 1.3. Applying Custom Base Styles or Components
+- If you need to define custom global base styles or reusable, opinionated component styles that go beyond simple utility composition, consider using Tailwind's plugin system or adding them via a global CSS file using `@layer base` or `@layer components`.
+- Prefer composing utilities whenever possible. Only create custom component classes if a pattern is very common and complex to replicate with utilities alone.
+
+```css
+/* Example in a global CSS file (e.g., src/index.css) */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  h1 {
+    @apply text-2xl font-bold mb-4;
+  }
+  /* ... other base styles */
+}
+
+@layer components {
+  .btn-primary {
+    @apply py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75;
+  }
+  /* Define other custom component classes here */
+}
+```
+
+## 2. Inline Styles (`style` prop)
+
+- **Avoid using inline styles (`style={{ ... }}`) for static styling.** Tailwind CSS utilities should cover most static styling needs.
+- Inline styles are acceptable for highly dynamic styles that depend on component state or props and cannot be easily achieved with Tailwind classes (e.g., calculated sizes, positions).
+- If using inline styles, ensure keys are camelCased (e.g., `backgroundColor` instead of `background-color`).
+
+```typescript jsx
+// Acceptable for dynamic styles
+const ProgressBar = ({ percentage }) => (
+  <div className="w-full bg-gray-200 rounded-full h-2.5">
+    <div 
+      className="bg-blue-600 h-2.5 rounded-full"
+      style={{ width: `${percentage}%` }} // Dynamic width
+    ></div>
+  </div>
+);
+
+// Bad - static styles that should be Tailwind classes
+const BadHeader = () => (
+  <h1 style={{ fontSize: '24px', color: 'blue', marginBottom: '16px' }}>
+    My Page Title
+  </h1>
+);
+
+// Good - using Tailwind utilities instead
+const GoodHeader = () => (
+  <h1 className="text-2xl text-blue-600 mb-4">
+    My Page Title
+  </h1>
+);
+```
+
+## 3. CSS Modules or Styled Components (Not currently in use)
+
+- This project is standardized on Tailwind CSS.
+- If a need arises for CSS Modules or a CSS-in-JS library like Styled Components, this should be a team decision and these guidelines would need to be updated.
+
+## 4. Organizing Custom CSS Files (If any)
+
+- If extensive custom CSS (beyond Tailwind extensions) becomes necessary:
+  - Keep custom CSS files minimal.
+  - Organize them logically, perhaps co-located with components if styles are component-specific and not achievable with Tailwind.
+  - Ensure they are imported correctly (e.g., in `main.tsx` or a root component).
+- Most global styles or custom component classes can be managed within the CSS file where Tailwind directives (`@tailwind base`, `@tailwind components`, `@tailwind utilities`) are declared.

@@ -1,0 +1,264 @@
+---
+description: React State & Hooks: Best practices for useState, useEffect, useContext, useReducer, and custom hooks.
+globs: **/*.tsx,**/*.jsx
+alwaysApply: false
+---
+# React: State Management & Hooks
+
+## 1. `useState`
+
+- Use `useState` for managing simple component-level state (strings, numbers, booleans, small objects/arrays).
+- Initialize state with a meaningful default value.
+- When updating state based on the previous state, use the functional update form to ensure you have the latest state value.
+
+```typescript jsx
+import React, { useState } from 'react';
+
+const Counter: React.FC = () => {
+  const [count, setCount] = useState(0);
+
+  const increment = () => {
+    setCount(prevCount => prevCount + 1); // Functional update
+  };
+
+  const decrement = () => {
+    setCount(count - 1); // Direct update (safe if not dependent on exact previous state in rapid succession)
+  };
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>Increment</button>
+      <button onClick={decrement}>Decrement</button>
+    </div>
+  );
+};
+```
+
+## 2. `useEffect`
+
+- Use `useEffect` to perform side effects after rendering (e.g., data fetching, subscriptions, manually changing the DOM).
+
+### 2.1. Dependency Array
+- **Always provide a dependency array** to `useEffect`.
+  - Empty array `[]`: The effect runs once after the initial render and cleans up on unmount.
+  - Array with values `[dep1, dep2]`: The effect runs after the initial render and re-runs if any dependency changes.
+  - No array (omitted): The effect runs after every render (avoid this unless absolutely necessary as it can lead to performance issues and infinite loops).
+- Include all values from the component scope (props, state, functions) that are used inside the effect and change over time.
+
+### 2.2. Cleanup Function
+- If your effect sets up subscriptions or listeners, **return a cleanup function** from `useEffect` to remove them when the component unmounts or before the effect re-runs.
+
+```typescript jsx
+import React, { useState, useEffect } from 'react';
+
+interface TimerProps {
+  interval: number;
+}
+
+const Timer: React.FC<TimerProps> = ({ interval }) => {
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    console.log('Setting up timer with interval:', interval);
+    const timerId = setInterval(() => {
+      setSeconds(prevSeconds => prevSeconds + 1);
+    }, interval);
+
+    // Cleanup function
+    return () => {
+      console.log('Clearing timer');
+      clearInterval(timerId);
+    };
+  }, [interval]); // Re-run effect if interval prop changes
+
+  return <p>Timer: {seconds}s</p>;
+};
+
+// Example: Data fetching
+const UserData: React.FC<{ userId: string }> = ({ userId }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(`/api/users/${userId}`)
+      .then(res => res.json())
+      .then(data => {
+        setUser(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Failed to fetch user:', error);
+        setLoading(false);
+      });
+  }, [userId]); // Dependency: effect re-runs if userId changes
+
+  if (loading) return <p>Loading user...</p>;
+  return <pre>{JSON.stringify(user, null, 2)}</pre>;
+};
+```
+
+## 3. `useContext`
+
+- Use `useContext` to share state across the component tree without manually passing props down through many levels (prop drilling).
+- Useful for global themes, user authentication status, language preferences, etc.
+- Create a `Context` object using `React.createContext()`.
+- Wrap the part of your component tree that needs access to the context with a `Context.Provider` and pass the value.
+- Consume the context value using the `useContext` hook in any descendant component.
+
+```typescript jsx
+import React, { createContext, useContext, useState } from 'react';
+
+// 1. Create Context
+interface ThemeContextType {
+  theme: string;
+  toggleTheme: () => void;
+}
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+// Custom hook for consuming context (optional but good practice)
+const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
+};
+
+// 2. Create Provider Component
+const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [theme, setTheme] = useState('light');
+  const toggleTheme = () => setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+// 3. Consume Context
+const ThemedButton: React.FC = () => {
+  const { theme, toggleTheme } = useTheme();
+  return (
+    <button onClick={toggleTheme} style={{ background: theme === 'light' ? '#fff' : '#333', color: theme === 'light' ? '#000' : '#fff' }}>
+      Current theme: {theme}. Toggle me!
+    </button>
+  );
+};
+
+// App structure
+const App = () => (
+  <ThemeProvider>
+    <ThemedButton />
+  </ThemeProvider>
+);
+```
+
+## 4. `useReducer`
+
+- Use `useReducer` as an alternative to `useState` for managing more complex state logic that involves multiple sub-values or when the next state depends on the previous one in a more involved way.
+- Particularly useful when state transitions are well-defined or involve dispatching actions.
+
+```typescript jsx
+import React, { useReducer } from 'react';
+
+interface State {
+  count: number;
+  error: string | null;
+}
+
+type Action =
+  | { type: 'increment' }
+  | { type: 'decrement' }
+  | { type: 'reset' }
+  | { type: 'setError'; payload: string };
+
+const initialState: State = { count: 0, error: null };
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'increment':
+      return { ...state, count: state.count + 1, error: null };
+    case 'decrement':
+      return { ...state, count: state.count - 1, error: null };
+    case 'reset':
+      return { ...state, count: 0, error: null };
+    case 'setError':
+      return { ...state, error: action.payload };
+    default:
+      return state;
+  }
+}
+
+const ComplexCounter: React.FC = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    <div>
+      <p>Count: {state.count}</p>
+      {state.error && <p style={{ color: 'red' }}>Error: {state.error}</p>}
+      <button onClick={() => dispatch({ type: 'increment' })}>Increment</button>
+      <button onClick={() => dispatch({ type: 'decrement' })}>Decrement</button>
+      <button onClick={() => dispatch({ type: 'reset' })}>Reset</button>
+      <button onClick={() => dispatch({ type: 'setError', payload: 'Something went wrong!' })}>Set Error</button>
+    </div>
+  );
+};
+```
+
+## 5. Custom Hooks
+
+- **Extract component logic into reusable custom Hooks** when you find yourself repeating the same stateful logic (e.g., `useState` and `useEffect` combinations) across multiple components.
+- Custom Hook names should always start with `use` (e.g., `useFormInput`, `useWindowSize`).
+- Custom Hooks can call other Hooks.
+
+```typescript jsx
+import { useState, useEffect } from 'react';
+
+// Custom Hook: useWindowWidth
+function useWindowWidth() {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []); // Empty dependency array: runs only on mount and unmount
+
+  return width;
+}
+
+// Component using the custom hook
+const ResponsiveComponent: React.FC = () => {
+  const windowWidth = useWindowWidth();
+
+  return <p>Current window width is: {windowWidth}px</p>;
+};
+
+// Custom Hook: useFormInput
+function useFormInput(initialValue: string) {
+  const [value, setValue] = useState(initialValue);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
+  };
+  return {
+    value,
+    onChange: handleChange,
+  };
+}
+
+const MyForm: React.FC = () => {
+  const nameInput = useFormInput('');
+  const emailInput = useFormInput('');
+
+  return (
+    <form>
+      <input type="text" placeholder="Name" {...nameInput} />
+      <input type="email" placeholder="Email" {...emailInput} />
+      <p>Name: {nameInput.value}, Email: {emailInput.value}</p>
+    </form>
+  );
+};
+```

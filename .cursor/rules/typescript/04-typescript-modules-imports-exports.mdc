@@ -1,0 +1,142 @@
+---
+description: TypeScript Modules, Imports, and Exports: Best practices for organizing code into modules and managing imports/exports.
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
+---
+# TypeScript Modules, Imports, and Exports
+
+## Introduction
+Properly structuring code into modules and managing imports and exports is essential for creating scalable and maintainable TypeScript applications. This guide provides best practices for these aspects.
+
+## Guidelines
+
+### Module Organization
+- **Single Responsibility**: Aim for modules (files) that have a single, well-defined responsibility or focus on a specific feature/domain.
+- **Directory Structure**: Organize modules into a logical directory structure. Common patterns include feature-based (e.g., `src/features/user/`) or type-based (e.g., `src/components/`, `src/services/`, `src/utils/`).
+- **Barrel Files (`index.ts`)**: Use `index.ts` files (barrel files) to re-export entities from a directory, making it easier to import them from outside the directory.
+  ```typescript
+  // In src/components/index.ts
+  export * from './Button';
+  export * from './Modal';
+
+  // Usage elsewhere
+  import { Button, Modal } from '../components'; // Imports from src/components/index.ts
+  ```
+  Use barrels judiciously, as overusing them can sometimes lead to larger bundle sizes if tree-shaking is not effective, or circular dependency issues if not managed carefully.
+
+### Exporting Members
+- **Named Exports**: Prefer named exports for clarity and to allow importing only what is needed. This also aids tree-shaking.
+  ```typescript
+  // Good: Named exports
+  export const utilityFunction = () => { /* ... */ };
+  export interface UserProfile { /* ... */ }
+  ```
+- **Default Exports**: Use default exports sparingly, typically for the primary export of a module (e.g., a main component in a UI file, or a class). Be consistent if you choose to use them.
+  ```typescript
+  // Good: Default export for a primary component
+  // In UserCard.tsx
+  export default function UserCard(props: UserCardProps) { /* ... */ }
+  // Import: import MyUserCard from './UserCard';
+  ```
+  Mixing default and named exports in the same file is possible but can sometimes be confusing. Clarity is key.
+
+### Importing Members
+- **Specific Imports**: Import only the specific members you need.
+  ```typescript
+  // Good
+  import { utilityFunction, UserProfile } from './utils';
+
+  // Avoid (if you only need a few things)
+  import * as Utils from './utils';
+  // Utils.utilityFunction(); -- Less clear about what is being used
+  ```
+- **Path Aliases**: Configure path aliases in `tsconfig.json` (e.g., `@/*` for `src/*`) to avoid long relative paths (`../../../`).
+  ```json
+  // tsconfig.json
+  {
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "@/*": ["src/*"]
+      }
+    }
+  }
+  ```
+  ```typescript
+  // Usage
+  import { MyComponent } from '@/components/MyComponent';
+  import { apiService } from '@/services/api';
+  ```
+- **Group and Sort Imports**: Keep imports organized. A common convention is:
+  1. External/third-party library imports
+  2. Internal imports (using path aliases or relative paths)
+  3. Type imports (if using `import type`)
+  Many linters/formatters can enforce import sorting (e.g., ESLint with `eslint-plugin-import`).
+  ```typescript
+  import React from 'react'; // External
+  import { Button } from '@mui/material'; // External UI library
+
+  import { userService } from '@/services/userService'; // Internal
+  import { MyCustomHook } from '../hooks/myCustomHook'; // Internal relative
+
+  import type { User } from '@/types'; // Type import
+  ```
+- **`import type`**: Use `import type` when importing only types (interfaces, type aliases). This makes it clear that the import is for type information only and can be safely erased by the TypeScript compiler, sometimes leading to better optimization or avoiding circular dependency issues related to values.
+  ```typescript
+  import type { User, Order } from './models';
+
+  function processUser(user: User) {
+    // ...
+  }
+  ```
+
+### Circular Dependencies
+- Be mindful of circular dependencies between modules. They can lead to unexpected `undefined` values at runtime.
+- If you encounter them, try to refactor your code by:
+  - Extracting shared logic into a new, lower-level module.
+  - Using dependency injection.
+  - Re-evaluating module responsibilities.
+- `import type` can sometimes help break circular dependencies if the cycle involves only type information.
+
+## Examples
+
+### Barrel File Example (`src/utils/index.ts`)
+```typescript
+// src/utils/formatters.ts
+export const formatDate = (date: Date): string => { /* ... */ };
+export const formatCurrency = (amount: number): string => { /* ... */ };
+
+// src/utils/validators.ts
+export const isValidEmail = (email: string): boolean => { /* ... */ };
+
+// src/utils/index.ts
+export * from './formatters';
+export * from './validators';
+
+// Usage elsewhere:
+import { formatDate, isValidEmail } from '@/utils';
+```
+
+### Path Alias and Import Grouping Example
+```typescript
+// External libraries
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+
+// Internal modules (using path aliases)
+import { logger } from '@/core/logger';
+import { AppConfig } from '@/config';
+import { ProductCard } from '@/components/ProductCard';
+
+// Type imports
+import type { UserSession, Product } from '@/types';
+
+function MyFeatureComponent() {
+  const [data, setData] = useState<Product[] | null>(null);
+  // ... uses logger, AppConfig, etc.
+}
+```
+
+## Tools
+- **ESLint (`eslint-plugin-import`)**: Helps enforce import order, prevent unresolved imports, and manage import paths.
+- **TypeScript Compiler (`tsc`)**: The `paths` and `baseUrl` options in `tsconfig.json` are essential for path aliases.

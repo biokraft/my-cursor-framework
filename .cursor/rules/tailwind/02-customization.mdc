@@ -1,0 +1,183 @@
+---
+description: Tailwind CSS: Best practices for customizing Tailwind via tailwind.config.js or tailwind.config.ts.
+globs: tailwind.config.js, tailwind.config.ts
+alwaysApply: false
+---
+# Tailwind CSS: Customization via `tailwind.config.js`
+
+## Introduction
+
+Tailwind CSS is highly customizable through its configuration file, typically `tailwind.config.js` or `tailwind.config.ts`. This guide outlines best practices for modifying your Tailwind setup to match your project's design system.
+
+## 1. Understanding `tailwind.config.js`
+
+This file is where you define your project's color palette, type scale, fonts, breakpoints, spacing, and more. It allows you to extend Tailwind's default theme, add custom utilities, or integrate plugins.
+
+**Key Sections:**
+
+-   `theme`: Used to customize Tailwind's default design tokens.
+-   `theme.extend`: The preferred way to add new values or override specific default values without losing the rest of the defaults.
+-   `plugins`: For adding official or third-party plugins.
+-   `content`: Specifies the files Tailwind should scan for utility classes to generate CSS.
+
+## 2. Extending the Theme
+
+Always prefer `theme.extend` over directly modifying `theme` to avoid accidentally removing default Tailwind values you might still need.
+
+**Good Example: Adding custom colors**
+
+```javascript
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        'brand-primary': '#1DA1F2',
+        'brand-secondary': '#14171A',
+        'custom-alert': 'hsla(var(--custom-alert-hue), 80%, 50%, 1)', // Example with CSS variables
+      },
+      spacing: {
+        '128': '32rem', // Adding a larger spacing utility
+      },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'], // Overriding default sans-serif font
+        display: ['Oswald', 'ui-serif'], // Adding a custom display font
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        }
+      },
+      animation: {
+        fadeIn: 'fadeIn 1s ease-out'
+      }
+    },
+  },
+  plugins: [],
+}
+```
+
+**Avoid directly overriding the entire `theme` object for simple additions:**
+
+```javascript
+// Less ideal if you only want to add a color
+module.exports = {
+  theme: {
+    colors: { // This replaces ALL default Tailwind colors
+      'brand-primary': '#1DA1F2',
+    },
+  },
+}
+```
+
+## 3. Organizing Your Configuration
+
+-   **Keep it Readable**: For larger configurations, consider organizing your theme extensions into separate objects or even separate files if your `tailwind.config.js` becomes too unwieldy.
+-   **Use Comments**: Explain complex configurations or custom values.
+-   **Consistent Naming**: Use a consistent naming convention for your custom keys (e.g., `brand-primary`, `accent-color`).
+
+## 4. Content Configuration
+
+Ensure your `content` array in `tailwind.config.js` accurately reflects all the file paths where you use Tailwind classes. This is crucial for PurgeCSS (in older Tailwind versions) or the JIT engine to correctly remove unused styles and generate only the necessary CSS.
+
+```javascript
+// tailwind.config.js
+module.exports = {
+  content: [
+    './src/**/*.{js,jsx,ts,tsx,vue,svelte}',
+    './public/index.html',
+  ],
+  // ... other configurations
+}
+```
+
+## 5. Using Plugins
+
+Tailwind has a rich ecosystem of first-party and third-party plugins.
+
+-   **Official Plugins**: Such as `@tailwindcss/typography`, `@tailwindcss/forms`, `@tailwindcss/aspect-ratio` can be very useful.
+-   **Third-Party Plugins**: Evaluate their necessity and maintenance status before adding them.
+
+```javascript
+// tailwind.config.js
+module.exports = {
+  theme: {
+    // ... extend
+  },
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
+  ],
+}
+```
+
+## 6. Custom Variants
+
+You can add custom variants using plugins or by extending `variants` in `theme.extend` (though plugin API is often preferred for more complex variants).
+
+```javascript
+// Example: Adding a 'disabled-within' variant (simplified)
+// More robust solutions might involve a small plugin
+
+// In your main CSS (e.g., index.css)
+// @layer variants {
+//   .disabled-within\:opacity-50:has(:disabled) {
+//       opacity: 0.5;
+//   }
+// }
+
+// Generally, for custom variants, consider writing a small plugin:
+// plugins: [
+//   function({ addVariant }) {
+//     addVariant('disabled-within', ':merge(.group):disabled &');
+//     addVariant('group-disabled', ':merge(.group):disabled &');
+//   }
+// ]
+```
+Refer to the official Tailwind documentation for the most up-to-date and robust ways to create custom variants.
+
+## 7. Theming with CSS Variables
+
+For advanced theming (e.g., light/dark mode, multiple themes), using CSS custom properties in your `tailwind.config.js` is a powerful technique.
+
+```javascript
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        primary: 'hsl(var(--color-primary-hue) var(--color-primary-saturation) var(--color-primary-lightness) / <alpha-value>)',
+        background: 'hsl(var(--color-background-hue) var(--color-background-saturation) var(--color-background-lightness) / <alpha-value>)',
+        text: 'hsl(var(--color-text-hue) var(--color-text-saturation) var(--color-text-lightness) / <alpha-value>)',
+      }
+    }
+  }
+}
+```
+
+Then define these CSS variables in your global CSS, potentially scoped by a class or data attribute:
+
+```css
+/* styles.css */
+:root {
+  --color-primary-hue: 210;
+  --color-primary-saturation: 100%;
+  --color-primary-lightness: 50%;
+  /* ... other default theme variables */
+}
+
+[data-theme="dark"] {
+  --color-primary-hue: 250;
+  /* ... other dark theme variables */
+}
+```
+Using `<alpha-value>` in your `tailwind.config.js` allows Tailwind's opacity modifiers (e.g., `bg-primary/50`) to work correctly with HSL colors.
+
+## Summary
+
+-   Use `theme.extend` to customize Tailwind without losing defaults.
+-   Keep your `tailwind.config.js` organized and readable.
+-   Ensure `content` paths are accurate for optimal CSS generation.
+-   Leverage plugins for common UI patterns and extended functionality.
+-   Consider CSS variables for advanced theming capabilities.

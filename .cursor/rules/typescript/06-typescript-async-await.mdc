@@ -1,0 +1,196 @@
+---
+description: TypeScript Async/Await: Best practices for using async/await syntax for asynchronous operations.
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
+---
+# TypeScript Async/Await Best Practices
+
+## Introduction
+`async/await` provides a cleaner, more synchronous-looking way to write asynchronous code that deals with Promises. This guide covers best practices for its usage in TypeScript.
+
+## Guidelines
+
+### Use `async` Keyword for Functions Returning Promises
+- Any function that uses the `await` keyword internally must be marked with `async`.
+- `async` functions implicitly return a `Promise`. If the function returns a value `T`, the `async` function returns `Promise<T>`. If it throws an error, the promise is rejected.
+
+```typescript
+async function fetchData(url: string): Promise<any> { // Explicit Promise return type is good practice
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return await response.json();
+}
+```
+
+### Use `await` to Pause Execution
+- Use `await` before a Promise to pause the execution of the `async` function until the Promise settles (either resolves or rejects).
+- Only use `await` on expressions that evaluate to a Promise.
+
+```typescript
+async function processUserData() {
+  try {
+    console.log("Fetching user...");
+    const user = await fetchUser(123);
+    console.log("User fetched:", user);
+
+    console.log("Fetching user posts...");
+    const posts = await fetchPostsForUser(user.id);
+    console.log("Posts fetched:", posts);
+  } catch (error) {
+    console.error("Error processing user data:", error);
+  }
+}
+```
+
+### Error Handling with `try...catch`
+- Wrap `await` calls in `try...catch` blocks to handle promise rejections (errors from asynchronous operations).
+
+```typescript
+async function getUser(id: number): Promise<User | null> {
+  try {
+    const response = await fetch(`/api/users/${id}`);
+    if (!response.ok) {
+      // Handle non-2xx HTTP statuses as errors
+      throw new Error(`Failed to fetch user: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(`Error fetching user ${id}:`, error.message);
+    }
+    return null; // Or re-throw, or return a specific error object
+  }
+}
+```
+
+### Avoid `await` in Non-Async Functions
+- You cannot use `await` directly inside a regular (non-`async`) function. If you need to consume a promise, use `.then().catch()` or make the outer function `async`.
+
+### Parallel Execution with `Promise.all()` or `Promise.allSettled()`
+- If you have multiple independent asynchronous operations, don't `await` them sequentially if they can be run in parallel. Use `Promise.all()` to run them concurrently and wait for all to complete, or `Promise.allSettled()` to wait for all to settle (resolve or reject).
+
+```typescript
+// Sequential (slower if independent)
+async function fetchUserDataSequentially(userId: string) {
+  const profile = await fetchUserProfile(userId); // Waits
+  const orders = await fetchUserOrders(userId);   // Waits after profile
+  return { profile, orders };
+}
+
+// Parallel (faster if independent)
+async function fetchUserDataInParallel(userId: string) {
+  try {
+    const [profile, orders] = await Promise.all([
+      fetchUserProfile(userId),
+      fetchUserOrders(userId),
+    ]);
+    return { profile, orders };
+  } catch (error) {
+    console.error("Error fetching user data in parallel:", error);
+    throw error;
+  }
+}
+
+// Parallel, handling individual failures with Promise.allSettled()
+async function fetchMultipleResources(urls: string[]) {
+  const results = await Promise.allSettled(urls.map(url => fetch(url).then(res => res.json())));
+
+  results.forEach((result, index) => {
+    if (result.status === "fulfilled") {
+      console.log(`URL ${urls[index]} fetched successfully:`, result.value);
+    } else {
+      console.error(`URL ${urls[index]} failed to fetch:`, result.reason);
+    }
+  });
+}
+```
+
+### Avoid Unnecessary `async`
+- If a function doesn't use `await` but needs to return a Promise, you can often just return the Promise directly without marking the function as `async`.
+- However, `async` ensures that the function *always* returns a Promise, and any thrown synchronous error will be converted into a rejected promise, which can be a benefit for consistency.
+
+```typescript
+// Unnecessary async if just returning a promise
+async function getPromise(): Promise<string> { // Not strictly necessary to be async
+  return Promise.resolve("hello");
+}
+
+// Can be written as:
+function getPromiseSimply(): Promise<string> {
+  return Promise.resolve("hello");
+}
+
+// But, async provides consistent error handling:
+async function potentiallyThrowsSynchronously(): Promise<string> {
+  if (Math.random() < 0.5) {
+    throw new Error("Sync error!"); // This becomes a rejected promise
+  }
+  return "Success";
+}
+```
+
+### Top-Level `await` (ES2022 Modules)
+- In ES modules (when `module` is set to `es2022` or newer and `target` is `es2017` or newer in `tsconfig.json`), you can use `await` at the top level of a module, outside of an `async` function. This can be useful for module initialization.
+
+```typescript
+// In an ES module (e.g., file.ts compiled with appropriate tsconfig)
+// const connection = await connectToDatabase();
+// console.log("Database connected at module load time.");
+// export const db = connection;
+```
+Be mindful of its implications on module loading and execution flow.
+
+### `void` Operator with Unhandled Promises
+- If you call an `async` function but don't intend to `await` its result (fire-and-forget), and your linter complains about unhandled promises, you can use the `void` operator to signal this intent. Ensure you have proper error handling within the `async` function itself.
+
+```typescript
+async function logAnalyticsEvent(event: string): Promise<void> {
+  try {
+    await analyticsService.track(event);
+  } catch (error) {
+    console.error("Failed to log analytics event:", error);
+    // Do not let this error propagate and break other operations
+  }
+}
+
+// Fire-and-forget with void to suppress unhandled promise warnings
+void logAnalyticsEvent("user_clicked_button");
+```
+However, be cautious with fire-and-forget promises, as unhandled rejections can still cause issues if not caught within the `async` function.
+
+## Examples
+
+### Simple `async/await` Usage
+```typescript
+async function displayUserData(userId: number): Promise<void> {
+  try {
+    const user = await fetchUser(userId); // Assume fetchUser is an async function
+    console.log("User Name:", user.name);
+    const settings = await fetchUserSettings(userId);
+    console.log("Theme:", settings.theme);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(`Failed to display user data for ${userId}:`, error.message);
+    }
+  }
+}
+```
+
+### `Promise.all` for Concurrent Operations
+```typescript
+async function loadDashboardData(userId: number): Promise<DashboardData | null> {
+  try {
+    const [profile, articles, notifications] = await Promise.all([
+      fetchUserProfile(userId),
+      fetchArticlesForUser(userId),
+      fetchNotifications(userId),
+    ]);
+    return { profile, articles, notifications };
+  } catch (error: unknown) {
+    console.error("Error loading dashboard data:", error);
+    return null;
+  }
+}
+```

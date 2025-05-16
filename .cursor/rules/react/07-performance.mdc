@@ -1,0 +1,190 @@
+---
+description: React Performance: Guidelines for optimizing component rendering using React.memo, useMemo, useCallback, code splitting, and virtualization.
+globs: **/*.tsx,**/*.jsx
+alwaysApply: false
+---
+# React: Performance Optimization Guidelines
+
+Optimizing React applications ensures a smooth and responsive user experience. Here are key techniques and considerations.
+
+## 1. Memoization
+
+Memoization helps prevent unnecessary re-renders by caching the results of expensive calculations or component renders.
+
+### 1.1. `React.memo()`
+- `React.memo` is a higher-order component that memoizes your component. React will skip rendering the component if its props have not changed.
+- It performs a shallow comparison of props by default. You can provide a custom comparison function as a second argument if needed.
+- Use it for functional components that render often with the same props.
+
+```typescript jsx
+import React from 'react';
+
+interface UserAvatarProps {
+  userId: string;
+  imageUrl: string;
+  size?: number;
+}
+
+// This component will only re-render if userId, imageUrl, or size changes.
+const UserAvatar: React.FC<UserAvatarProps> = React.memo(({ userId, imageUrl, size = 50 }) => {
+  console.log(`Rendering UserAvatar for ${userId}`);
+  return <img src={imageUrl} alt={`Avatar for ${userId}`} width={size} height={size} style={{ borderRadius: '50%' }} />;
+});
+
+// Custom comparison function example (rarely needed if props are primitive or stable objects)
+// const areEqual = (prevProps, nextProps) => {
+//   return prevProps.item.id === nextProps.item.id && prevProps.onClick === nextProps.onClick;
+// };
+// const MemoizedItem = React.memo(MyItemComponent, areEqual);
+
+export default UserAvatar;
+```
+
+### 1.2. `useMemo()`
+- `useMemo` memoizes the result of a function call. It recomputes the memoized value only when one of the dependencies has changed.
+- Useful for expensive calculations that shouldn't run on every render.
+
+```typescript jsx
+import React, { useMemo, useState } from 'react';
+
+const ExpensiveCalculationComponent: React.FC<{ list: number[] }> = ({ list }) => {
+  // This calculation will only re-run if 'list' changes.
+  const sum = useMemo(() => {
+    console.log('Calculating sum...');
+    return list.reduce((acc, current) => acc + current, 0);
+  }, [list]);
+
+  return <p>Sum: {sum}</p>;
+};
+
+const App = () => {
+  const [numbers, setNumbers] = useState([1, 2, 3]);
+  const [count, setCount] = useState(0); // To trigger re-renders unrelated to numbers
+
+  return (
+    <div>
+      <button onClick={() => setNumbers([...numbers, numbers.length + 1])}>Add Number</button>
+      <button onClick={() => setCount(count + 1)}>Increment Count (triggers re-render): {count}</button>
+      <ExpensiveCalculationComponent list={numbers} />
+    </div>
+  );
+};
+```
+
+### 1.3. `useCallback()`
+- `useCallback` memoizes callback functions. It returns a memoized version of the callback that only changes if one of the dependencies has changed.
+- Crucial when passing callbacks to optimized child components that rely on reference equality to prevent unnecessary re-renders (e.g., children wrapped in `React.memo`).
+
+```typescript jsx
+import React, { useState, useCallback } from 'react';
+
+const ChildComponent: React.FC<{ onClick: () => void }> = React.memo(({ onClick }) => {
+  console.log('Rendering ChildComponent');
+  return <button onClick={onClick}>Click me</button>;
+});
+
+const ParentComponent: React.FC = () => {
+  const [count, setCount] = useState(0);
+  const [otherState, setOtherState] = useState(0);
+
+  // Without useCallback, handleClick would be a new function on every ParentComponent render,
+  // causing ChildComponent to re-render even if its behavior doesn't change.
+  const handleClick = useCallback(() => {
+    console.log('Button clicked! Count is:', count); // `count` will be the value from when handleClick was memoized
+    // If the callback needs the latest count, include count in dependencies or use functional update for setCount.
+  }, [count]); // Re-creates handleClick only when `count` changes.
+
+  return (
+    <div>
+      <p>Parent Count: {count}</p>
+      <p>Other State: {otherState}</p>
+      <button onClick={() => setCount(c => c + 1)}>Increment Parent Count</button>
+      <button onClick={() => setOtherState(s => s + 1)}>Change Other State (triggers parent re-render)</button>
+      <ChildComponent onClick={handleClick} />
+    </div>
+  );
+};
+```
+**Note on `useCallback` dependencies:** Be careful with the dependency array. If your callback depends on props or state, they should be listed in the array. If you omit a dependency, the callback might use a stale value from a previous render.
+
+## 2. Code Splitting
+
+- Use dynamic `import()` syntax with `React.lazy()` to split your code into smaller chunks. This allows loading components only when they are needed, improving initial load time.
+- Wrap lazy components in `React.Suspense` to show a fallback UI (e.g., a loading spinner) while the component is being loaded.
+
+```typescript jsx
+import React, { Suspense, useState } from 'react';
+
+// This component will be loaded in a separate chunk
+const LazyLoadedComponent = React.lazy(() => import('./LazyLoadedComponent'));
+
+const App = () => {
+  const [showLazy, setShowLazy] = useState(false);
+
+  return (
+    <div>
+      <button onClick={() => setShowLazy(true)}>Load Lazy Component</button>
+      <Suspense fallback={<div>Loading...</div>}>
+        {showLazy && <LazyLoadedComponent />}
+      </Suspense>
+    </div>
+  );
+};
+
+// ./LazyLoadedComponent.tsx
+// const LazyLoadedComponent = () => <div>This component was loaded lazily!</div>;
+// export default LazyLoadedComponent;
+```
+
+## 3. Virtualization for Long Lists
+
+- When rendering very long lists or tables, rendering all items at once can lead to performance issues.
+- Use list virtualization (also known as "windowing") libraries like `react-window` or `react-virtualized`.
+- These libraries only render the items currently visible within the viewport (the "window"), significantly improving performance for large datasets.
+
+```typescript jsx
+// Simplified example using react-window
+import React from 'react';
+import { FixedSizeList as List } from 'react-window';
+
+// Assume `items` is a large array of data
+const MyLargeList = ({ items }) => {
+  const Row = ({ index, style }) => (
+    <div style={style} className="list-item">
+      {items[index].name}
+    </div>
+  );
+
+  return (
+    <List
+      height={400} // Height of the scrollable area
+      itemCount={items.length} // Total number of items
+      itemSize={35} // Height of each row
+      width={300} // Width of the list
+    >
+      {Row}
+    </List>
+  );
+};
+
+// const items = Array.from({ length: 10000 }, (_, i) => ({ id: i, name: `Item ${i + 1}` }));
+// <MyLargeList items={items} />
+```
+
+## 4. Profiling
+
+- Use the React Developer Tools Profiler to identify performance bottlenecks in your application.
+- The Profiler helps you understand which components are re-rendering, why they are re-rendering, and how much time they take to render.
+
+## 5. Optimize Context Usage
+
+- When using `useContext`, be aware that any component consuming a context will re-render whenever the context value changes.
+- To optimize, you can:
+  - Split contexts into smaller, more granular pieces if different parts of the state change at different rates.
+  - Memoize parts of the context value if they don't change often.
+  - Pass down specific parts of the context or use selectors if using a state management library integrated with context.
+
+## 6. Avoid Unnecessary Computations in Render
+
+- Keep the logic directly within the render phase (the main body of your functional component or the `render` method of a class component) as minimal and fast as possible.
+- Move expensive computations to `useEffect` (if they are side effects) or memoize them with `useMemo`.

@@ -1,0 +1,115 @@
+---
+description: Git Commit Messages: Guidelines for enforcing Conventional Commits for clearer history and automated changelogs.
+globs: 
+alwaysApply: false
+---
+# Commit Message Conventions (Conventional Commits)
+
+## Introduction
+
+Adopting a consistent commit message format, like Conventional Commits, significantly improves a project's version control history. It makes git logs more readable, helps in automating changelog generation, and enables semantic versioning.
+
+[Conventional Commits Specification](https://www.conventionalcommits.org/)
+
+## Guidelines
+
+The commit message should be structured as follows:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+### 1. Type
+
+Must be one of the following:
+
+- **feat**: A new feature for the user.
+- **fix**: A bug fix for the user.
+- **build**: Changes that affect the build system or external dependencies (e.g., gulp, broccoli, npm).
+- **chore**: Routine tasks, maintenance, or changes that don't modify `src` or `test` files (e.g., updating dependencies, build scripts).
+- **ci**: Changes to CI configuration files and scripts (e.g., GitHub Actions, GitLab CI).
+- **docs**: Documentation only changes.
+- **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc).
+- **refactor**: A code change that neither fixes a bug nor adds a feature.
+- **perf**: A code change that improves performance.
+- **test**: Adding missing tests or correcting existing tests.
+- **revert**: Reverts a previous commit.
+
+### 2. Scope (Optional)
+
+The scope provides additional contextual information and is contained within parentheses, e.g., `feat(parser): add ability to parse arrays`.
+It can be anything specifying the place of the commit change (e.g., component name, module, file name).
+
+### 3. Description (Subject)
+
+- Concise summary of the code changes.
+- Use the imperative, present tense: "change" not "changed" nor "changes".
+- Don't capitalize the first letter.
+- No dot (.) at the end.
+- Should be 50 characters or less if possible, but a hard limit of 72 characters is often enforced by tools.
+
+### 4. Body (Optional)
+
+- Also use the imperative, present tense.
+- Should include the motivation for the change and contrast this with previous behavior.
+- Explain *what* and *why* vs. *how*.
+- Wrap the body at 72 characters.
+
+### 5. Footer(s) (Optional)
+
+- **Breaking Changes**: Start with `BREAKING CHANGE:` (or `BREAKING-CHANGE:`) followed by a description of the breaking change. A BREAKING CHANGE can be part of commits of any type.
+- **Issue References**: Reference issues or pull requests that this commit addresses (e.g., `Closes #123`, `Fixes #456`).
+
+## Examples
+
+### Simple Commit (Fix)
+```
+fix: correct minor typos in code
+```
+
+### Commit with Scope and Description (Feature)
+```
+feat(lang): add polish language
+```
+
+### Commit with Body (Refactor)
+```
+refactor: simplify user authentication logic
+
+Removed redundant checks and streamlined the token validation process
+to improve readability and maintainability. This change does not
+alter existing functionality.
+```
+
+### Commit with Breaking Change
+```
+feat: implement new user profile API
+
+BREAKING CHANGE: The `GET /users/:id` endpoint now returns a
+restructured user object. The `isActive` field has been replaced
+by a `status` field which can be `active`, `inactive`, or `pending`.
+Refer to API documentation for details.
+```
+
+### Commit Referencing an Issue
+```
+fix(api): resolve issue with pagination limit
+
+The pagination limit was not being correctly applied when the
+`pageSize` parameter exceeded the maximum allowed value.
+
+Closes #235
+```
+
+## Tooling
+
+Consider using tools to help enforce these conventions:
+
+- **[Commitizen](https://github.com/commitizen/cz-cli)**: A command-line utility that prompts for commit information to create compliant messages.
+- **[Commitlint](https://commitlint.js.org/)**: A linter to check if your commit messages meet the conventional commit format. Often used with Husky hooks.
+
+Refer to the [Husky Hook Script Guidelines](mdc:.cursor/rules/husky/02-husky-hook-scripts.mdc) for integrating `commitlint`.

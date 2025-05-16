@@ -1,0 +1,117 @@
+---
+description: HTML Meta Tags: Standards for common meta tags (SEO, viewport, character set, etc.).
+globs: **/*.html,**/*.htm
+alwaysApply: false
+---
+# Standard HTML Meta Tag Usage
+
+## Introduction
+
+Meta tags provide metadata about the HTML document. Metadata is not displayed on the page itself but is machine parsable. They are typically used to specify page description, keywords, author of the document, last modified, and other metadata. Correctly using meta tags is crucial for SEO, social media sharing, and browser behavior.
+
+## Guidelines
+
+### Essential Meta Tags
+
+These tags should be included in virtually every HTML page:
+
+- **Character Set:** Defines the character encoding for the document. UTF-8 is universally recommended.
+    ```html
+    <meta charset="UTF-8">
+    ```
+
+- **Viewport Configuration:** Controls the page's dimensions and scaling on different devices, crucial for responsive web design.
+    ```html
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    ```
+
+- **Page Title:** While not a meta tag, the `<title>` tag is essential for SEO and user experience (appears in browser tabs and search results). It should be concise and descriptive.
+    ```html
+    <title>Descriptive Page Title</title>
+    ```
+
+### SEO-Related Meta Tags
+
+- **Description:** Provides a brief summary of the page's content. Search engines often use this for snippets in search results.
+    ```html
+    <meta name="description" content="A concise and relevant summary of the page content, typically 150-160 characters.">
+    ```
+
+- **Keywords (Optional):** Lists relevant keywords for the page. Modern search engines place less emphasis on this tag, but it can still be included.
+    ```html
+    <meta name="keywords" content="keyword1, keyword2, relevant keyword">
+    ```
+    > **Note:** Focus more on high-quality content and a good description than stuffing keywords.
+
+- **Author:** Specifies the author of the content.
+    ```html
+    <meta name="author" content="Author Name or Organization">
+    ```
+
+- **Robots:** Instructs web crawlers (robots) on how to crawl or index the page.
+    ```html
+    <!-- Allow indexing and following links (default behavior) -->
+    <meta name="robots" content="index, follow">
+
+    <!-- Prevent indexing and following links -->
+    <meta name="robots" content="noindex, nofollow">
+    ```
+
+### Social Media Meta Tags (Open Graph & Twitter Cards)
+
+These tags help control how your content appears when shared on social media platforms like Facebook, LinkedIn (Open Graph), and Twitter (Twitter Cards).
+
+- **Open Graph (og:*)**
+    ```html
+    <meta property="og:title" content="Title of Content for Social Media">
+    <meta property="og:description" content="Description for Social Media Snippet">
+    <meta property="og:image" content="https://example.com/path/to/image.jpg">
+    <meta property="og:url" content="https://example.com/page-url">
+    <meta property="og:type" content="website"> <!-- or article, book, profile etc. -->
+    ```
+
+- **Twitter Cards (twitter:*)**
+    ```html
+    <meta name="twitter:card" content="summary_large_image"> <!-- summary, summary_large_image, app, player -->
+    <meta name="twitter:title" content="Title for Twitter Card">
+    <meta name="twitter:description" content="Description for Twitter Card">
+    <meta name="twitter:image" content="https://example.com/path/to/image.jpg">
+    <!-- <meta name="twitter:site" content="@YourTwitterHandle"> (Optional) -->
+    <!-- <meta name="twitter:creator" content="@AuthorTwitterHandle"> (Optional) -->
+    ```
+
+## Example `<head>` Section
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>My Awesome Web Page</title>
+    <meta name="description" content="Learn all about awesome web pages and how to create them.">
+    <meta name="keywords" content="web page, awesome, html, css, javascript">
+    <meta name="author" content="Your Name">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://example.com/my-awesome-web-page">
+    <meta property="og:title" content="My Awesome Web Page - Shared Title">
+    <meta property="og:description" content="Check out this awesome web page I made!">
+    <meta property="og:image" content="https://example.com/images/awesome-page-preview.jpg">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://example.com/my-awesome-web-page">
+    <meta name="twitter:title" content="My Awesome Web Page - Shared Title">
+    <meta name="twitter:description" content="Check out this awesome web page I made!">
+    <meta name="twitter:image" content="https://example.com/images/awesome-page-preview.jpg">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Page content goes here -->
+</body>
+</html>

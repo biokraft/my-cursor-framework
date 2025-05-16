@@ -36,7 +36,7 @@ Git submodules allow you to embed other Git repositories as subdirectories withi
     *   *Example Rule:* "When using the `common_utils_lib` submodule, only import and use functions from the `common_utils_lib.api` module. Do not directly access internal implementation details."
 
 4.  **`@Docs` for Submodule APIs:**
-    *   If the submodule is a library with its own documentation, use the `@Docs` feature to point Cursor to that documentation, even if it's local within the submodule's directory (e.g., `@Docs add shared_libs/common_utils_lib/docs`).
+    *   If the submodule is a public library with its own documentation, use the `@Docs` feature to point Cursor to that documentation.
 
 5.  **Opening the Submodule as a Separate Project (If Needed):**
     *   For very intensive work focused solely within a submodule, you *could* open that submodule's directory as a separate project in Cursor. This would give Cursor focused context on just that library. However, you'd then lose direct context from the parent project.

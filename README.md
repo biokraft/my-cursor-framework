@@ -52,8 +52,8 @@ This section delves into advanced techniques and workflows tailored for develope
     -   [Auto-Generating Rules from @Docs](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/02b-Auto-Generating-Rules-from-Docs.md)
     -   [Evolving Your Ruleset](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/02c-Evolving-Your-Ruleset.md)
 -   🛠️ [The SpecsForge Framework](./02-Cursor-for-Developers/03-The-SpecsForge-Framework.md)
--   ⚙️ [Leveraging Terminal Integration for Debugging](./02-Cursor-for-Developers/04-Leveraging-Terminal-Integration.md)  
     > 🧑‍💻 **Listen up devs:** this is where the secret sauce is at!
+-   ⚙️ [Leveraging Terminal Integration for Debugging](./02-Cursor-for-Developers/04-Leveraging-Terminal-Integration.md)  
 -   ⇄ [Working Across Repositories](./02-Cursor-for-Developers/05-Working-Across-Repositories.md)
 
 ---

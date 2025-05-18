@@ -6,6 +6,7 @@ This document outlines a powerful approach to enhance your planning, brainstormi
 
 -   **Unified Environment**: Keep all your thoughts, plans, and code in one place. No more context switching between your editor and separate note-taking tools.
 -   **Structured Thinking**: Markdown's simple syntax naturally encourages structured and organized notes, making it easier to outline ideas, create to-do lists, and document processes.
+-   **LLMs Speak Markdown**: Large Language Models live and breathe Markdown. When you see beautifully structured output from an LLM (like tables or well-organized headings, for example, in ChatGPT), you're often seeing Markdown under the hood. If you ask an LLM to produce content without a specific front-end, it will naturally use Markdown syntax. This makes Markdown an incredibly intuitive format for any knowledge-based interaction with AI.
 -   **AI-Powered Ideation**: Seamlessly integrate Cursor's powerful AI capabilities into your brainstorming and planning sessions.
     -   **[Learn Mode](./04-Custom-Modes-Tailoring-Cursor-to-You/04b-Mode-Spotlight-Learn.md)**: Quickly dive deep into new concepts or technologies relevant to your plan. Select text, invoke Learn Mode, and get explanations or summaries directly within your Markdown file.
     -   **[Research Mode](./04-Custom-Modes-Tailoring-Cursor-to-You/04d-Mode-Spotlight-Research.md)**: Expand on ideas, find supporting information, or explore related topics without leaving your planning document.

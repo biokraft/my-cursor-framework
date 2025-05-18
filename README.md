@@ -2,6 +2,8 @@
 
 Welcome to this personal collection of best practices, rules, and workflows designed to maximize your productivity with Cursor. This framework aims to help everyone, from Product Managers to Developers, harness the full potential of AI-assisted coding and documentation.
 
+**💡 Pro Tip for Everyone (Especially Non-Developers):** One of the most impactful ways to boost your productivity with Cursor is through [Markdown-Driven Planning & Brainstorming](./01-Cursor-for-Everyone/08-Markdown-Driven-Planning.md). It's a simple yet powerful technique to manage knowledge and projects, and you'll find it covered in Part 1.
+
 This repository is structured to guide you through understanding core Cursor concepts and then diving into advanced development workflows.
 
 ---

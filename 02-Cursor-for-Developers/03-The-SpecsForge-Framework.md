@@ -126,7 +126,7 @@ Here's a breakdown of the `SpecsForge` custom mode prompt and its components.
 -   **Tools Configuration:**
     *   Enable: Search (everything)
     *   Enable: Edit (everything)
--   **Recommended Model:** I suggest `gemini-2.5-pro-preview-05-06` (or a similar high-capability model with "thinking" enabled) for this mode, but you can experiment.
+-   **Recommended Model:** I suggest `gemini-2.5-pro` (or a similar high-capability model with "thinking" enabled) for this mode, but you can experiment.
 
 ### Core Ideas Behind SpecsForge
 

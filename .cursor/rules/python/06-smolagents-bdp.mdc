@@ -1,0 +1,46 @@
+---
+description: Smolagents best practices: Guidelines for building efficient and reliable agents using smolagents.
+globs:
+alwaysApply: false
+---
+# Smolagents Best Practices
+
+## Introduction
+
+This guide outlines best practices for building effective and robust agents with `smolagents`. Adhering to these principles will help in creating simpler, more reliable, and efficient agentic systems.
+
+## Core Principle: Simplify Your Workflow
+
+The most fundamental guideline for building good `smolagents` is to **simplify the agent's workflow as much as possible**. Complex workflows increase the chances of errors, latency, and cost.
+
+## Key Guidelines
+
+To achieve workflow simplification, consider the following:
+
+### 1. Reduce the Number of LLM Calls
+
+Minimize interactions with the Large Language Model (LLM). Each call introduces potential for error and adds to latency and cost.
+
+- **Strive for fewer, more impactful LLM interactions.**
+
+### 2. Group Tools Logically
+
+Whenever an agent needs to perform multiple related actions (e.g., calling several APIs to gather information for a single conceptual task), consolidate these into a single, unified tool.
+
+- **Example**: Instead of having separate tools for `get_travel_distance` and `get_weather_forecast` that the agent calls sequentially, create one tool like `get_spot_information` that internally calls both and returns a combined result.
+- **Benefit**: This reduces the number of LLM calls, simplifies the agent's decision-making process, and lowers the risk of errors.
+
+### 3. Prefer Deterministic Logic
+
+Where possible, implement logic using deterministic functions (i.e., standard code) rather than relying on the LLM to make decisions or perform computations that can be handled programmatically.
+
+- **Use agentic decisions only when necessary** for tasks that genuinely require LLM reasoning (e.g., understanding natural language, complex planning).
+- **Benefit**: Deterministic code is more reliable, predictable, and easier to debug than LLM-driven logic.
+
+## Rationale
+
+Following these best practices leads to:
+
+- **Reduced Costs**: Fewer LLM calls mean lower operational expenses.
+- **Lower Latency**: Simpler workflows and fewer LLM interactions result in faster responses.
+- **Decreased Error Risk**: Reducing complexity and the number of points where an LLM makes a decision minimizes opportunities for mistakes. Well-programmed systems should still have error logging and retry mechanisms, but simplification is the first line of defense.

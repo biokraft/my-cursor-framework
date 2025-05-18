@@ -27,7 +27,7 @@ Cursor strives to provide access to the best available models. Based on current 
 
 These are your go-to models for tasks requiring deep understanding, creativity, and detailed output.
 
-*   **Google's `gemini-2.5-pro-preview`:**
+*   **Google's `gemini-2.5-pro`:**
     *   Often a top recommendation for cutting-edge performance, offering strong reasoning and generation capabilities for complex tasks.
 *   **Anthropic's `claude-3.7-sonnet`:**
     *   A highly capable model from Anthropic, providing a strong balance of intelligence and efficiency for demanding tasks.
@@ -62,7 +62,7 @@ It's important to understand that Cursor might use different models for differen
 *   **Experiment:** The best way to find your preferred models is to try them out on different types of tasks.
 *   **Start with the Default:** Cursor usually has a sensible default model selected. Use that as a baseline.
 *   **Switch for Specific Needs:**
-    *   Need groundbreaking ideas or a deep dive into a complex problem? Opt for a top-tier model like Google's `gemini-2.5-pro-preview`, Anthropic's `claude-3.7-sonnet`, or one of OpenAI's `o3` series.
+    *   Need groundbreaking ideas or a deep dive into a complex problem? Opt for a top-tier model like Google's `gemini-2.5-pro`, Anthropic's `claude-3.7-sonnet`, or one of OpenAI's `o3` series.
     *   Need a quick code snippet, a fast explanation, or rapid iteration? A faster model like OpenAI's `gpt-4.1`, or Anthropic's `claude-3.7-sonnet` (with "thinking" turned off/minimized) would be a better choice.
 *   **Check Cursor's Documentation:** The official Cursor documentation is the best source for the most up-to-date list of available models and their recommended use cases.
 

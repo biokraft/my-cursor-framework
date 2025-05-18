@@ -36,7 +36,8 @@ This section is designed for *anyone* using Cursor, regardless of their technica
     -   [MCP Spotlight: DBHub - Universal Database Access](./01-Cursor-for-Everyone/06-The-Model-Context-Protocol-MCP/06c-MCP-Spotlight-DBHub.md)
     -   [Exploring the MCP Ecosystem](./01-Cursor-for-Everyone/06-The-Model-Context-Protocol-MCP/06d-Exploring-the-MCP-Ecosystem.md)
     -   [Quick Look: The @Docs Feature](./01-Cursor-for-Everyone/07-Quick-Look-The-Docs-Feature.md)
--   💡 [Markdown-Driven Planning & Brainstorming](./01-Cursor-for-Everyone/08-Markdown-Driven-Planning.md)
+-   💡 [Markdown-Driven Planning & Brainstorming](./01-Cursor-for-Everyone/08-Markdown-Driven-Planning.md)  
+    > 💼 **Product Managers:** Check this out!
 
 ---
 
@@ -51,7 +52,8 @@ This section delves into advanced techniques and workflows tailored for develope
     -   [Auto-Generating Rules from @Docs](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/02b-Auto-Generating-Rules-from-Docs.md)
     -   [Evolving Your Ruleset](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/02c-Evolving-Your-Ruleset.md)
 -   🛠️ [The SpecsForge Framework](./02-Cursor-for-Developers/03-The-SpecsForge-Framework.md)
--   ⚙️ [Leveraging Terminal Integration for Debugging](./02-Cursor-for-Developers/04-Leveraging-Terminal-Integration.md)
+-   ⚙️ [Leveraging Terminal Integration for Debugging](./02-Cursor-for-Developers/04-Leveraging-Terminal-Integration.md)  
+    > 🧑‍💻 **Listen up devs:** this is where the secret sauce is at!
 -   ⇄ [Working Across Repositories](./02-Cursor-for-Developers/05-Working-Across-Repositories.md)
 
 ---

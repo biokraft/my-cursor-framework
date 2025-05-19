@@ -22,9 +22,9 @@ Jira is a staple for many teams to manage tasks, bugs, and sprints. Integrating 
     *   (If action-enabled) "Add a comment to PROJ-123 saying 'Investigating the proposed solution.'"
 
 *   **Using Specific Tool Commands (Examples based on available tools):**
-    *   To get details of an issue: `mcp_mcp-atlassian_Jira_Cloud_jira_get_issue(issue_key='PROJ-123')`
-    *   To search for issues using JQL: `mcp_mcp-atlassian_Jira_Cloud_jira_search(jql='project = PROJ AND status = "In Progress" AND assignee = currentUser()')`
-    *   To add a comment: `mcp_mcp-atlassian_Jira_Cloud_jira_add_comment(issue_key='PROJ-123', comment='Solution implemented and tested.')`
+    *   To get details of an issue: `mcp_mcp-atlassian_jira_get_issue(issue_key='PROJ-123')`
+    *   To search for issues using JQL: `mcp_mcp-atlassian_jira_search(jql='project = PROJ AND status = "In Progress" AND assignee = currentUser()')`
+    *   To add a comment: `mcp_mcp-atlassian_jira_add_comment(issue_key='PROJ-123', comment='Solution implemented and tested.')`
 
 ## Connecting to Confluence
 
@@ -46,9 +46,9 @@ Confluence is widely used for team collaboration, project documentation, knowled
     *   (If action-enabled) "Create a new Confluence page in the 'PROJECTX' space titled 'New Feature Brainstorm' with the following content..."
 
 *   **Using Specific Tool Commands (Examples based on available tools):**
-    *   To search Confluence: `mcp_mcp-atlassian_Jira_Cloud_confluence_search(query='type=page AND space=DEV AND title~"Release Process"')`
-    *   To get page content: `mcp_mcp-atlassian_Jira_Cloud_confluence_get_page(page_id='123456789', convert_to_markdown=True)`
-    *   To create a page: `mcp_mcp-atlassian_Jira_Cloud_confluence_create_page(space_key='DEV', title='My New Page', content='# Heading\nThis is my page content in Markdown.')`
+    *   To search Confluence: `mcp_mcp-atlassian_confluence_search(query='type=page AND space=DEV AND title~"Release Process"')`
+    *   To get page content: `mcp_mcp-atlassian_confluence_get_page(page_id='123456789', convert_to_markdown=True)`
+    *   To create a page: `mcp_mcp-atlassian_confluence_create_page(space_key='DEV', title='My New Page', content='# Heading\\nThis is my page content in Markdown.')`
 
 ## Benefits for Everyone
 
@@ -65,7 +65,7 @@ This guide provides step-by-step instructions for integrating Jira Cloud and Con
 **Prerequisites and General Information:**
 
 *   **MCP Overview:** The Model Context Protocol (MCP) is an open protocol standardizing how applications provide context and tools to LLMs. It acts as a plugin system for Cursor, extending the Agent's capabilities by connecting it to various data sources and tools. For more details, see the [official MCP documentation](https://docs.cursor.com/context/model-context-protocol).
-*   **Atlassian MCP Basis:** This integration utilizes the `mcp-atlassian` project available on [GitHub](https://github.com/sooperset/mcp-atlassian).
+*   **Atlassian MCP Basis:** This integration utilizes the `mcp-atlassian` project available on [GitHub](https://github.com/sooperset/mcp-atlassian). The setup has been updated to recommend running the MCP server via Docker.
 
 **Setup Steps:**
 
@@ -76,17 +76,20 @@ This guide provides step-by-step instructions for integrating Jira Cloud and Con
     *   Navigate to [Atlassian API Tokens](https://id.atlassian.com/manage-profile/security/api-tokens).
     *   Create a new API token.
     *   **Action:** Copy the generated token immediately and store it securely (e.g., in 1Password, KeePass, or your company's preferred password manager).
-    *   **Label/Name:** Give it a descriptive name, for example, "Cursor AI".
+    *   **Label/Name:** Give it a descriptive name, for example, "Cursor AI MCP".
     *   **Expiry:** Set an appropriate expiration date (e.g., six months in the future, like 01/10/2025).
 
 3.  **Create Confluence Personal Access Token (PAT):**
     *   Go to your Confluence PAT settings: `https://confluence.[YOUR_COMPANY_DOMAIN].de/plugins/personalaccesstokens/usertokens.action` (Replace `confluence.[YOUR_COMPANY_DOMAIN].de` with your Confluence instance URL if different).
     *   Create a new token.
     *   **Action:** Copy the token and store it securely.
-    *   **Token Name:** Use a clear name, such as "Cursor AI".
+    *   **Token Name:** Use a clear name, such as "Cursor AI MCP".
     *   **Expiry:** Choose "No expiry date" or set an expiry date (e.g., 180 days).
 
-4.  **Install Homebrew (Package Manager for macOS):**
+4.  **Install Docker Desktop:**
+    *   Download and install Docker Desktop for your operating system from the [official Docker website](https://www.docker.com/products/docker-desktop/). This will allow you to run the `mcp-atlassian` server in a container.
+
+5.  **Install Homebrew (Package Manager for macOS - Optional but Recommended):**
     *   1.  Open your Terminal application.
     *   2.  Execute the following command:
         ```bash
@@ -98,7 +101,8 @@ This guide provides step-by-step instructions for integrating Jira Cloud and Con
         ```
         You should see the Homebrew version output (e.g., `Homebrew 4.4.29`).
 
-5.  **Install `uv` (Python Package Manager):**
+6.  **Install `uv` (Python Package Manager - Optional but Recommended):**
+    *   `uv` can be useful for debugging MCP servers or managing other Python-based MCPs.
     *   In your Terminal, run:
         ```bash
         brew install uv
@@ -108,60 +112,81 @@ This guide provides step-by-step instructions for integrating Jira Cloud and Con
         arch -arm64 brew install uv
         ```
 
-6.  **Configure MCP for Jira Cloud and Confluence in Cursor AI:**
+7.  **Configure MCP in Cursor AI for `mcp-atlassian` (Direct Docker Method):**
+    *   This method configures Cursor to directly run the `mcp-atlassian` Docker container, managing its lifecycle and environment variables from within `mcp.json`.
     *   1.  Open Cursor AI Settings.
     *   2.  Select "MCP" from the settings menu.
     *   3.  Click "Add new global MCP Server". This will open an `mcp.json` file.
-    *   4.  Paste the following JSON configuration into the `mcp.json` file:
+    *   4.  Paste the following JSON configuration into the `mcp.json` file.
 
         ```json
         {
             "mcpServers": {
-              "mcp-atlassian (Jira Cloud)": {
-                "command": "uvx",
+              "mcp-atlassian": {
+                "command": "docker",
                 "args": [
-                  "mcp-atlassian",
-                  "--verbose",
-                  "--read-only",
-                  "--jira-url=[YOUR JIRA INSTANCE]",
-                  "--jira-username=[YOUR_EMAIL]@[YOUR_COMPANY_DOMAIN]",
-                  "--jira-token=[YOUR JIRA ACCESS TOKEN]"
-                ]
-              },
-              "mcp-atlassian (Confluence)": {
-                "command": "uvx",
-                "args": [
-                  "mcp-atlassian",
-                  "--verbose",
-                  "--read-only",
-                  "--confluence-url=https://[YOUR_CONFLUENCE_URL]/",
-                  "--confluence-username=[YOUR_EMAIL]@[YOUR_COMPANY_DOMAIN]",
-                  "--confluence-personal-token=[YOUR CONFLUENCE ACCESS TOKEN]"
-                ]
+                  "run",
+                  "-i", // Enables interactive mode, crucial for the MCP server
+                  "--rm", // Automatically removes the container when it exits
+                  // Pass environment variables from the 'env' block below
+                  "-e", "CONFLUENCE_URL",
+                  "-e", "CONFLUENCE_USERNAME",
+                  "-e", "CONFLUENCE_API_TOKEN", // For older Confluence Server/DC if PAT doesn't work
+                  "-e", "CONFLUENCE_PERSONAL_ACCESS_TOKEN", // Preferred for Confluence Cloud & newer Server/DC
+                  "-e", "JIRA_URL",
+                  "-e", "JIRA_USERNAME",
+                  "-e", "JIRA_API_TOKEN",
+                  "-e", "READ_ONLY_MODE=true", // Recommended for safety
+                  // "-e", "LOG_LEVEL=DEBUG", // Optional: for more detailed logs
+                  // "-e", "ENABLED_TOOLS=jira_get_issue,confluence_search", // Optional: comma-separated list
+                  "ghcr.io/sooperset/mcp-atlassian:latest"
+                  // Add server arguments after the image name if needed, e.g., "--port", "9001"
+                  // By default, mcp-atlassian started this way listens on a unix socket.
+                  // To use TCP, you would need to add: "--transport", "streamable-http", "--port", "9000"
+                  // and then configure a separate MCP entry with "url": "http://localhost:9000/mcp"
+                  // However, the direct `docker run` with stdin/stdout is often simpler.
+                ],
+                "env": {
+                  "CONFLUENCE_URL": "https://[YOUR_CONFLUENCE_INSTANCE_URL]",
+                  "CONFLUENCE_USERNAME": "[YOUR_EMAIL]@[YOUR_COMPANY_DOMAIN]",
+                  "CONFLUENCE_API_TOKEN": "[YOUR_CONFLUENCE_API_TOKEN_IF_NEEDED]", // Usually for older Confluence Server/DC
+                  "CONFLUENCE_PERSONAL_ACCESS_TOKEN": "[YOUR_CONFLUENCE_PAT]", // From Step 3
+                  "JIRA_URL": "https://[YOUR_JIRA_INSTANCE_URL]",
+                  "JIRA_USERNAME": "[YOUR_EMAIL]@[YOUR_COMPANY_DOMAIN]",
+                  "JIRA_API_TOKEN": "[YOUR_JIRA_API_TOKEN]", // From Step 2
+                  // You can also set READ_ONLY_MODE, LOG_LEVEL, ENABLED_TOOLS here
+                  "READ_ONLY_MODE": "true"
+                },
+                "description": "Atlassian MCP Server (Jira & Confluence via direct Docker command)",
+                "timeoutSeconds": 60 // Increased timeout for Docker startup
               }
             }
           }
         ```
-    *   5.  **Customize the placeholders** in the JSON (remove the square brackets):
-        *   `[YOUR JIRA INSTANCE]`: Your Jira Cloud URL (e.g., `https://your-company.atlassian.net`, `https://another-project.atlassian.net`).
-        *   `[YOUR_EMAIL]@[YOUR_COMPANY_DOMAIN]`: Your email address associated with your Jira/Confluence accounts.
-        *   `[YOUR JIRA ACCESS TOKEN]`: The Jira API token you created in Step 2.
-        *   `[YOUR CONFLUENCE ACCESS TOKEN]`: The Confluence PAT you created in Step 3.
-        *   `[YOUR_CONFLUENCE_URL]`: Ensure this matches your Confluence instance URL if it's different (e.g., `your-company.atlassian.net/wiki`).
-    *   6.  Save the `mcp.json` file (e.g., Cmd+S on macOS).
-    *   7.  Return to the Cursor AI Settings (MCP Servers screen).
-    *   8.  **Recommendation:** Keep `--read-only` enabled in the `args` for both configurations. Removing it would allow Cursor AI to potentially write to Jira and Confluence, which should only be done with caution and full understanding of the implications.
-    *   9.  The MCP server entries should now appear in the list. A green status indicator means the connection is likely successful. A red indicator suggests a configuration error (double-check your URLs, email, and tokens).
+    *   5.  **Customize the placeholders** in the `env` block of the JSON (remove the square brackets):
+        *   `[YOUR_CONFLUENCE_INSTANCE_URL]`: Your Confluence URL (e.g., `your-company.atlassian.net/wiki`).
+        *   `[YOUR_EMAIL]@[YOUR_COMPANY_DOMAIN]`: Your email address associated with your Atlassian accounts.
+        *   `[YOUR_CONFLUENCE_API_TOKEN_IF_NEEDED]`: Your Confluence API Token (password for very old Server/DC instances). Most users will primarily use the PAT.
+        *   `[YOUR_CONFLUENCE_PAT]`: The Confluence Personal Access Token you created in Step 3.
+        *   `[YOUR_JIRA_INSTANCE_URL]`: Your Jira Cloud URL (e.g., `your-company.atlassian.net`).
+        *   `[YOUR_JIRA_API_TOKEN]`: The Jira API token you created in Step 2.
+        *   Ensure `READ_ONLY_MODE` is set to `"true"` for safety, unless you explicitly need write access.
 
-7.  **Enable/Disable MCP Servers:**
-    *   In the Cursor AI MCP settings, you can toggle the switches for "mcp-atlassian (Jira Cloud)" and "mcp-atlassian (Confluence)" to enable or disable the respective integrations as needed. Ensure they are enabled for use.
+    *   6.  **Note on Docker Image Version:** The configuration uses `ghcr.io/sooperset/mcp-atlassian:latest`. While `:latest` usually points to the most recent version, it can sometimes have an issue. If you encounter problems, you can try a specific version tag like `v0.11.0` or `v0.10.6` by changing `latest` to, for example, `v0.11.0` in the `"args"` array.
 
-8.  **Test in Chat:**
+    *   7.  Save the `mcp.json` file (e.g., Cmd+S on macOS).
+    *   8.  Return to the Cursor AI Settings (MCP Servers screen).
+    *   9.  The "mcp-atlassian" server entry should now appear in the list. A green status indicator means Cursor is successfully managing the Docker container. A red indicator suggests a configuration error (double-check your credentials in `mcp.json` and ensure Docker Desktop is running).
+
+8.  **Enable/Disable MCP Servers:**
+    *   In the Cursor AI MCP settings, you can toggle the switch for "mcp-atlassian" to enable or disable the integration as needed. Ensure it is enabled for use.
+
+9.  **Test in Chat:**
     *   Activate "Agent" mode in Cursor AI chat.
     *   You can now use natural language queries or specific MCP commands to interact with your Jira and Confluence instances. Examples:
         *   "Get details for Jira ticket PROJ-123"
-        *   "@jira search jql='assignee = currentUser() and status = Open'"
+        *   To use a specific tool: `mcp_mcp-atlassian_jira_search(jql='assignee = currentUser() and status = Open')`
         *   "Find Confluence pages about 'API documentation' in the DEV space"
-        *   "@confluence get_page page_id=123456789"
+        *   To use a specific tool: `mcp_mcp-atlassian_confluence_get_page(page_id='123456789')`
 
 This detailed setup guide should provide comprehensive instructions for users to integrate their Atlassian tools with Cursor. 

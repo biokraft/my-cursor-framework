@@ -89,30 +89,7 @@ This guide provides step-by-step instructions for integrating Jira Cloud and Con
 4.  **Install Docker Desktop:**
     *   Download and install Docker Desktop for your operating system from the [official Docker website](https://www.docker.com/products/docker-desktop/). This will allow you to run the `mcp-atlassian` server in a container.
 
-5.  **Install Homebrew (Package Manager for macOS - Optional but Recommended):**
-    *   1.  Open your Terminal application.
-    *   2.  Execute the following command:
-        ```bash
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        ```
-    *   3.  Verify the installation by running:
-        ```bash
-        brew -v
-        ```
-        You should see the Homebrew version output (e.g., `Homebrew 4.4.29`).
-
-6.  **Install `uv` (Python Package Manager - Optional but Recommended):**
-    *   `uv` can be useful for debugging MCP servers or managing other Python-based MCPs.
-    *   In your Terminal, run:
-        ```bash
-        brew install uv
-        ```
-    *   If you encounter an error (especially on ARM-based Macs), try:
-        ```bash
-        arch -arm64 brew install uv
-        ```
-
-7.  **Configure MCP in Cursor AI for `mcp-atlassian` (Direct Docker Method):**
+5.  **Configure MCP in Cursor AI for `mcp-atlassian` (Direct Docker Method):**
     *   This method configures Cursor to directly run the `mcp-atlassian` Docker container, managing its lifecycle and environment variables from within `mcp.json`.
     *   1.  Open Cursor AI Settings.
     *   2.  Select "MCP" from the settings menu.
@@ -178,10 +155,10 @@ This guide provides step-by-step instructions for integrating Jira Cloud and Con
     *   8.  Return to the Cursor AI Settings (MCP Servers screen).
     *   9.  The "mcp-atlassian" server entry should now appear in the list. A green status indicator means Cursor is successfully managing the Docker container. A red indicator suggests a configuration error (double-check your credentials in `mcp.json` and ensure Docker Desktop is running).
 
-8.  **Enable/Disable MCP Servers:**
+6.  **Enable/Disable MCP Servers:**
     *   In the Cursor AI MCP settings, you can toggle the switch for "mcp-atlassian" to enable or disable the integration as needed. Ensure it is enabled for use.
 
-9.  **Test in Chat:**
+7.  **Test in Chat:**
     *   Activate "Agent" mode in Cursor AI chat.
     *   You can now use natural language queries or specific MCP commands to interact with your Jira and Confluence instances. Examples:
         *   "Get details for Jira ticket PROJ-123"

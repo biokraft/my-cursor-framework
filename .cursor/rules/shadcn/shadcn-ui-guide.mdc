@@ -1,0 +1,163 @@
+---
+description: Shadcn UI: Guide for initializing, configuring, and adding components to a project. Covers CLI usage, components.json, and core concepts.
+globs: 
+alwaysApply: false
+---
+# Shadcn UI Usage Guide
+
+This guide provides instructions for initializing, configuring, and adding components using Shadcn UI. Shadcn UI is not a traditional component library; instead, it provides a CLI tool to add individual, unstyled component source code directly into your project, giving you full control over styling and behavior.
+
+## Prerequisites
+
+- A React-based project (e.g., Next.js, Vite, Gatsby, Remix).
+- Tailwind CSS installed and configured in your project.
+- Path aliases configured in your `tsconfig.json` (e.g., `@/*` pointing to `./src/*`).
+
+## 1. Initialization
+
+To start using Shadcn UI, run the `init` command in your project's root directory:
+
+```bash
+# Using pnpm
+pnpm dlx shadcn-ui@latest init
+
+# Using npm
+npx shadcn-ui@latest init
+
+# Using yarn
+yarn dlx shadcn-ui@latest init
+
+# Using bun
+bunx shadcn-ui@latest init
+```
+
+This command will guide you through a series of questions to create a `components.json` file in your project root. This file defines how Shadcn UI components are integrated into your project.
+
+### `components.json` Configuration
+
+You'll be asked to configure the following:
+
+- **TypeScript usage**: Recommended (`yes`).
+- **Style**: Choose a style (e.g., `Default` or `New York`). This primarily affects the initial look of some components if they have pre-defined styles.
+- **Base color**: Select a base color theme for your components (e.g., `Slate`, `Zinc`).
+- **Global CSS file location**: Path to your main CSS file where Tailwind directives are imported (e.g., `src/app/globals.css`, `src/index.css`, `src/styles/globals.css`).
+- **CSS variables for colors**: Whether to use CSS variables for theming (`yes`/`no`).
+- **`tailwind.config.js` location**: Path to your Tailwind CSS configuration file (e.g., `tailwind.config.js` or `tailwind.config.ts`).
+- **Import alias for components**: The alias for UI components (e.g., `@/components`). Components will be added to a `ui` subdirectory under this path (e.g. `@/components/ui`).
+- **Import alias for utils**: The alias for utility functions, like the `cn` helper (e.g., `@/lib/utils`).
+- **React Server Components (RSC)**: Whether you are using React Server Components (`yes`/`no`).
+
+**Example `components.json`:**
+
+```json
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "default",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "src/app/globals.css",
+    "baseColor": "slate",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils"
+  }
+}
+```
+
+### Path Aliases (`tsconfig.json`)
+
+Ensure your `tsconfig.json` has path aliases configured correctly. The `init` command might help with this, but verify it:
+
+```json
+{
+  "compilerOptions": {
+    // ...
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+    // ...
+  }
+}
+```
+For some frameworks like Gatsby, you might need additional configuration (e.g., in `gatsby-node.ts`) to resolve these aliases during build time. Refer to the Shadcn UI documentation for framework-specific instructions if needed.
+
+### `cn` Helper Utility
+
+Shadcn UI relies on a `cn` utility function for conditionally applying Tailwind CSS classes. This is typically created at the path specified by `aliases.utils` (e.g., `src/lib/utils.ts`):
+
+```typescript
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+```
+The `init` command usually sets this up for you.
+
+## 2. Adding Components
+
+Once initialized, you can add components using the `add` command:
+
+```bash
+# Using pnpm
+pnpm dlx shadcn-ui@latest add <component-name>
+
+# Example: Add a button
+pnpm dlx shadcn-ui@latest add button
+```
+
+This command will:
+1. Copy the component's source code (e.g., `button.tsx`) into the directory specified in your `components.json` (e.g., `src/components/ui/button.tsx`).
+2. Install any necessary dependencies for that specific component (e.g., `lucide-react` for icons).
+
+You can add multiple components at once:
+```bash
+pnpm dlx shadcn-ui@latest add button card dialog
+```
+
+## 3. Using Components
+
+Import and use the components in your React files:
+
+```tsx
+import { Button } from "@/components/ui/button"; // Adjust path based on your alias
+
+export default function MyPage() {
+  return (
+    <div>
+      <Button variant="outline" size="lg">Click Me</Button>
+    </div>
+  );
+}
+```
+
+## 4. Customizing Components
+
+Since Shadcn UI copies the actual source code into your project, you have full control:
+- **Directly edit the component's `.tsx` file** in your `components/ui` directory to change its structure, styling, or behavior.
+- There are no complex APIs to learn or style overrides to fight. You own the code.
+
+## Key Concepts
+
+- **Open Code**: You get the raw component code, not an opaque library. This allows for maximum flexibility and understanding.
+- **Composability**: Components are designed to be composed together.
+- **Styling**: Primarily uses Tailwind CSS utility classes. You modify these directly in the component files.
+- **Not a Library**: It's a CLI tool and a collection of copy-pasteable components.
+
+## Monorepo Setup
+
+If you're working in a monorepo:
+- Each workspace (e.g., a shared `ui` package and a consuming `web` app) must have its own `components.json`.
+- Configure aliases in `components.json` appropriately for inter-workspace dependencies (e.g., the `web` app's `components.json` might point `aliases.ui` to `@workspace/ui/components`).
+- Ensure `style`, `iconLibrary`, and `baseColor` are consistent across all relevant `components.json` files.
+- For Tailwind CSS v4, the `tailwind.config` property in `components.json` should be an empty string.
+
+Refer to the official Shadcn UI documentation for the most up-to-date and detailed information.

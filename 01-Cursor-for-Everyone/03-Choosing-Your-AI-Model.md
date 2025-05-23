@@ -27,6 +27,8 @@ Cursor strives to provide access to the best available models. Based on current 
 
 These are your go-to models for tasks requiring deep understanding, creativity, and detailed output.
 
+*   **Anthropic's `claude-4-sonnet`:**
+    *   The latest and most advanced thinking model from Anthropic, offering exceptional reasoning capabilities and nuanced understanding for the most complex tasks. This is the top recommendation for deep problem-solving and sophisticated content generation.
 *   **Google's `gemini-2.5-pro`:**
     *   Often a top recommendation for cutting-edge performance, offering strong reasoning and generation capabilities for complex tasks.
 *   **Anthropic's `claude-3.7-sonnet`:**
@@ -40,10 +42,10 @@ These are your go-to models for tasks requiring deep understanding, creativity, 
 
 These models are excellent for when you need rapid responses, for less complex tasks, or when iterating quickly.
 
+*   **Anthropic's `claude-4-opus`:**
+    *   The newest fast model from Anthropic, optimized for speed while maintaining high quality. This is the top recommendation for quick code changes, rapid iterations, and day-to-day development tasks.
 *   **OpenAI's `gpt-4.1`:**
     *   A recommended choice for the majority of day-to-day tasks, offering a good blend of capability and speed.
-*   **Anthropic's `claude-3.7-sonnet` (with "thinking" turned off/minimized):**
-    *   When configured for speed (e.g., by minimizing its "thinking" or depth of processing), this model can serve as a very fast and effective option for quicker assistance.
 
 ---
 

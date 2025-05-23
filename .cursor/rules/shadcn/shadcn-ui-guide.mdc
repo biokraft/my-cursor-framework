@@ -19,16 +19,16 @@ To start using Shadcn UI, run the `init` command in your project's root director
 
 ```bash
 # Using pnpm
-pnpm dlx shadcn-ui@latest init
+pnpm dlx shadcn@latest init
 
 # Using npm
-npx shadcn-ui@latest init
+npx shadcn@latest init
 
 # Using yarn
-yarn dlx shadcn-ui@latest init
+yarn dlx shadcn@latest init
 
 # Using bun
-bunx shadcn-ui@latest init
+bunx shadcn@latest init
 ```
 
 This command will guide you through a series of questions to create a `components.json` file in your project root. This file defines how Shadcn UI components are integrated into your project.
@@ -108,10 +108,22 @@ Once initialized, you can add components using the `add` command:
 
 ```bash
 # Using pnpm
-pnpm dlx shadcn-ui@latest add <component-name>
+pnpm dlx shadcn@latest add <component-name>
 
 # Example: Add a button
-pnpm dlx shadcn-ui@latest add button
+pnpm dlx shadcn@latest add button
+
+# Example: Add a switch
+pnpm dlx shadcn@latest add switch
+
+# Using npm
+npx shadcn@latest add <component-name>
+
+# Example: Add a button
+npx shadcn@latest add button
+
+# Example: Add a switch
+npx shadcn@latest add switch
 ```
 
 This command will:
@@ -120,7 +132,7 @@ This command will:
 
 You can add multiple components at once:
 ```bash
-pnpm dlx shadcn-ui@latest add button card dialog
+npx shadcn@latest add button card dialog
 ```
 
 ## 3. Using Components

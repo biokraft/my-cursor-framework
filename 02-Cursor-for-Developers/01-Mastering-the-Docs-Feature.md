@@ -34,17 +34,13 @@ To use an added documentation source in chat:
 3.  **Include Specific API Reference Pages:** For very focused tasks, you can add documentation sources in settings that point to specific API reference pages or guides.
     *   In settings, add: Name: "FastAPI Path Params", URL: `https://fastapi.tiangolo.com/tutorial/path-params/` (when working on path parameters).
 
-4.  **Leverage Local Documentation:** If you have local copies of documentation (e.g., Markdown files, downloaded manuals, or internal company SDK docs), you can add these as sources in settings using their file paths.
-    *   In settings, add: Name: "Internal SDK", Path: `./docs/internal_api_sdk/`
-    *   In settings, add: Name: "My Library Notes", Path: `./path/to/my_library_notes.md`
-
-5.  **Combine `@Docs` with Specific Prompts:** After referencing a documentation source in chat using `@Docs [Name]`, tailor your prompts to make it clear you want the AI to use that context.
+4.  **Combine `@Docs` with Specific Prompts:** After referencing a documentation source in chat using `@Docs [Name]`, tailor your prompts to make it clear you want the AI to use that context.
     *   First, in chat: `@Docs FastAPI Official`
     *   Then prompt: "Using the FastAPI documentation I provided, show me how to implement OAuth2 password flow with a Pydantic model for the user."
     *   First, in chat: `@Docs Internal UI Lib`
     *   Then prompt: "Based on the documentation for our internal UI library, generate a React component for a data table with sorting and pagination."
 
-6.  **Iteratively Manage `@Docs` Context:** For a large project, you might have many documentation sources defined in settings. Reference the specific docs relevant to your current task using `@Docs [Name]`. Cursor typically allows you to see which `@Docs` are active and provides ways to clear the context if needed (e.g., a "Clear context" button or command if multiple docs are active).
+5.  **Iteratively Manage `@Docs` Context:** For a large project, you might have many documentation sources defined in settings. Reference the specific docs relevant to your current task using `@Docs [Name]`. Cursor typically allows you to see which `@Docs` are active and provides ways to clear the context if needed (e.g., a "Clear context" button or command if multiple docs are active).
 
 ## Example Workflow: Working with a New Library
 

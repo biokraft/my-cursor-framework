@@ -26,8 +26,8 @@ This guide is structured to be beneficial for a wide audience:
 
 This guide is split into two main parts:
 
-1.  **[Cursor for Everyone](./README.md#part-1-cursor-for-everyone):** Covers the foundational concepts and features applicable to all users.
-2.  **[Cursor for Developers](./README.md#part-2-cursor-for-developers):** Dives into more advanced, code-centric workflows and my `SpecsForge` framework.
+1.  **[Cursor for Everyone](../README.md#part-1-cursor-for-everyone):** Covers the foundational concepts and features applicable to all users.
+2.  **[Cursor for Developers](../README.md#part-2-cursor-for-developers):** Dives into more advanced, code-centric workflows and my `SpecsForge` framework.
 
 I recommend starting with "Part 1" to get a solid understanding of Cursor's capabilities. Developers can then proceed to "Part 2" for more specialized techniques.
 

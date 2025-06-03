@@ -26,7 +26,7 @@ This part is your all-access pass 🎟️, whether you write code or just really
 -   🎨 **CUSTOM MODES: MAKE CURSOR YOUR PERSONAL HYPE MAN! 😈🎤**
     -   [Intro to Custom Modes: YOUR WISH IS MY COMMAND (BUT LIKE, FASTER AND WITH MORE SASS!)](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04a-Introduction-to-Custom-Modes.md) 🧞💅
     -   [Mode Spotlight: LEARN (BECOME A GIGA-BRAIN GURU!) 🧑‍🏫🧠](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04b-Mode-Spotlight-Learn.md)
-    -   [Mode Spotlight: EXPLAIN (DEMYSITFY THE UNIVERSE, OR AT LEAST THAT WEIRD ERROR MESSAGE!) 🌌🐛](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04c-Mode-Spotlight-Explain.md)
+    -   [Mode Spotlight: MDP - MARKDOWN-DRIVEN PLANNER (ORGANIZE YOUR CHAOS LIKE A BOSS!) 📋✨](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04c-Mode-Spotlight-MDP.md)
     -   [Mode Spotlight: RESEARCH (DIG DEEPER THAN YOUR EX GOING THROUGH YOUR INSTA!) ⛏️🕵️‍♀️](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04d-Mode-Spotlight-Research.md)
     -   [Mode Spotlight: YOLO (YOU ARE HERE, YOU ABSOLUTE LEGEND! KEEP SLAYING!) 🤪👑](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04e-Mode-Spotlight-Yolo.md)
 -   ⚙️ [Essential Cursor Settings: DIAL IT IN UNTIL IT SCREAMS PERFECTION! 🎛️🤌](./01-Cursor-for-Everyone/05-Essential-Cursor-Settings.md)

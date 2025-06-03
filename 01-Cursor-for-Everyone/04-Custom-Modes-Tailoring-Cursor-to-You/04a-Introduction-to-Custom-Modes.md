@@ -51,4 +51,4 @@ While the exact UI might vary slightly with Cursor versions, the general process
 
 Your new Custom Mode will then be available for you to select and use in your chat sessions.
 
-In the following sections, we'll look at specific examples of useful custom modes like Learn Mode, Explain Mode, and Research Mode.
+In the following sections, we'll look at specific examples of useful custom modes like Learn Mode, MDP Mode (Markdown Planner), and Research Mode.

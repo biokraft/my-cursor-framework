@@ -18,23 +18,11 @@ This section is designed for *anyone* using Cursor, regardless of their technica
 
 -   📜 [The Golden Rule: Context is King](./01-Cursor-for-Everyone/00-The-Golden-Rule-Context-is-King.md)
 -   👋 [Welcome to Cursor](./01-Cursor-for-Everyone/01-Welcome-to-Cursor.md)
--   🧩 **Understanding Cursor Rules**
-    -   [What, Why, How?](./01-Cursor-for-Everyone/02-Understanding-Cursor-Rules/02a-What-Why-How.md)
-    -   [Interactive Rule Development](./01-Cursor-for-Everyone/02-Understanding-Cursor-Rules/02b-Interactive-Rule-Development.md)
-    -   [Rules for Stellar Documentation](./01-Cursor-for-Everyone/02-Understanding-Cursor-Rules/02c-Rules-for-Stellar-Documentation.md)
+-   🧩 [Understanding Cursor Rules](./01-Cursor-for-Everyone/02-Understanding-Cursor-Rules/README.md)
 -   🧠 [Choosing Your AI Model](./01-Cursor-for-Everyone/03-Choosing-Your-AI-Model.md)
--   🎨 **Custom Modes: Tailoring Cursor to You**
-    -   [Introduction to Custom Modes](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04a-Introduction-to-Custom-Modes.md)
-    -   [Mode Spotlight: Learn](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04b-Mode-Spotlight-Learn.md)
-    -   [Mode Spotlight: MDP - Markdown-Driven Planner](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04c-Mode-Spotlight-MDP.md)
-    -   [Mode Spotlight: Research](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04d-Mode-Spotlight-Research.md)
-    -   [Mode Spotlight: Yolo](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04e-Mode-Spotlight-Yolo.md)
+-   🎨 [Custom Modes: Tailoring Cursor to You](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/README.md)
 -   ⚙️ [Essential Cursor Settings](./01-Cursor-for-Everyone/05-Essential-Cursor-Settings.md)
--   🔗 **The Model Context Protocol (MCP)**
-    -   [MCP: The Big Picture](./01-Cursor-for-Everyone/06-The-Model-Context-Protocol-MCP/06a-MCP-The-Big-Picture.md)
-    -   [MCP in Action: Jira and Confluence](./01-Cursor-for-Everyone/06-The-Model-Context-Protocol-MCP/06b-MCP-in-Action-Jira-and-Confluence.md)
-    -   [MCP Spotlight: DBHub - Universal Database Access](./01-Cursor-for-Everyone/06-The-Model-Context-Protocol-MCP/06c-MCP-Spotlight-DBHub.md)
-    -   [Exploring the MCP Ecosystem](./01-Cursor-for-Everyone/06-The-Model-Context-Protocol-MCP/06d-Exploring-the-MCP-Ecosystem.md)
+-   🔗 [The Model Context Protocol (MCP)](./01-Cursor-for-Everyone/06-The-Model-Context-Protocol-MCP/README.md)
 -   👀 [Quick Look: The @Docs Feature](./01-Cursor-for-Everyone/07-Quick-Look-The-Docs-Feature.md)
 -   💡 [Markdown-Driven Planning & Brainstorming](./01-Cursor-for-Everyone/08-Markdown-Driven-Planning.md)  
     > 💼 **Product Managers:** Check this out!
@@ -47,10 +35,7 @@ This section delves into advanced techniques and workflows tailored for develope
 
 -   宣言 [The Vibe Programmer Manifesto](./02-Cursor-for-Developers/00-The-Vibe-Programmer-Manifesto.md)
 -   📚 [Mastering the @Docs Feature](./02-Cursor-for-Developers/01-Mastering-the-Docs-Feature.md)
--   🛠️ **Crafting Rules for Your Tech Stack**
-    -   [Why Tech-Specific Rules Matter](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/02a-Why-Tech-Specific-Rules-Matter.md)
-    -   [Auto-Generating Rules from @Docs](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/02b-Auto-Generating-Rules-from-Docs.md)
-    -   [Evolving Your Ruleset](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/02c-Evolving-Your-Ruleset.md)
+-   🛠️ [Crafting Rules for Your Tech Stack](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/README.md)
 -   🛠️ [The SpecsForge Framework](./02-Cursor-for-Developers/03-The-SpecsForge-Framework.md)
     > 🧑‍💻 **Listen up devs:** this is where the secret sauce is at!
 -   ⚙️ [Leveraging Terminal Integration for Debugging](./02-Cursor-for-Developers/04-Leveraging-Terminal-Integration.md)  

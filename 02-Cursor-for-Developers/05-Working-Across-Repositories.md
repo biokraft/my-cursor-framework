@@ -52,4 +52,8 @@ Even if you're not using Git submodules, the principle of providing context rema
 
 ## Key Takeaway
 
-When your project spans multiple repositories, your primary goal is to make the relevant code and documentation from those other repositories accessible and known to Cursor. Git submodules are a convenient way to achieve this for locally dependent code. Always be explicit in your prompts and use `@` mentions with clear paths to guide Cursor effectively in a multi-repo setup. 
+When your project spans multiple repositories, your primary goal is to make the relevant code and documentation from those other repositories accessible and known to Cursor. Git submodules are a convenient way to achieve this for locally dependent code. Always be explicit in your prompts and use `@` mentions with clear paths to guide Cursor effectively in a multi-repo setup.
+
+---
+
+[⬅️ Back to Main README](../../README.md) 

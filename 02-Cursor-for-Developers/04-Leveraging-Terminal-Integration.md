@@ -19,4 +19,8 @@ Check the status of the Lambda function 'myFunction' in the 'us-east-1' region u
 
 Cursor can then execute the necessary `aws lambda get-function --function-name myFunction --region us-east-1` and `aws logs tail /aws/lambda/myFunction --region us-east-1` (or similar) commands, presenting the output directly in the chat. This immediate feedback loop significantly speeds up troubleshooting.
 
-By leveraging terminal integration, you can make Cursor an even more indispensable part of your development toolkit, allowing it to interact with your system and cloud environments through the CLIs you already know and trust. 
+By leveraging terminal integration, you can make Cursor an even more indispensable part of your development toolkit, allowing it to interact with your system and cloud environments through the CLIs you already know and trust.
+
+---
+
+[⬅️ Back to Main README](../../README.md) | [Next: Working Across Repositories ➡️](./05-Working-Across-Repositories.md) 

@@ -62,4 +62,8 @@ A powerful workflow emerges when you combine `@Docs` with the creation of new Cu
 
 For a detailed guide on how to leverage `@Docs` for auto-generating rules from documentation, please see [Auto-Generating Rules from @Docs](./02-Crafting-Rules-for-Your-Tech-Stack/02b-Auto-Generating-Rules-from-Docs.md).
 
-By mastering the `@Docs` feature, you transform Cursor from a general-purpose AI into a highly specialized assistant that understands the nuances of your specific tech stack, leading to more efficient and accurate development. 
+By mastering the `@Docs` feature, you transform Cursor from a general-purpose AI into a highly specialized assistant that understands the nuances of your specific tech stack, leading to more efficient and accurate development.
+
+---
+
+[⬅️ Back to Main README](../../README.md) | [Next: Crafting Rules for Your Tech Stack ➡️](./02-Crafting-Rules-for-Your-Tech-Stack/README.md) 

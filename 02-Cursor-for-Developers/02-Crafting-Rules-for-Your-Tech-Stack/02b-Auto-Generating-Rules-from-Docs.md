@@ -92,4 +92,8 @@ By referencing these master rules in your prompt, you instruct the AI to generat
 -   **One Doc at a Time (Sometimes):** If documentation for a library is vast, you might get better results by adding one specific section with `@Docs`, generating rules for that section, clearing `@Docs`, and then moving to the next section.
 -   **Combine with Your Own Knowledge:** The AI provides a great starting point. Augment its output with your own expertise and project-specific requirements.
 
-Using `@Docs` to bootstrap your tech-stack rules can save significant time and ensure your rules are well-grounded in authoritative information, leading to a more effective and knowledgeable AI coding partner. 
+Using `@Docs` to bootstrap your tech-stack rules can save significant time and ensure your rules are well-grounded in authoritative information, leading to a more effective and knowledgeable AI coding partner.
+
+---
+
+[⬅️ Back to Main README](../../../README.md) 

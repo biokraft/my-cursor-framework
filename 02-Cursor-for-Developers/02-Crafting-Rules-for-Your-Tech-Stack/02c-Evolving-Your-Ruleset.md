@@ -56,4 +56,8 @@ Treat your interaction with Cursor as a continuous feedback loop:
 
 Every time the AI generates code or provides advice related to your tech stack, it's an opportunity to assess the effectiveness of your rules. If the output is perfect, your rules are working well. If not, it signals a need for refinement.
 
-By actively maintaining and evolving your tech-stack rules, you ensure that Cursor remains a highly effective and increasingly intelligent partner, always aligned with the latest standards and specifics of your development projects. 
+By actively maintaining and evolving your tech-stack rules, you ensure that Cursor remains a highly effective and increasingly intelligent partner, always aligned with the latest standards and specifics of your development projects.
+
+---
+
+[⬅️ Back to Main README](../../../README.md) 

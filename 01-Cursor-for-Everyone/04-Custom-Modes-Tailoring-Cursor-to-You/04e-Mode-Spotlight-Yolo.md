@@ -58,4 +58,8 @@ Let's get this bread! 🍞💅 It's time to absolutely ~manifest~ some epic resu
     *   "Generate a new feature. Surprise me! 🎁"
     *   "Write a commit message for this, but make it sound like a pirate captain wrote it. 🏴‍☠️🦜"
 
-**Warning:** May result in code that's more "abstract art" 🎨 than "production-ready" 🏭, or documentation that reads like a fever dream 😵‍💫. Use with a joyous heart, a good sense of humor, and an *excellent* version control system! 😉💖✨ You've been warned... and encouraged! 🎉 
+**Warning:** May result in code that's more "abstract art" 🎨 than "production-ready" 🏭, or documentation that reads like a fever dream 😵‍💫. Use with a joyous heart, a good sense of humor, and an *excellent* version control system! 😉💖✨ You've been warned... and encouraged! 🎉
+
+---
+
+[⬅️ Back to Main README](../../../README.md) 

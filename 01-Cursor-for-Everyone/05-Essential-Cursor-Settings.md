@@ -72,4 +72,8 @@ Once you're comfortable with these, delve into other settings Cursor offers:
 -   **AI Model Preferences:** Set default models (as discussed in "Choosing Your AI Model").
 -   **Privacy and Data Settings:** Understand and configure data handling.
 
-By thoughtfully configuring these settings, especially the BETA features, you can create a highly efficient, context-aware, and enjoyable working environment in Cursor. Remember to check the settings panel as new Cursor versions are released to discover new features and customization options. 
+By thoughtfully configuring these settings, especially the BETA features, you can create a highly efficient, context-aware, and enjoyable working environment in Cursor. Remember to check the settings panel as new Cursor versions are released to discover new features and customization options.
+
+---
+
+[⬅️ Back to Main README](../../README.md) | [Next: The Model Context Protocol (MCP) ➡️](./06-The-Model-Context-Protocol-MCP/README.md) 

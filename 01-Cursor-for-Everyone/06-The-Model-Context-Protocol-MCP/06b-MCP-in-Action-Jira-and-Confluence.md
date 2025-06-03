@@ -166,4 +166,8 @@ This guide provides step-by-step instructions for integrating Jira Cloud and Con
         *   "Find Confluence pages about 'API documentation' in the DEV space"
         *   To use a specific tool: `mcp_mcp-atlassian_confluence_get_page(page_id='123456789')`
 
-This detailed setup guide should provide comprehensive instructions for users to integrate their Atlassian tools with Cursor. 
+This detailed setup guide should provide comprehensive instructions for users to integrate their Atlassian tools with Cursor.
+
+---
+
+[⬅️ Back to Main README](../../../README.md) 

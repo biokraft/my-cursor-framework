@@ -11,4 +11,8 @@ This section will guide you through:
 -   **Crafting Rules for Documentation**: Specific advice on using rules to produce excellent documentation.
     -   ✍️ [Rules for Stellar Documentation](./02c-Rules-for-Stellar-Documentation.md)
 
-Navigate through these documents to become proficient in using Cursor rules! 
+Navigate through these documents to become proficient in using Cursor rules!
+
+---
+
+[⬅️ Back to Main README](../../../README.md) | [Next: Choosing Your AI Model ➡️](../03-Choosing-Your-AI-Model.md) 

@@ -33,4 +33,8 @@ Throughout this guide, we'll explore various methods for providing context. Here
 >
 > "My #1 recommendation for people these days is to use a context window for one task, and one task only. If your coding agent is misbehaving, it's time to create a new context window. If the bowling ball is in the gutter, there's no saving it. It's in the gutter."
 >
-> — [Geoffrey Huntley](https://ghuntley.com/gutter/) 
+> — [Geoffrey Huntley](https://ghuntley.com/gutter/)
+
+---
+
+[⬅️ Back to Main README](../../README.md) | [Next: Welcome to Cursor ➡️](./01-Welcome-to-Cursor.md) 

@@ -180,4 +180,8 @@ This guide provides step-by-step instructions for setting up DBHub and integrati
 -   **DSN Issues:** Test your DSN string with a standard database client first to ensure it's correct. Pay attention to URL encoding for special characters in passwords or database names.
 -   **Oracle Thick Mode:** Ensure `ORACLE_LIB_DIR` is correctly set in the environment where `npx` (and thus DBHub) is running. If Cursor launches DBHub, this environment variable needs to be available to Cursor's process or set globally.
 
-By following this guide, you can unlock powerful database interaction capabilities directly within Cursor, streamlining workflows for both technical and non-technical users. 
+By following this guide, you can unlock powerful database interaction capabilities directly within Cursor, streamlining workflows for both technical and non-technical users.
+
+---
+
+[⬅️ Back to Main README](../../../README.md) 

@@ -53,4 +53,8 @@ For example, your `00-cursor-rules.mdc` might specify:
 
 And your `01-mdc-guidelines.mdc` provides the strict schema for frontmatter.
 
-By actively teaching Cursor and codifying that knowledge into well-structured `.mdc` rules, you compound its effectiveness over time, creating a truly personalized AI partner. 
+By actively teaching Cursor and codifying that knowledge into well-structured `.mdc` rules, you compound its effectiveness over time, creating a truly personalized AI partner.
+
+---
+
+[⬅️ Back to Main README](../../../README.md) 

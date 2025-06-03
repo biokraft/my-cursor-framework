@@ -51,4 +51,8 @@ Once a documentation source is added and named in the settings, you can referenc
 
 After selecting it, the AI will prioritize this documentation for subsequent queries in that chat session or until the `@Docs` context is cleared or changed. This ensures the AI uses the specific information you've pointed it to.
 
-This brief introduction should give you an idea of its potential. For now, just be aware that it's another powerful tool in Cursor's arsenal for providing critical context to the AI. 
+This brief introduction should give you an idea of its potential. For now, just be aware that it's another powerful tool in Cursor's arsenal for providing critical context to the AI.
+
+---
+
+[⬅️ Back to Main README](../../README.md) | [Next: Markdown-Driven Planning & Brainstorming ➡️](./08-Markdown-Driven-Planning.md) 

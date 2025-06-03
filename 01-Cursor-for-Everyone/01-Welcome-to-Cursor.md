@@ -32,3 +32,7 @@ This guide is split into two main parts:
 I recommend starting with "Part 1" to get a solid understanding of Cursor's capabilities. Developers can then proceed to "Part 2" for more specialized techniques.
 
 Let's begin your journey to mastering Cursor! 🚀
+
+---
+
+[⬅️ Back to Main README](../../README.md) | [Next: Understanding Cursor Rules ➡️](./02-Understanding-Cursor-Rules/README.md)

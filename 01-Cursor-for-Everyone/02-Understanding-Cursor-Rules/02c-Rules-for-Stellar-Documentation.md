@@ -97,4 +97,8 @@ When making changes to code, especially API endpoints, core features, or user-fa
 -   **Updating Existing Docs:** If you're asking Cursor to update a section, it will adhere to the established style and structure if the relevant rules are active.
 -   **Reviewing Docs:** You can even ask Cursor to review existing documentation against these rules: "@docs/my_document.md Does this document adhere to the guidelines in `@.cursor/rules/docs-style-guide.mdc` and `@.cursor/rules/docs-readme-template.mdc`? Suggest improvements."
 
-By implementing documentation-specific `.mdc` rules with proper frontmatter, you empower Cursor to be a more effective assistant in creating and maintaining a clear, consistent, and valuable knowledge base for your project. 
+By implementing documentation-specific `.mdc` rules with proper frontmatter, you empower Cursor to be a more effective assistant in creating and maintaining a clear, consistent, and valuable knowledge base for your project.
+
+---
+
+[⬅️ Back to Main README](../../../README.md) 

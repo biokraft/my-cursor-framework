@@ -136,3 +136,7 @@ Here's a breakdown of the `SpecsForge` custom mode prompt and its components.
 -   **Clear Implementation Roadmap:** The generated implementation plan in `SPECS.md` provides a clear, phased approach to development.
 
 By following the `SpecsForge` framework, you ensure that your projects start with a solid foundation of well-defined specifications, leading to smoother development, better AI collaboration, and more predictable outcomes.
+
+---
+
+[⬅️ Back to Main README](../../README.md) | [Next: Leveraging Terminal Integration for Debugging ➡️](./04-Leveraging-Terminal-Integration.md)

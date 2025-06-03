@@ -35,4 +35,8 @@ As we explore advanced techniques for using Cursor in development:
 
 This manifesto sets the stage for how we'll approach topics like mastering the `@Docs` feature, crafting tech-stack specific rules, and using the `SpecsForge` framework. The goal is not just to get Cursor to write code, but to help *you* write *better* code, faster and more intelligently.
 
-Welcome, Vibe Programmer! 
+Welcome, Vibe Programmer!
+
+---
+
+[⬅️ Back to Main README](../../README.md) | [Next: Mastering the @Docs Feature ➡️](./01-Mastering-the-Docs-Feature.md) 

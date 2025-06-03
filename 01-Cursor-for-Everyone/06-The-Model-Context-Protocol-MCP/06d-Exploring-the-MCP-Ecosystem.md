@@ -85,4 +85,8 @@ The power of AI assistants like Cursor grows exponentially as they become more d
 -   **Stay Updated:** Keep an eye on Cursor's release notes and community announcements for new MCP integrations.
 -   **Voice Your Needs:** If there's a tool you rely on that you'd love to see integrated via MCP, let the Cursor team know through their feedback channels. Developer and user demand often drives the roadmap for new features.
 
-As the MCP ecosystem matures, you can expect Cursor to become an even more indispensable hub for your development and project-related activities, pulling in context and enabling actions across a diverse set of platforms. 
+As the MCP ecosystem matures, you can expect Cursor to become an even more indispensable hub for your development and project-related activities, pulling in context and enabling actions across a diverse set of platforms.
+
+---
+
+[⬅️ Back to Main README](../../../README.md) 

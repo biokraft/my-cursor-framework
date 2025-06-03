@@ -81,4 +81,8 @@ Ready to transform your planning process? Here's your action plan:
 4. **🔄 Iterate and refine** using the combined power of structured Markdown and AI assistance
 5. **📊 Track your progress** through Git commits as your plans evolve
 
-By embracing Markdown within Cursor and leveraging the specialized MDP Mode, you create a dynamic and powerful hub for your thoughts and plans—beautifully formatted, systematically organized, and supercharged by AI assistance with robust version control. 
+By embracing Markdown within Cursor and leveraging the specialized MDP Mode, you create a dynamic and powerful hub for your thoughts and plans—beautifully formatted, systematically organized, and supercharged by AI assistance with robust version control.
+
+---
+
+[⬅️ Back to Main README](../../README.md) | [Next: The Vibe Programmer Manifesto ➡️](../../02-Cursor-for-Developers/00-The-Vibe-Programmer-Manifesto.md) 

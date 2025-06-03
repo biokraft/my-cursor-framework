@@ -48,4 +48,8 @@ While the specific steps vary for each service:
 
 **Security Note:** Always be mindful of the permissions you grant. MCP is designed to respect your credentials, but it's good practice to use the principle of least privilege (granting only necessary permissions) when creating API tokens if possible.
 
-In the next sections, we'll look at specific examples of using MCP with Jira and Confluence, and discuss the broader ecosystem of potential MCP integrations. 
+In the next sections, we'll look at specific examples of using MCP with Jira and Confluence, and discuss the broader ecosystem of potential MCP integrations.
+
+---
+
+[⬅️ Back to Main README](../../../README.md) 

@@ -12,4 +12,8 @@ In this section, you'll discover:
     -   🔍 [Mode Spotlight: Research](./04d-Mode-Spotlight-Research.md)
     -   🤪 [Mode Spotlight: Yolo](./04e-Mode-Spotlight-Yolo.md)
 
-By exploring these guides, you'll learn how to create and utilize custom modes to significantly enhance your workflow with Cursor. 
+By exploring these guides, you'll learn how to create and utilize custom modes to significantly enhance your workflow with Cursor.
+
+---
+
+[⬅️ Back to Main README](../../../README.md) | [Next: Essential Cursor Settings ➡️](../05-Essential-Cursor-Settings.md) 

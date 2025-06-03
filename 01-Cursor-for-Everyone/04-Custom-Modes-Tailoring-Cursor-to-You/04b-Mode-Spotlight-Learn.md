@@ -79,4 +79,8 @@ While both modes help you acquire knowledge, they serve different primary purpos
     *   The goal is to collect and synthesize information to build a comprehensive overview (e.g., for a report, decision-making, or feature investigation).
     *   You need to understand the "what" and "why" across a landscape.
 
-For a dedicated mode on gathering and synthesizing information broadly, see [Mode Spotlight: Research Mode](04d-Mode-Spotlight-Research.md). 
+For a dedicated mode on gathering and synthesizing information broadly, see [Mode Spotlight: Research Mode](04d-Mode-Spotlight-Research.md).
+
+---
+
+[⬅️ Back to Main README](../../../README.md) 

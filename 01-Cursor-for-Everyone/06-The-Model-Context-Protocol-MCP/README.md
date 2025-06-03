@@ -12,4 +12,8 @@ Here, you will learn about:
 -   **Exploring the Ecosystem**: Discover the broader range of tools and possibilities with MCP.
     -   🗺️ [Exploring the MCP Ecosystem](./06d-Exploring-the-MCP-Ecosystem.md)
 
-Understanding MCP will unlock new levels of productivity by enabling Cursor to leverage information from your favorite platforms. 
+Understanding MCP will unlock new levels of productivity by enabling Cursor to leverage information from your favorite platforms.
+
+---
+
+[⬅️ Back to Main README](../../../README.md) | [Next: Quick Look: The @Docs Feature ➡️](../07-Quick-Look-The-Docs-Feature.md) 

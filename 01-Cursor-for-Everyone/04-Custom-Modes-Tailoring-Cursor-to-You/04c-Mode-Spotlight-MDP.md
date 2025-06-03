@@ -128,4 +128,8 @@ TOOL USAGE:
     *   You need to gather information before structuring it 🔬
     *   Building content that requires external sources 📊
 
-By leveraging MDP Mode, you transform chaotic information into well-architected documentation systems that are easy to navigate, maintain, and expand over time. ✨ 
+By leveraging MDP Mode, you transform chaotic information into well-architected documentation systems that are easy to navigate, maintain, and expand over time. ✨
+
+---
+
+[⬅️ Back to Main README](../../../README.md) 

@@ -89,4 +89,8 @@ While both modes help you acquire knowledge, they serve different primary purpos
     *   You want focused explanations, examples, and patient tutoring on a narrower subject.
     *   You need to understand the "how" of something specific.
 
-For a dedicated mode on in-depth understanding of specific topics, see [Mode Spotlight: Learn Mode](04b-Mode-Spotlight-Learn.md). 
+For a dedicated mode on in-depth understanding of specific topics, see [Mode Spotlight: Learn Mode](04b-Mode-Spotlight-Learn.md).
+
+---
+
+[⬅️ Back to Main README](../../../README.md) 

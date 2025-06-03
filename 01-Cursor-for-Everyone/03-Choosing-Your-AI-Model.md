@@ -68,4 +68,8 @@ It's important to understand that Cursor might use different models for differen
     *   Need a quick code snippet, a fast explanation, or rapid iteration? A faster model like OpenAI's `gpt-4.1`, or Anthropic's `claude-3.7-sonnet` (with "thinking" turned off/minimized) would be a better choice.
 *   **Check Cursor's Documentation:** The official Cursor documentation is the best source for the most up-to-date list of available models and their recommended use cases.
 
-By understanding the strengths of different AI models, you can tailor your Cursor experience to be as efficient and powerful as possible. 
+By understanding the strengths of different AI models, you can tailor your Cursor experience to be as efficient and powerful as possible.
+
+---
+
+[⬅️ Back to Main README](../../README.md) | [Next: Custom Modes: Tailoring Cursor to You ➡️](./04-Custom-Modes-Tailoring-Cursor-to-You/README.md) 

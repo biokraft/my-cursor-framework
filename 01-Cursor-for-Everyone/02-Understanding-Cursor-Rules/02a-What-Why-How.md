@@ -71,4 +71,8 @@ It's highly recommended to include the following two foundational rules in any p
 
 (You can find examples of these in the `.cursor/rules` directory of this framework repository.)
 
-In the next sections, we'll explore how to develop rules interactively and use them for specific purposes like documentation. 
+In the next sections, we'll explore how to develop rules interactively and use them for specific purposes like documentation.
+
+---
+
+[⬅️ Back to Main README](../../../README.md) 

@@ -75,4 +75,4 @@ In the next sections, we'll explore how to develop rules interactively and use t
 
 ---
 
-[⬅️ Back to Main README](../../../README.md) 
+[⬅️ Back](../../../README.md) | [Next: Interactive Rule Development ➡️](./02b-Interactive-Rule-Development.md) 

@@ -43,4 +43,4 @@ In the following sections, we'll explore practical ways to create and manage the
 
 ---
 
-[⬅️ Back to Main README](../../../README.md) 
+[⬅️ Back](../../../README.md) | [Next: Auto-Generating Rules from @Docs ➡️](./02b-Auto-Generating-Rules-from-Docs.md) 

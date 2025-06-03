@@ -37,4 +37,4 @@ Throughout this guide, we'll explore various methods for providing context. Here
 
 ---
 
-[⬅️ Back to Main README](../../README.md) | [Next: Welcome to Cursor ➡️](./01-Welcome-to-Cursor.md) 
+[⬅️ Back](../../README.md) | [Next: Welcome to Cursor ➡️](./01-Welcome-to-Cursor.md) 

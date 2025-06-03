@@ -15,4 +15,4 @@ Navigate through these documents to become proficient in using Cursor rules!
 
 ---
 
-[⬅️ Back to Main README](../../../README.md) | [Next: Choosing Your AI Model ➡️](../03-Choosing-Your-AI-Model.md) 
+[⬅️ Back](../../../README.md) | [Next: What, Why, How? ➡️](./02a-What-Why-How.md) 

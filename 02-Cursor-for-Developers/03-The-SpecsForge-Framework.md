@@ -139,4 +139,4 @@ By following the `SpecsForge` framework, you ensure that your projects start wit
 
 ---
 
-[⬅️ Back to Main README](../../README.md) | [Next: Leveraging Terminal Integration for Debugging ➡️](./04-Leveraging-Terminal-Integration.md)
+[⬅️ Back](../../README.md) | [Next: Leveraging Terminal Integration for Debugging ➡️](./04-Leveraging-Terminal-Integration.md)

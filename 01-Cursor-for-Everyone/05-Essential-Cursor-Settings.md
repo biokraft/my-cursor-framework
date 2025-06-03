@@ -76,4 +76,4 @@ By thoughtfully configuring these settings, especially the BETA features, you ca
 
 ---
 
-[⬅️ Back to Main README](../../README.md) | [Next: The Model Context Protocol (MCP) ➡️](./06-The-Model-Context-Protocol-MCP/README.md) 
+[⬅️ Back](../../README.md) | [Next: The Model Context Protocol (MCP) ➡️](./06-The-Model-Context-Protocol-MCP/README.md) 

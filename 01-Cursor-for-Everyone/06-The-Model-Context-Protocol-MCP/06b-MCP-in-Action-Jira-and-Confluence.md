@@ -170,4 +170,4 @@ This detailed setup guide should provide comprehensive instructions for users to
 
 ---
 
-[⬅️ Back to Main README](../../../README.md) 
+[⬅️ Back](../../../README.md) | [Next: MCP Spotlight: DBHub ➡️](./06c-MCP-Spotlight-DBHub.md) 

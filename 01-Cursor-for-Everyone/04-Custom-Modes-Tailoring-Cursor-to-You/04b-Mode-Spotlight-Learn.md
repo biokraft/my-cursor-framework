@@ -83,4 +83,4 @@ For a dedicated mode on gathering and synthesizing information broadly, see [Mod
 
 ---
 
-[⬅️ Back to Main README](../../../README.md) 
+[⬅️ Back](../../../README.md) | [Next: Mode Spotlight: MDP ➡️](./04c-Mode-Spotlight-MDP.md) 

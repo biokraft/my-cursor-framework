@@ -55,4 +55,4 @@ In the following sections, we'll look at specific examples of useful custom mode
 
 ---
 
-[⬅️ Back to Main README](../../../README.md)
+[⬅️ Back](../../../README.md) | [Next: Mode Spotlight: Learn ➡️](./04b-Mode-Spotlight-Learn.md)

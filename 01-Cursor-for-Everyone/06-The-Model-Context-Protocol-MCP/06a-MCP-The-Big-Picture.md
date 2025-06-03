@@ -52,4 +52,4 @@ In the next sections, we'll look at specific examples of using MCP with Jira and
 
 ---
 
-[⬅️ Back to Main README](../../../README.md) 
+[⬅️ Back](../../../README.md) | [Next: MCP in Action: Jira and Confluence ➡️](./06b-MCP-in-Action-Jira-and-Confluence.md) 

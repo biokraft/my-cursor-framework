@@ -35,4 +35,4 @@ Let's begin your journey to mastering Cursor! 🚀
 
 ---
 
-[⬅️ Back to Main README](../../README.md) | [Next: Understanding Cursor Rules ➡️](./02-Understanding-Cursor-Rules/README.md)
+[⬅️ Back](../../README.md) | [Next: Understanding Cursor Rules ➡️](./02-Understanding-Cursor-Rules/README.md)

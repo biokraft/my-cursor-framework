@@ -23,4 +23,4 @@ By leveraging terminal integration, you can make Cursor an even more indispensab
 
 ---
 
-[⬅️ Back to Main README](../../README.md) | [Next: Working Across Repositories ➡️](./05-Working-Across-Repositories.md) 
+[⬅️ Back](../../README.md) | [Next: Working Across Repositories ➡️](./05-Working-Across-Repositories.md) 

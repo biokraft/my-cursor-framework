@@ -85,4 +85,4 @@ By embracing Markdown within Cursor and leveraging the specialized MDP Mode, you
 
 ---
 
-[⬅️ Back to Main README](../../README.md) | [Next: The Vibe Programmer Manifesto ➡️](../../02-Cursor-for-Developers/00-The-Vibe-Programmer-Manifesto.md) 
+[⬅️ Back](../../README.md) | [Next: The Vibe Programmer Manifesto ➡️](../../02-Cursor-for-Developers/00-The-Vibe-Programmer-Manifesto.md) 

@@ -89,4 +89,4 @@ As the MCP ecosystem matures, you can expect Cursor to become an even more indis
 
 ---
 
-[⬅️ Back to Main README](../../../README.md) 
+[⬅️ Back](../../../README.md) | [Next: Quick Look: The @Docs Feature ➡️](../07-Quick-Look-The-Docs-Feature.md) 

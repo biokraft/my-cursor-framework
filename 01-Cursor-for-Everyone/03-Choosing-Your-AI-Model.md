@@ -72,4 +72,4 @@ By understanding the strengths of different AI models, you can tailor your Curso
 
 ---
 
-[⬅️ Back to Main README](../../README.md) | [Next: Custom Modes: Tailoring Cursor to You ➡️](./04-Custom-Modes-Tailoring-Cursor-to-You/README.md) 
+[⬅️ Back](../../README.md) | [Next: Custom Modes: Tailoring Cursor to You ➡️](./04-Custom-Modes-Tailoring-Cursor-to-You/README.md) 

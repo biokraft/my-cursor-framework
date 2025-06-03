@@ -16,4 +16,4 @@ Understanding MCP will unlock new levels of productivity by enabling Cursor to l
 
 ---
 
-[⬅️ Back to Main README](../../../README.md) | [Next: Quick Look: The @Docs Feature ➡️](../07-Quick-Look-The-Docs-Feature.md) 
+[⬅️ Back](../../../README.md) | [Next: MCP: The Big Picture ➡️](./06a-MCP-The-Big-Picture.md) 

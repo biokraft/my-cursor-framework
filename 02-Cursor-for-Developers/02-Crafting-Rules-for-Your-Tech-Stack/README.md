@@ -15,4 +15,4 @@ By the end of this section, you'll be equipped to create a robust set of rules t
 
 ---
 
-[⬅️ Back to Main README](../../../README.md) | [Next: The SpecsForge Framework ➡️](../03-The-SpecsForge-Framework.md) 
+[⬅️ Back](../../../README.md) | [Next: Why Tech-Specific Rules Matter ➡️](./02a-Why-Tech-Specific-Rules-Matter.md) 

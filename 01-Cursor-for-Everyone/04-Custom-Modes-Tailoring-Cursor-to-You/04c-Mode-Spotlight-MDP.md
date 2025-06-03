@@ -132,4 +132,4 @@ By leveraging MDP Mode, you transform chaotic information into well-architected 
 
 ---
 
-[⬅️ Back to Main README](../../../README.md) 
+[⬅️ Back](../../../README.md) | [Next: Mode Spotlight: Research ➡️](./04d-Mode-Spotlight-Research.md) 

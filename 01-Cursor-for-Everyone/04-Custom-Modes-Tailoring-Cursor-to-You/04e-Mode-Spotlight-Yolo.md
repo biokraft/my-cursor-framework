@@ -62,4 +62,4 @@ Let's get this bread! 🍞💅 It's time to absolutely ~manifest~ some epic resu
 
 ---
 
-[⬅️ Back to Main README](../../../README.md) 
+[⬅️ Back](../../../README.md) | [Next: Essential Cursor Settings ➡️](../05-Essential-Cursor-Settings.md) 

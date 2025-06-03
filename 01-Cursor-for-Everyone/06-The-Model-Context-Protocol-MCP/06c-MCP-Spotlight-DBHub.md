@@ -184,4 +184,4 @@ By following this guide, you can unlock powerful database interaction capabiliti
 
 ---
 
-[⬅️ Back to Main README](../../../README.md) 
+[⬅️ Back](../../../README.md) | [Next: Exploring the MCP Ecosystem ➡️](./06d-Exploring-the-MCP-Ecosystem.md) 

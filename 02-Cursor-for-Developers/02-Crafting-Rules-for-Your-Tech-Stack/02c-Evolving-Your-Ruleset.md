@@ -60,4 +60,4 @@ By actively maintaining and evolving your tech-stack rules, you ensure that Curs
 
 ---
 
-[⬅️ Back to Main README](../../../README.md) 
+[⬅️ Back](../../../README.md) | [Next: The SpecsForge Framework ➡️](../03-The-SpecsForge-Framework.md) 

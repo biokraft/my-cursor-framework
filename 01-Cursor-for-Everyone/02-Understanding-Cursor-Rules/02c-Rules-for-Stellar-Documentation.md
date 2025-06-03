@@ -101,4 +101,4 @@ By implementing documentation-specific `.mdc` rules with proper frontmatter, you
 
 ---
 
-[⬅️ Back to Main README](../../../README.md) 
+[⬅️ Back](../../../README.md) | [Next: Choosing Your AI Model ➡️](../03-Choosing-Your-AI-Model.md) 

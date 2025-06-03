@@ -16,4 +16,4 @@ By exploring these guides, you'll learn how to create and utilize custom modes t
 
 ---
 
-[⬅️ Back to Main README](../../../README.md) | [Next: Essential Cursor Settings ➡️](../05-Essential-Cursor-Settings.md) 
+[⬅️ Back](../../../README.md) | [Next: Essential Cursor Settings ➡️](../05-Essential-Cursor-Settings.md) 

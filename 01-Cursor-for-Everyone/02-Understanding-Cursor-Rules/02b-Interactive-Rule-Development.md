@@ -57,4 +57,4 @@ By actively teaching Cursor and codifying that knowledge into well-structured `.
 
 ---
 
-[⬅️ Back to Main README](../../../README.md) 
+[⬅️ Back](../../../README.md) | [Next: Rules for Stellar Documentation ➡️](./02c-Rules-for-Stellar-Documentation.md) 

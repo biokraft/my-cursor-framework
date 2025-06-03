@@ -55,4 +55,4 @@ This brief introduction should give you an idea of its potential. For now, just 
 
 ---
 
-[⬅️ Back to Main README](../../README.md) | [Next: Markdown-Driven Planning & Brainstorming ➡️](./08-Markdown-Driven-Planning.md) 
+[⬅️ Back](../../README.md) | [Next: Markdown-Driven Planning & Brainstorming ➡️](./08-Markdown-Driven-Planning.md) 

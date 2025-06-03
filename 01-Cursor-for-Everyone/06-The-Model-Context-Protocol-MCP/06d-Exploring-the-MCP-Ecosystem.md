@@ -9,7 +9,7 @@ Imagine Cursor being able to seamlessly interact with:
 -   **Note-Taking Apps & Personal Knowledge Bases:**
     *   **Notion:** Accessing databases, pages, and tasks from your Notion workspace.
     *   **Obsidian:** Reading notes, searching your vault, and potentially creating new notes in your Obsidian setup (especially if it has local file access or an API).
-    *   **Anytype:** Interacting with your Anytype objects and graphs.
+    *   **Anytype:** A privacy-first alternative to Notion with powerful MCP integration for interacting with your knowledge base objects and graphs.
 -   **Design Tools:**
     *   **Figma:** Fetching information about design components, styles, or comments on mockups to provide context for frontend development.
 -   **Data Visualization & Monitoring Tools:**
@@ -22,6 +22,12 @@ Imagine Cursor being able to seamlessly interact with:
     *   Log management systems, CI/CD platforms, artifact repositories.
 
 ---
+**Featured Integration: Anytype MCP Server**
+
+For users seeking a privacy-first alternative to Notion, **Anytype** offers a compelling solution with comprehensive MCP support. The [Anytype MCP Server](https://github.com/anyproto/anytype-mcp) enables AI assistants to seamlessly interact with Anytype's API through natural language, making it an excellent choice for those who prioritize data sovereignty without sacrificing functionality.
+
+---
+
 **Honorable Mention:**
 
 -   **PowerPoint Presentation Generation:**

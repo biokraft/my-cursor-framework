@@ -6,7 +6,7 @@ Cursor offers access to a variety of cutting-edge AI models, each with its own s
 
 ## Understanding Model Tiers and Capabilities
 
-**⚠️ Important Disclaimer on Model Selection:** It is strongly recommended to **NEVER use the "auto" model selection setting.** From practical experience, this can lead to inconsistent model switching, potentially degrading performance and the coherence of your AI interactions. Always make a conscious choice based on your task.
+**ℹ️ Note on Model Selection:** As of Cursor version 0.51.2, the **"auto" model selection setting works very well**. If you're unsure which model to pick, using "auto" is now a safe and convenient choice. The system will intelligently select an appropriate model for your task, providing a good balance of performance and capability. Of course, you can still manually choose a model if you have specific needs or preferences.
 
 While Cursor's model roster can evolve, they generally fall into categories based on their capabilities, speed, and the complexity of tasks they excel at. Some models are powerhouses for deep reasoning, complex problem-solving, and generating nuanced content ("thinking" models), while others might be optimized for speed and more straightforward tasks.
 

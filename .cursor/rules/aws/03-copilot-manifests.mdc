@@ -1,0 +1,519 @@
+---
+description:
+globs: copilot/**/manifest.yml, copilot/**/manifest.yaml, **/copilot/**/*.yml, **/copilot/**/*.yaml
+alwaysApply: false
+---
+# AWS Copilot Manifest Best Practices
+
+This guide provides comprehensive best practices for writing AWS Copilot manifest files, focusing on Load Balanced Web Services and Environment configurations.
+
+## General Manifest Principles
+
+### File Organization
+- Place all Copilot manifests in the `copilot/` directory at your project root
+- Use descriptive names for services and environments
+- Follow consistent naming conventions (kebab-case recommended)
+- Organize by service type: `copilot/environments/`, `copilot/services/`
+
+### YAML Best Practices
+- Use consistent indentation (2 spaces)
+- Quote string values when they contain special characters
+- Use explicit boolean values (`true`/`false`, not `yes`/`no`)
+- Comment complex configurations for clarity
+- Use YAML anchors and aliases for repeated configurations
+
+## Load Balanced Web Service Manifests
+
+### Essential Structure
+```yaml
+name: 'service-name'
+type: 'Load Balanced Web Service'
+
+image:
+  build: './path/to/dockerfile'
+  port: 8080
+
+http:
+  path: '/'
+  healthcheck: '/health'
+
+cpu: 256
+memory: 512
+count: 2
+```
+
+### Image Configuration Best Practices
+
+#### Container Build
+```yaml
+image:
+  build:
+    dockerfile: './Dockerfile'
+    context: './app'
+    args:
+      BUILD_ENV: production
+  port: 8080
+```
+
+#### Pre-built Images
+```yaml
+image:
+  location: 'aws_account_id.dkr.ecr.region.amazonaws.com/service:tag'
+  port: 8080
+```
+
+### HTTP Configuration
+
+#### Basic HTTP Setup
+```yaml
+http:
+  path: '/'
+  healthcheck: '/health'
+  # Use specific health check paths, not root
+  # Include success codes if non-200 responses are valid
+  success_codes: '200,301'
+```
+
+#### Advanced Health Checks
+```yaml
+http:
+  path: '/'
+  healthcheck:
+    path: '/health/deep'
+    port: 8080  # Use different port if health endpoint is separate
+    success_codes: '200,301'
+    healthy_threshold: 3
+    unhealthy_threshold: 2
+    interval: 30s
+    timeout: 10s
+    grace_period: 2m  # Allow time for application startup
+  deregistration_delay: 30s
+  stickiness: true  # Enable for stateful applications
+```
+
+#### Domain Configuration
+```yaml
+http:
+  alias: 'api.example.com'
+  # Or for environment-specific domains
+environments:
+  production:
+    http:
+      alias:
+        - name: 'api.example.com'
+          hosted_zone: 'Z0873220N255IR3MTNR4'
+  staging:
+    http:
+      alias: 'staging-api.example.com'
+```
+
+### Resource Configuration
+
+#### CPU and Memory
+```yaml
+# Use appropriate sizing based on workload
+cpu: 512      # 0.5 vCPU
+memory: 1024  # 1 GB
+
+# For compute-intensive workloads
+cpu: 2048     # 2 vCPU
+memory: 4096  # 4 GB
+```
+
+#### Auto Scaling
+```yaml
+count:
+  range: 2-10
+  cooldown:
+    in: 60s   # Scale up cooldown
+    out: 180s # Scale down cooldown (longer to prevent flapping)
+  cpu_percentage: 70
+  memory_percentage: 80
+  requests: 100
+  response_time: 500ms
+```
+
+### Environment Variables and Secrets
+
+#### Environment Variables
+```yaml
+variables:
+  LOG_LEVEL: info
+  NODE_ENV: production
+  API_VERSION: v1
+  # Use CloudFormation exports for cross-stack references
+  DATABASE_URL:
+    from_cfn: 'DatabaseEndpoint'
+
+# Or use environment files
+env_file: '.env.production'
+```
+
+#### Secrets Management
+```yaml
+secrets:
+  # Systems Manager Parameter Store
+  DATABASE_PASSWORD: '/app/database/password'
+  
+  # Secrets Manager
+  API_KEYS:
+    secretsmanager: 'api-keys-secret'
+  
+  # CloudFormation exports
+  JWT_SECRET:
+    from_cfn: 'JwtSecretArn'
+```
+
+### Storage Configuration
+
+#### Ephemeral Storage
+```yaml
+storage:
+  ephemeral: 50  # GiB, minimum 20, maximum 200
+  readonly_fs: false
+```
+
+#### EFS Volumes
+```yaml
+storage:
+  volumes:
+    shared_data:
+      path: '/app/shared'
+      read_only: false
+      efs:
+        id: 'fs-12345678'
+        root_dir: '/app-data'
+        auth:
+          iam: true
+          access_point_id: 'fsap-12345678'
+```
+
+### Network Configuration
+
+#### VPC Placement
+```yaml
+network:
+  vpc:
+    placement: 'private'  # Recommended for security
+    # Use 'public' only when necessary
+```
+
+#### Security Groups
+```yaml
+network:
+  vpc:
+    ingress:
+      from_vpc: true
+    security_groups:
+      - sg-12345678  # Additional security groups
+```
+
+### Deployment Configuration
+
+#### Rolling Deployment
+```yaml
+deployment:
+  rolling: 'default'  # or 'recreate' for stateful apps
+  rollback_alarms:
+    - 'HighErrorRate'
+    - 'HighLatency'
+  # Or use Copilot-managed alarms
+  rollback_alarms:
+    cpu_utilization: 80
+    memory_utilization: 90
+```
+
+### Observability
+
+#### Logging
+```yaml
+logging:
+  retention: 30  # days
+  # Custom log driver configuration
+  destination:
+    Name: cloudwatch
+    region: us-west-2
+    log_group_name: '/copilot/service-name'
+```
+
+#### Tracing
+```yaml
+observability:
+  tracing: 'awsxray'
+```
+
+### Sidecars
+```yaml
+sidecars:
+  nginx:
+    image: 'nginx:alpine'
+    port: 80
+    variables:
+      NGINX_PORT: 80
+    mount_points:
+      - source_volume: 'config'
+        path: '/etc/nginx/conf.d'
+        read_only: true
+```
+
+## Environment Manifests
+
+### Basic Environment Structure
+```yaml
+name: 'production'
+type: 'Environment'
+
+# Enable container insights for monitoring
+observability:
+  container_insights: true
+```
+
+### Network Configuration
+
+#### Custom VPC
+```yaml
+network:
+  vpc:
+    cidr: '10.0.0.0/16'
+    subnets:
+      public:
+        - cidr: '10.0.1.0/24'
+          az: 'us-west-2a'
+        - cidr: '10.0.2.0/24'
+          az: 'us-west-2b'
+      private:
+        - cidr: '10.0.10.0/24'
+          az: 'us-west-2a'
+        - cidr: '10.0.20.0/24'
+          az: 'us-west-2b'
+```
+
+#### Imported VPC
+```yaml
+network:
+  vpc:
+    id: 'vpc-12345678'
+    subnets:
+      public:
+        - id: 'subnet-public-1'
+        - id: 'subnet-public-2'
+      private:
+        - id: 'subnet-private-1'
+        - id: 'subnet-private-2'
+```
+
+#### Security Groups
+```yaml
+network:
+  vpc:
+    security_group:
+      ingress:
+        - ip_protocol: tcp
+          ports: 443
+          cidr: '0.0.0.0/0'
+        - ip_protocol: tcp
+          ports: 80
+          cidr: '0.0.0.0/0'
+      egress:
+        - ip_protocol: -1  # All protocols
+          ports: 0-65535
+          cidr: '0.0.0.0/0'
+```
+
+#### VPC Flow Logs
+```yaml
+network:
+  vpc:
+    flow_logs:
+      retention: 30  # days
+```
+
+### Load Balancer Configuration
+
+#### Public Load Balancer
+```yaml
+http:
+  public:
+    certificates:
+      - 'arn:aws:acm:region:account:certificate/cert-id'
+    access_logs:
+      bucket_name: 'my-alb-logs-bucket'
+      prefix: 'production-alb'
+    ssl_policy: 'ELBSecurityPolicy-TLS-1-2-2017-01'
+    ingress:
+      source_ips: 
+        - '203.0.113.0/24'  # Restrict to known IP ranges
+```
+
+#### Private Load Balancer
+```yaml
+http:
+  private:
+    certificates:
+      - 'arn:aws:acm:region:account:certificate/private-cert-id'
+    subnets: 
+      - 'subnet-private-1'
+      - 'subnet-private-2'
+    ingress:
+      vpc: true
+    ssl_policy: 'ELBSecurityPolicy-TLS-1-2-2017-01'
+```
+
+### CloudFront Configuration
+```yaml
+cdn:
+  certificate: 'arn:aws:acm:us-east-1:account:certificate/cloudfront-cert'
+  static_assets:
+    location: 'my-static-bucket.s3.us-west-2.amazonaws.com'
+    path: 'static/*'
+    alias: 'static.example.com'
+  terminate_tls: true
+```
+
+## Environment-Specific Overrides
+
+### Service-Level Overrides
+```yaml
+# In service manifest
+environments:
+  production:
+    count:
+      range: 5-20
+    cpu: 1024
+    memory: 2048
+    variables:
+      LOG_LEVEL: warn
+  staging:
+    count: 2
+    variables:
+      LOG_LEVEL: debug
+  development:
+    count: 1
+    cpu: 256
+    memory: 512
+```
+
+## Security Best Practices
+
+### Secrets Management
+- Never hardcode secrets in manifests
+- Use AWS Secrets Manager for sensitive data
+- Use Systems Manager Parameter Store for configuration
+- Implement least-privilege IAM policies
+
+### Network Security
+- Place services in private subnets when possible
+- Use security groups to restrict traffic
+- Enable VPC Flow Logs for monitoring
+- Implement WAF rules for public-facing services
+
+### Container Security
+- Use minimal base images
+- Scan images for vulnerabilities
+- Run containers as non-root users
+- Enable read-only root filesystem when possible
+
+## Performance Optimization
+
+### Resource Sizing
+- Start with conservative resource allocation
+- Monitor and adjust based on actual usage
+- Use auto-scaling for variable workloads
+- Consider burstable performance instances for development
+
+### Health Checks
+- Use lightweight health check endpoints
+- Implement deep health checks for critical dependencies
+- Set appropriate timeouts and thresholds
+- Monitor health check performance
+
+### Load Balancing
+- Configure appropriate deregistration delays
+- Use connection draining for graceful shutdowns
+- Enable stickiness only when necessary
+- Monitor target group health
+
+## Common Patterns
+
+### Multi-Environment Setup
+```yaml
+# copilot/environments/development.yml
+name: development
+type: Environment
+network:
+  vpc:
+    cidr: '10.1.0.0/16'
+
+# copilot/environments/staging.yml  
+name: staging
+type: Environment
+network:
+  vpc:
+    cidr: '10.2.0.0/16'
+
+# copilot/environments/production.yml
+name: production
+type: Environment
+network:
+  vpc:
+    cidr: '10.0.0.0/16'
+observability:
+  container_insights: true
+```
+
+### Microservices Architecture
+```yaml
+# API Gateway service
+name: 'api-gateway'
+type: 'Load Balanced Web Service'
+http:
+  path: '/api/*'
+
+# User service  
+name: 'user-service'
+type: 'Backend Service'
+http:
+  path: '/users/*'
+
+# Order service
+name: 'order-service' 
+type: 'Backend Service'
+http:
+  path: '/orders/*'
+```
+
+## Validation and Testing
+
+### Manifest Validation
+- Use `copilot env package` to validate environment manifests
+- Use `copilot svc package` to validate service manifests
+- Test manifests in development environments first
+- Use CloudFormation drift detection
+
+### Deployment Testing
+- Implement blue-green deployments for critical services
+- Use canary deployments for gradual rollouts
+- Monitor key metrics during deployments
+- Have rollback procedures ready
+
+## Troubleshooting Common Issues
+
+### Service Discovery
+- Ensure services are in the same environment
+- Check security group rules
+- Verify DNS resolution
+- Monitor service mesh configuration
+
+### Load Balancer Issues
+- Check target group health
+- Verify security group rules
+- Monitor ALB access logs
+- Check certificate validity
+
+### Auto Scaling Problems
+- Review CloudWatch metrics
+- Check scaling policies
+- Monitor cooldown periods
+- Verify resource limits
+
+This guide provides a foundation for creating robust, secure, and scalable AWS Copilot applications. Always refer to the latest AWS Copilot documentation for the most current features and best practices.

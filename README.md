@@ -43,6 +43,16 @@ This section delves into advanced techniques and workflows tailored for develope
 
 ---
 
+## ✨ Featured Workflow in Action: The SpecsForge Framework
+
+See the `SpecsForge` framework in action! This video gives a practical look at how to turn a high-level idea into a detailed specification and then into code using Cursor.
+
+[![Watch the SpecsForge Workflow Demo](https://img.youtube.com/vi/3mSPPsbOkyU/hqdefault.jpg)](https://youtu.be/3mSPPsbOkyU)
+
+> This is a core concept from [Part 2: Cursor for Developers](./02-Cursor-for-Developers/03-The-SpecsForge-Framework.md) and demonstrates a powerful, spec-driven development workflow.
+
+---
+
 ## 🏁 Getting Started
 
 1.  Explore **Part 1** to build a solid foundation in Cursor's core functionalities.

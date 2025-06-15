@@ -4,6 +4,14 @@ This section details the `SpecsForge` framework, a custom Cursor mode and workfl
 
 The `SpecsForge` mode is designed to act as an expert software architect and full-stack engineer, guiding you through a discovery process to build out a comprehensive set of specifications before any code is written.
 
+## 👀 See It in Action
+
+Here's a short video demonstrating the `SpecsForge` workflow in practice.
+
+[![Watch the SpecsForge Workflow Demo](https://img.youtube.com/vi/3mSPPsbOkyU/hqdefault.jpg)](https://youtu.be/3mSPPsbOkyU)
+
+*Note: This is a preliminary video. Higher quality footage and a more detailed walkthrough are coming soon!*
+
 ## My Standard Workflow with SpecsForge
 
 1.  **Project Setup & Rule Integration:**

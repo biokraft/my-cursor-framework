@@ -45,7 +45,7 @@ This section delves into advanced techniques and workflows tailored for develope
 
 ## ✨ Featured Workflow in Action: The SpecsForge Framework
 
-See the `SpecsForge` framework in action! This video gives a practical look at how to turn a high-level idea into a detailed specification and then into code using Cursor.
+See the `SpecsForge` framework in action! This video gives a practical look at how to turn a high-level idea into a detailed specification and then into code. The footage is from my open-source CLI tool, [`automake`](https://github.com/biokraft/auto-make), an AI-native shell that turns natural language into actions.
 
 [![Watch the SpecsForge Workflow Demo](https://img.youtube.com/vi/3mSPPsbOkyU/hqdefault.jpg)](https://youtu.be/3mSPPsbOkyU)
 

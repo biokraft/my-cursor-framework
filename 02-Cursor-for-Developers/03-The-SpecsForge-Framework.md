@@ -6,7 +6,7 @@ The `SpecsForge` mode is designed to act as an expert software architect and ful
 
 ## 👀 See It in Action
 
-Here's a short video demonstrating the `SpecsForge` workflow in practice.
+Here's a short video demonstrating the `SpecsForge` workflow in practice. The footage is from [`automake`](https://github.com/biokraft/auto-make), an AI-native CLI tool I am building that turns natural language into actions.
 
 [![Watch the SpecsForge Workflow Demo](https://img.youtube.com/vi/3mSPPsbOkyU/hqdefault.jpg)](https://youtu.be/3mSPPsbOkyU)
 

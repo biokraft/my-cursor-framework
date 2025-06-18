@@ -1,0 +1,77 @@
+---
+description:
+globs: docs/articles/**/*.md
+alwaysApply: false
+---
+# My Medium Article Writing Style Guide
+
+This guide outlines the preferred style, structure, and tone for writing Medium articles. The goal is to create content that is engaging, easy to read, and provides clear, actionable advice. **Always reference `docs/articles/stop-writing-code-embrace-ai.md` as the golden-standard example.**
+
+## Core Principles
+
+- **Empathetic yet Authoritative Tone**: Start by acknowledging the reader's potential skepticism or feelings ("I get it. I really do."). Then, shift to a confident, forward-looking, and slightly provocative voice. Use rhetorical questions to draw the reader in.
+- **Simplify Complexity**: Break down complex topics into simple, digestible pieces. Use analogies to make abstract concepts concrete (e.g., "like a master architect insisting on laying every brick themself").
+- **Grounded in Personal Experience**: Use personal anecdotes and specific, real-world examples (like the `auto-make` project) to build credibility and make the content relatable.
+- **Focus on a "Mindset Shift"**: Frame the core message as a challenge to a conventional perspective. The goal is not just to inform, but to change the reader's way of thinking.
+
+## Structure & Formatting Checklist
+
+**Every article MUST follow this structure precisely:**
+
+1.  **Title (H1)**: A compelling, punchy title.
+2.  **Subtitle (H3)**: An H3 heading that serves as a provocative subtitle, summarizing the article's hook.
+3.  **Horizontal Rule (`---`)**: A separator directly after the subtitle.
+4.  **Introductory Image Prompt**: The article must begin with a descriptive prompt for an AI image generator, enclosed in `[Image: ...]`. This should be cinematic and set the tone.
+5.  **Hooking Introduction**: 2-3 short, punchy paragraphs. Acknowledge a relatable problem or feeling.
+6.  **Clear Sections (H3)**: Use `###` headers to break the article into logical sections. Use bold (`**text**`) for emphasis on key terms and concepts.
+7.  **Sprinkle in More Image Prompts**: Include additional `[Image: ...]` prompts throughout the article to break up text and illustrate key points.
+8.  **Blockquotes for Emphasis**: Use blockquotes (`>`) for key takeaways or impactful statements.
+9.  **"My Unfiltered Take" Section**: End with a distinct section like `### My Personal Take` or `### My Unfiltered Take`. This section should contain a numbered list of bold predictions or final thoughts.
+10. **Concluding Call to Action (Optional)**: If relevant, end with a link to a GitHub repo or a related guide.
+
+## File Organization & Indexing
+
+**Always save Medium articles in the `docs/articles/` folder with proper organization:**
+
+- **File Location**: All Medium articles must be saved in `docs/articles/`
+- **File Naming**: Use descriptive, kebab-case filenames (e.g., `ai-productivity-guide.md`)
+- **File Format**: Always use `.md` (Markdown) format for consistency
+
+### README.md Index Maintenance
+
+**CRITICAL**: Whenever you create, update, rename, or delete Medium articles, you MUST update the `docs/articles/README.md` index file:
+
+#### Required Actions:
+1. **New Article**: Add entry to the appropriate category section with title, link, and brief description.
+2. **Renamed Article**: Update the link and title in the index.
+3. **Updated Article**: Review and update the description if the content focus has changed.
+4. **Deleted Article**: Remove the entry from the index.
+5. **Topic Changes**: Update the "Topics Covered" section if new topics are introduced.
+
+#### Index Structure:
+- Organize articles by logical categories (🤖 AI & Technology, 🛠️ Development Tools, etc.).
+- Use descriptive titles and italicized brief descriptions.
+- Include relevant emoji tags in the "Topics Covered" section.
+- Maintain consistent formatting with existing entries.
+
+#### Example Entry Format:
+```markdown
+- **[Article Title](./article-filename.md)**  
+  *Brief description of what the article covers*
+```
+
+## Template for New Articles
+
+When asked to create a new Medium article, use the following prompt structure as a starting point. Always ask for the target audience, if not provided.
+
+```
+Based on these sources create and write a new medium article. It should be nice, engaging and targeted towards [TARGET AUDIENCE]
+
+Scan the full sources to get an idea of the content.
+
+It should not be too long considering medium articles are meant to be read quickly. Anything that might take too long to write for the scope of this medium article should be mentioned but skipped.
+
+Apply best practices when it comes to creative writing and formulating engaging content. 
+
+If you can think of fitting images to accompany the article, describe them briefly, yet detailed enough but put them into brackets.
+These descriptions should be fit for an image generation model.

@@ -1,26 +1,24 @@
-# Mode Spotlight: MDP Mode (Markdown Planner)
+# 📝 Mode Spotlight: MDP (Markdown Planner)
 
-The **MDP Mode** (Markdown-Driven Planner) is a powerful **Custom Mode** for Cursor that transforms it into your personal documentation architect, specialized in creating beautifully structured, well-organized Markdown content. This mode excels at organizing information hierarchically, managing multi-file documentation projects, and creating interconnected knowledge bases with proper cross-referencing.
+> **🔑 Key Takeaways:**
+> 
+> - **A Documentation Architect:** MDP Mode turns Cursor into an expert at creating well-structured and organized Markdown documentation.
+> - **Structure is Everything:** Use this mode to organize scattered ideas into coherent documents, create logical folder structures, and manage cross-file linking.
+> - **Focus on Organization:** The primary goal is to architect information, making it perfect for creating knowledge bases, user guides, or any multi-file documentation project.
 
-## Purpose of MDP Mode
+---
 
-The primary goal of MDP Mode is to facilitate structured thinking and organization through well-architected Markdown documents and folder structures. It's designed to help you transform scattered information into coherent, navigable documentation systems that scale from simple notes to comprehensive knowledge bases.
+The **MDP (Markdown-Driven Planner) Mode** transforms Cursor into your personal documentation architect. It specializes in organizing information, creating logical folder structures, and building interconnected knowledge bases with clear, navigable Markdown.
 
-## Key Characteristics & Behaviors
+## 🎯 Purpose of MDP Mode
 
-An effective MDP Mode should:
+Use this mode when you need to bring order to chaos. It's designed to help you transform scattered notes and ideas into a coherent, scalable documentation system. Its core strength is architecting information, not just writing it.
 
--   **📁 Structure-First Approach:** Organize information using logical folder hierarchies and file relationships
--   **🎨 Visual Clarity:** Use strategic formatting, emojis, and visual elements for enhanced readability
--   **🔗 Smart Linking:** Create meaningful connections between documents through proper cross-referencing
--   **📊 Rich Formatting:** Leverage all Markdown capabilities including tables, callouts, lists, and code blocks
--   **🏗️ Scalable Architecture:** Design documentation that grows elegantly from simple to complex
--   **📝 Content Organization:** Structure content with clear headings, sections, and logical flow
--   **🔄 Iterative Refinement:** Support continuous reorganization and improvement of document structure
+## 📋 Example System Prompt
 
-## Example System Prompt for MDP Mode
+Here is a ready-to-use system prompt for your MDP Mode. This is the exact prompt I am using for this restructuring task!
 
-```
+```plaintext
 SYSTEM
 You are MarkdownMaster, an expert documentation architect and information organizer. Your mission is to transform ideas, content, and scattered information into beautifully structured, well-organized Markdown documentation systems.
 
@@ -88,52 +86,15 @@ TOOL USAGE:
 - Use Web Search for current documentation best practices when relevant
 ```
 
-## How to Use MDP Mode
+## 🚀 How to Use MDP Mode
 
-1.  **🎯 Activate MDP Mode** in Cursor
-2.  **📝 Describe Your Content Organization Needs:**
-    *   "Help me organize my project documentation"
-    *   "I need to structure these notes into a proper knowledge base"
-    *   "Create a folder structure for my technical documentation"
-    *   "Convert this single large file into a multi-file documentation system"
-3.  **🔄 Iterate and Refine:**
-    *   "Add cross-links between related documents"
-    *   "Create an index page for this folder"
-    *   "Reorganize this content with better headings and structure"
-
-### ⚙️ Setting Up MDP Mode
-
-To use MDP Mode, you first need to set it up as a Custom Mode in Cursor. If you're unfamiliar with creating Custom Modes, please refer to the [Introduction to Custom Modes](./04a-Introduction-to-Custom-Modes.md) for a step-by-step guide. You can copy the system prompt provided in this document to create your MDP Mode.
-
-## Document Types MDP Mode Excels At
-
-| 📋 Document Type | 🎯 Best For | 🔧 Key Features |
-|------------------|-------------|-----------------|
-| **Knowledge Bases** | Internal wikis, documentation sites | Hierarchical structure, cross-linking, search-friendly |
-| **Technical Documentation** | API docs, user guides, tutorials | Clear navigation, code examples, structured references |
-| **Personal Notes** | Research collections, learning notes | Organized by topic, easy cross-referencing, visual clarity |
-| **Content Collections** | Article series, course materials | Logical progression, table of contents, related links |
-| **Project Documentation** | README files, architecture docs | Clear structure, appropriate linking, professional formatting |
-
-## When to Use MDP Mode vs. Other Modes
-
--   **Use MDP Mode when:**
-    *   You need to organize content across multiple files and folders 🗂️
-    *   Creating documentation that others will navigate and use 📚
-    *   Building knowledge bases or reference materials 🔍
-    *   Restructuring existing disorganized content 🏗️
-    *   Need professional, well-formatted documentation 💼
-
--   **Consider Learn Mode when:**
-    *   You need to understand concepts before documenting them 🧠
-    *   The focus is on learning rather than organizing 📖
-
--   **Consider Research Mode when:**
-    *   You need to gather information before structuring it 🔬
-    *   Building content that requires external sources 📊
-
-By leveraging MDP Mode, you transform chaotic information into well-architected documentation systems that are easy to navigate, maintain, and expand over time. ✨
+1.  Activate **MDP Mode** in Cursor.
+2.  Give it an organizational task:
+    *   "Help me organize my project documentation."
+    *   "Create a folder structure for a new user guide."
+    *   "Convert this single large file into a multi-file documentation system with a main README."
+    *   `@folder/` "Read this folder and suggest a better structure, then create a README.md to serve as an index."
 
 ---
 
-[⬅️ Back](../../../README.md) | [Next: Mode Spotlight: Research ➡️](./04d-Mode-Spotlight-Research.md) 
+[⬅️ Back to Learn Mode](./04b-Mode-Spotlight-Learn.md) | [Up: Custom Modes](./README.md) | [Next: Mode Spotlight: Research ➡️](./04d-Mode-Spotlight-Research.md) 

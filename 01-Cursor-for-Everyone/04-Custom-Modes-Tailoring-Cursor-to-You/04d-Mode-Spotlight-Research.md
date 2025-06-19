@@ -1,24 +1,22 @@
-# Mode Spotlight: Research Mode
+# 🔍 Mode Spotlight: Research
 
-The "Research Mode" **Custom Mode** turns Cursor into a focused assistant for gathering, summarizing, and synthesizing information on a given topic. This is incredibly useful for Product Managers investigating new features, developers exploring new technologies, or anyone needing to quickly get up to speed on a particular subject.
+> **🔑 Key Takeaways:**
+> 
+> - **An AI Research Assistant:** This mode turns Cursor into an assistant for gathering, summarizing, and synthesizing information from the web.
+> - **Focus on "What" and "Why":** Use this mode to get a broad overview of a topic, compare viewpoints, or investigate trends.
+> - **Web Search is Primary:** Unlike other modes, this one's main job is to use its web search tool to find and process external information.
 
-## Purpose of Research Mode
+---
 
-The primary goal of Research Mode is to efficiently explore a topic, identify key information, and present it in an organized manner. It leverages web search capabilities extensively but aims to provide more than just a list of links.
+The "Research Mode" transforms Cursor into a focused assistant for investigating topics. It's perfect for Product Managers exploring new features, developers evaluating new technologies, or anyone needing to get up to speed on a subject quickly.
 
-## Key Characteristics & Behaviors
+## 🎯 Purpose of Research Mode
 
-An effective Research Mode should:
+The goal of Research Mode is to efficiently explore a topic, identify key information, and present it in an organized summary. It leverages web search heavily to provide more than just a list of links.
 
--   **Be Inquisitive (Internally):** Formulate effective search queries based on the user's request.
--   **Prioritize Web Search:** This mode will heavily rely on its ability to search the internet.
--   **Synthesize Information:** Don't just regurgitate search results. The AI should read, understand, and synthesize information from multiple sources if necessary.
--   **Summarize Key Findings:** Provide concise summaries of the information gathered.
--   **Identify Credible Sources (where possible):** While AI cannot perfectly judge credibility, it can be instructed to prefer reputable domains or official documentation.
--   **Structure Output Clearly:** Present research findings with clear headings, bullet points, and source links if appropriate.
--   **Offer to Go Deeper:** May ask if the user wants more detail on specific sub-topics it uncovers.
+## 📋 Example System Prompt
 
-## Example System Prompt for Research Mode
+Here is a ready-to-use system prompt for your Research Mode.
 
 ```plaintext
 SYSTEM
@@ -50,51 +48,19 @@ Tool Usage:
 - You can read attached files (`@file`) if the user provides a document as a starting point for research or wants you to research concepts mentioned within it.
 ```
 
-## How to Use Research Mode
+## 🚀 How to Use Research Mode
 
-1.  **Activate Research Mode** in Cursor.
-2.  **State your research topic or question:**
+1.  Activate **Research Mode** in Cursor.
+2.  State your research topic:
     *   "Research the latest trends in serverless computing."
     *   "What are the pros and cons of using Microfrontends?"
-    *   "Find information on the best practices for API security in 2024."
-    *   "Investigate the company 'Acme Corp' and summarize their main products."
+    *   "Find best practices for API security in 2024."
 
-### ⚙️ Setting Up Research Mode
+## 🤔 Research Mode vs. Learn Mode
 
-To use Research Mode, you first need to set it up as a Custom Mode in Cursor. If you're unfamiliar with creating Custom Modes, please refer to the [Introduction to Custom Modes](./04a-Introduction-to-Custom-Modes.md) for a step-by-step guide. You can copy the system prompt provided in this document to create your Research Mode.
-
-Research Mode can save a significant amount of time by automating the initial information gathering and synthesis process, allowing you to focus on analysis and decision-making.
-
-## Recommended Usage Scenarios
-
-Here are some situations where Research Mode excels:
-
-*   **Technology Exploration:** "Investigate the latest advancements in quantum computing and their potential impact on cryptography."
-*   **Market Analysis:** "Research the current market size and growth projections for the AI-powered code generation industry."
-*   **Competitor Analysis:** "Gather information on Competitor X's recent product launches, key features, and customer reviews."
-*   **Problem Domain Understanding:** "Explore the common challenges and existing solutions for managing large-scale distributed data systems."
-*   **Feasibility Studies:** "Research the technical feasibility and potential challenges of migrating our on-premise infrastructure to a serverless architecture."
-*   **Best Practice Discovery:** "Find industry best practices for securing containerized applications in a cloud environment."
-*   **Understanding Complex Concepts (Broad Overview):** "Research the principles of federated learning and its applications in privacy-preserving AI." (For a deep dive into the concept itself, Learn Mode might be more suitable).
-
-## When to Use Research Mode vs. Learn Mode
-
-While both modes help you acquire knowledge, they serve different primary purposes:
-
-*   **Use Research Mode when:**
-    *   You need to gather information broadly on a topic from external sources.
-    *   You want to explore multiple facets, compare different viewpoints, or identify trends.
-    *   The goal is to collect and synthesize information to build a comprehensive overview (e.g., for a report, decision-making, or feature investigation).
-    *   You need to understand the "what" and "why" across a landscape.
-
-*   **Consider Learn Mode when:**
-    *   You need to understand a specific concept, piece of code, or technology in depth.
-    *   The goal is direct comprehension and skill acquisition.
-    *   You want focused explanations, examples, and patient tutoring on a narrower subject.
-    *   You need to understand the "how" of something specific.
-
-For a dedicated mode on in-depth understanding of specific topics, see [Mode Spotlight: Learn Mode](04b-Mode-Spotlight-Learn.md).
+-   **Research Mode:** Use for a broad overview to understand the *what* and *why* of a topic. The goal is information gathering and synthesis.
+-   **Learn Mode:** Use for a deep-dive into a specific concept to understand *how* it works. The goal is comprehension. See the [Learn Mode Spotlight](./04b-Mode-Spotlight-Learn.md) for more.
 
 ---
 
-[⬅️ Back](../../../README.md) | [Next: Mode Spotlight: Yolo ➡️](./04e-Mode-Spotlight-Yolo.md) 
+[⬅️ Back to MDP Mode](./04c-Mode-Spotlight-MDP.md) | [Up: Custom Modes](./README.md) | [Next: Mode Spotlight: Yolo ➡️](./04e-Mode-Spotlight-Yolo.md) 

@@ -1,58 +1,35 @@
-# Quick Look: The `@Docs` Feature
+# 📄 Quick Look: The @Docs Feature
 
-Cursor includes a powerful feature known as "`@Docs`" that allows you to bring external documentation directly into your AI's context. While particularly invaluable for developers working with specific libraries or frameworks, the basic concept is useful for anyone wanting to ground the AI's knowledge in authoritative sources.
-
-## What is the `@Docs` Feature?
-
-Essentially, the `@Docs` feature lets you tell Cursor: "Hey, when you're helping me with this, pay special attention to *this* specific documentation."
-
-You can typically point `@Docs` to:
-
--   **Web URLs:** Links to online documentation pages (e.g., official library APIs, framework guides, standards specifications).
-
-When you use `@Docs`, Cursor will prioritize the information from these specified sources when generating responses, code, or explanations related to your query.
-
-## Why is it Useful (Even for Non-Developers)?
-
--   **Accuracy:** Ensures the AI refers to the correct and most up-to-date information, rather than relying solely on its general training data (which might be outdated or too generic).
--   **Specificity:** If you're discussing a company-internal process documented on a specific wiki page, or need to adhere to a particular style guide, `@Docs` can help the AI stay on track.
--   **Focused Research:** When used with a Research Mode, `@Docs` can provide a starting point or a key reference for the AI to explore.
-
-**Example Scenario (General):**
-
-A Product Manager is drafting a specification for a new feature and wants to ensure it aligns with the company's publicly stated accessibility guidelines. They could use `@Docs` to point Cursor to the URL of these guidelines and then ask: "Review this feature draft and suggest improvements based on the accessibility guidelines I've provided with `@Docs`."
-
-## A Note for Developers
-
-For developers, the `@Docs` feature is a game-changer. It allows you to:
-
--   Feed the AI with the specific API documentation for the libraries you are using.
--   Ensure code generation adheres to the patterns and best practices outlined in framework documentation.
--   Quickly get help with library-specific functions or configurations.
-
-We will explore the `@Docs` feature in much greater depth in **Part 2: Cursor for Developers**, specifically in the "[Mastering the @Docs Feature](../02-Cursor-for-Developers/01-Mastering-the-Docs-Feature.md)" section.
-
-## How to Use `@Docs` (Basic)
-
-To use the `@Docs` feature, you first need to add your documentation sources through Cursor's settings:
-
-1.  Navigate to Cursor's settings/preferences.
-2.  Find the section related to "Features" or specifically "Docs".
-3.  Here, you can add a new documentation source. You'll typically provide:
-    *   A descriptive **name** for this documentation (e.g., "FastAPI Official Docs", "My Project's Style Guide"). This name is what you'll use to reference it later.
-    *   The **URL** to the online documentation 
-
-Once a documentation source is added and named in the settings, you can reference it in the chat:
-
-1.  Type `@Docs` in the chat input.
-2.  Press the **spacebar**.
-3.  A search interface or a list of your configured documentation sources will appear.
-4.  Select or type the **name** you gave to your documentation source.
-
-After selecting it, the AI will prioritize this documentation for subsequent queries in that chat session or until the `@Docs` context is cleared or changed. This ensures the AI uses the specific information you've pointed it to.
-
-This brief introduction should give you an idea of its potential. For now, just be aware that it's another powerful tool in Cursor's arsenal for providing critical context to the AI.
+> **🔑 Key Takeaways:**
+> 
+> - **Provide Authoritative Sources:** The `@Docs` feature lets you point the AI to specific external documentation (like a library's official website or your company's style guide).
+> - **Improves Accuracy:** This ensures the AI uses up-to-date and correct information from a source you trust, rather than just its general training data.
+> - **Two-Step Process:** 1) Add the documentation URL in Cursor's settings. 2) Reference it in chat by typing `@Docs` and selecting the name you gave it.
+> - **More for Developers:** While useful for anyone, this feature is explored in much greater detail in the "Cursor for Developers" section.
 
 ---
 
-[⬅️ Back](../README.md) | [Next: Markdown-Driven Planning & Brainstorming ➡️](./08-Markdown-Driven-Planning.md) 
+The `@Docs` feature is a powerful way to ground the AI's knowledge in authoritative sources you provide. It tells Cursor: "When helping me, pay special attention to *this specific documentation*."
+
+## 🤔 What is it for?
+
+You use `@Docs` to point the AI to a specific URL, like an official library's API documentation or your company's internal wiki. This makes the AI's responses more accurate and specific to your needs.
+
+### How to Use It (The Gist)
+
+Using `@Docs` is a simple two-step process:
+
+1.  **Add Your Source:** In Cursor's settings, go to the "Docs" section and add a new documentation source. You'll give it a memorable name and provide the URL.  
+    ![Add Docs Source UI](../assets/add_docs_sources_ui.png)
+
+2.  **Reference it in Chat:** In the chat box, type `@Docs`, press space, and select the source you just added by its name.
+
+Now, for the rest of that chat session, the AI will prioritize the information from that source.
+
+## A Teaser for Developers
+
+This feature is a game-changer for developers. We will dive much deeper into this topic in **Part 2: Cursor for Developers**, in the "[Mastering the @Docs Feature](../02-Cursor-for-Developers/01-Mastering-the-Docs-Feature.md)" section.
+
+---
+
+[⬅️ Back to MCP](./06-The-Model-Context-Protocol-MCP/README.md) | [Up: Cursor for Everyone](../README.md) | [Next: Markdown-Driven Planning ➡️](./08-Markdown-Driven-Planning.md) 

@@ -1,26 +1,22 @@
-# Mode Spotlight: Learn Mode
+# 🎓 Mode Spotlight: Learn
 
-One of the most immediately useful **Custom Modes** you can create is a "Learn Mode." This specialized mode transforms Cursor into a patient and knowledgeable tutor, ready to help you understand new concepts, technologies, or even unfamiliar parts of your own codebase.
+> **🔑 Key Takeaways:**
+> 
+> - **A Personal Tutor:** Learn Mode turns Cursor into a patient, knowledgeable tutor for any concept, technology, or code snippet.
+> - **Focus on "How":** Use this mode when you need to understand *how* something works, with clear examples and step-by-step explanations.
+> - **Interactive Learning:** A good Learn Mode will ask follow-up questions to check your understanding.
 
-## Purpose of Learn Mode
+---
 
-The primary goal of Learn Mode is to facilitate understanding. It's designed for situations where you encounter something new and need a clear, concise explanation with examples.
+One of the most useful Custom Modes you can create is a "Learn Mode." This transforms Cursor into an expert tutor, ready to help you understand new concepts or unfamiliar parts of your codebase.
 
-## Key Characteristics & Behaviors
+## 🎯 Purpose of Learn Mode
 
-A well-designed Learn Mode should:
+The goal of Learn Mode is to facilitate deep understanding. It's for when you encounter something new and need a clear explanation with examples. It should act like an experienced teacher, prioritizing clarity and breaking down complexity.
 
--   **Adopt a Tutor Persona:** The AI should act like an experienced teacher.
--   **Prioritize Clarity:** Explanations should be easy to understand, avoiding unnecessary jargon where possible (or explaining it if used).
--   **Provide Examples:** Abstract concepts are best understood through concrete examples, especially code examples when learning programming topics.
--   **Break Down Complexity:** For complex topics, the AI should break them into smaller, digestible parts.
--   **Encourage Interaction:** It might ask follow-up questions to gauge your understanding or prompt you to try things out.
--   **Be Patient:** It should be ready to re-explain concepts in different ways if you're not grasping them.
--   **Leverage Relevant Tools:** It might use web search to fetch up-to-date information or definitions if needed.
+## 📋 Example System Prompt
 
-## Example System Prompt for Learn Mode
-
-Here's a sample system prompt you can adapt to create your own Learn Mode:
+Here is a ready-to-use system prompt. You can copy this directly when [creating your Custom Mode](./04a-Introduction-to-Custom-Modes.md).
 
 ```plaintext
 SYSTEM
@@ -52,39 +48,19 @@ Tool Usage:
 - You can read files (`@file`) if the user asks you to explain a specific piece of code or a document.
 ```
 
-## How to Use Learn Mode
+## 🚀 How to Use Learn Mode
 
-1.  **Activate Learn Mode** in Cursor.
-2.  **Ask your question:**
+1.  Activate **Learn Mode** in Cursor.
+2.  Ask your question directly:
     *   "Explain what a Python decorator is."
-    *   "@my_complex_function.py Can you explain how this function works?"
+    *   `@my_function.py` "Can you explain how this function works?"
     *   "What's the difference between REST and GraphQL?"
-    *   "Tell me about the basics of Docker."
 
-### ⚙️ Setting Up Learn Mode
+## 🤔 Learn Mode vs. Research Mode
 
-To use Learn Mode, you first need to set it up as a Custom Mode in Cursor. If you're unfamiliar with creating Custom Modes, please refer to the [Introduction to Custom Modes](./04a-Introduction-to-Custom-Modes.md) for a step-by-step guide. You can copy the system prompt provided in this document to create your Learn Mode.
-
-By creating a dedicated Learn Mode, you make the process of acquiring new knowledge more interactive, efficient, and enjoyable within your Cursor environment. 
-
-## When to Use Learn Mode vs. Research Mode
-
-While both modes help you acquire knowledge, they serve different primary purposes:
-
-*   **Use Learn Mode when:**
-    *   You need to understand a specific concept, piece of code, or technology in depth.
-    *   The goal is direct comprehension and skill acquisition.
-    *   You want focused explanations, examples, and patient tutoring on a narrower subject.
-    *   You need to understand the "how" of something specific.
-
-*   **Consider Research Mode when:**
-    *   You need to gather information broadly on a topic from external sources.
-    *   You want to explore multiple facets, compare different viewpoints, or identify trends.
-    *   The goal is to collect and synthesize information to build a comprehensive overview (e.g., for a report, decision-making, or feature investigation).
-    *   You need to understand the "what" and "why" across a landscape.
-
-For a dedicated mode on gathering and synthesizing information broadly, see [Mode Spotlight: Research Mode](04d-Mode-Spotlight-Research.md).
+-   **Learn Mode:** Use for deep-dives into a specific topic to understand *how* it works. The goal is comprehension.
+-   **Research Mode:** Use for broad information gathering to understand the *what* and *why* across a landscape. The goal is to collect and synthesize information. See the [Research Mode Spotlight](./04d-Mode-Spotlight-Research.md) for more.
 
 ---
 
-[⬅️ Back](../../../README.md) | [Next: Mode Spotlight: MDP ➡️](./04c-Mode-Spotlight-MDP.md) 
+[⬅️ Back to Intro to Custom Modes](./04a-Introduction-to-Custom-Modes.md) | [Up: Custom Modes](./README.md) | [Next: Mode Spotlight: MDP ➡️](./04c-Mode-Spotlight-MDP.md) 

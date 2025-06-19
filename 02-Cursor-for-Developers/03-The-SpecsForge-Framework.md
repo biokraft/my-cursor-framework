@@ -17,22 +17,45 @@ Once the specification is complete, `SpecsForge` hands off the implementation to
 
 Here is the step-by-step process for using the SpecsForge framework:
 
+### Phase 1: Specification Generation (SpecsForge Mode)
+
 1.  **Project Setup:** Copy your standard set of `.cursor/rules/` into the new project.
 2.  **Activate Mode:** Activate the `SpecsForge` custom mode in Cursor.
 3.  **Define Specs:** Engage in a conversation with the `SpecsForge` persona. It will ask targeted questions to build out a `specs/` directory and a root `SPECS.md` file.
-4.  **Generate Plan:** Once the specs are mature, the final step for the `SpecsForge` mode is to generate a detailed, phased implementation plan inside the `SPECS.md` file.
-5.  **Implement Phase by Phase:** With the plan in place, you then work through it with prompts like:
-    > Study @SPECS.md for functional specifications.  
-    > Study @.cursor for technical requirements  
-    >   
-    > Implement Phase 1  
-    > Create tests  
-    > Run and evaluate tests
+4.  **Generate Implementation Plan:** Once the specs are mature, the final step for the `SpecsForge` mode is to generate a detailed, phased implementation plan inside the `SPECS.md` file.
+
+### Phase 2: Implementation (TDV Framework)
+
+5.  **Switch to TDV Mode:** Activate the `TDV` custom mode in Cursor.
+6.  **Implement Phase by Phase:** Work through the implementation plan using the **[TDV (Test-Driven Vibing) Framework](./03a-The-TDV-Framework.md)** with prompts like:
+    > Using @SPECS.md, let's implement Phase 1: User Authentication.
     
-    This implementation part is best handled by its logical successor, the **[TDV (Test-Driven Vibing) Framework](./03a-The-TDV-Framework.md)**.
+    The TDV framework will:
+    - Create a detailed `plan.md` for the specific phase
+    - Follow strict Test-Driven Development cycles
+    - Implement features incrementally with tests leading the way
     
-6.  **Verify and Update:** After each phase, you can use the AI to check the work against the original spec and update the status in `SPECS.md`.
+7.  **Verify and Update:** After each phase, you can check the work against the original spec and update the status in `SPECS.md`:
     > @SPECS.md check if Phase 1 was implemented properly. If so, update its status to "Complete". Otherwise, list what's missing.
+
+## Alternative Implementation Approaches (Legacy Support)
+
+For reference, here are alternative ways to handle implementation if you're not using the TDV Framework:
+
+### Direct Implementation Approach
+```
+Study @SPECS.md for functional specifications.  
+Study @.cursor for technical requirements  
+
+Implement Phase 1  
+Create tests  
+Run and evaluate tests
+```
+
+### Manual Verification
+```
+@SPECS.md check if Phase 1 was implemented properly. If so, update its status to "Complete". Otherwise, list what's missing.
+```
 
 ## The `SpecsForge` Custom Mode Prompt
 

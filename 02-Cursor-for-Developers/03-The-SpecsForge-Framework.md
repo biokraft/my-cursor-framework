@@ -5,11 +5,13 @@
 > - **A Framework for AI-Driven Development:** SpecsForge is a systematic workflow, powered by a custom Cursor Mode, for turning a high-level idea into a detailed, AI-readable project specification.
 > - **From Vision to Plan:** It guides you through a discovery process to define business goals, features, and architecture *before* writing implementation code.
 > - **Creates a "Specification Library":** The output is a `specs/` directory and a root `SPECS.md` file, which serve as the single source of truth for the project.
-> - **Powers Subsequent Coding:** Once the spec is complete, it becomes the primary context you provide to the AI for generating the actual application code, phase by phase.
+> - **Powers Subsequent Coding:** Once the spec is complete, it becomes the primary context for the **[TDV (Test-Driven Vibing) Framework](./03a-The-TDV-Framework.md)** to generate well-tested application code, phase by phase.
 
 ---
 
 The `SpecsForge` framework is a workflow for transforming high-level product ideas into a precise, living specification library that powers efficient, AI-assisted development. It's built around a custom Cursor Mode that acts as an expert software architect, guiding you through a discovery process to build a comprehensive set of specifications before any code is written.
+
+Once the specification is complete, `SpecsForge` hands off the implementation to the [TDV (Test-Driven Vibing) Framework](./03a-The-TDV-Framework.md), which uses the specs to execute a rigorous, test-first development cycle.
 
 ## The Standard Workflow
 
@@ -26,6 +28,9 @@ Here is the step-by-step process for using the SpecsForge framework:
     > Implement Phase 1  
     > Create tests  
     > Run and evaluate tests
+    
+    This implementation part is best handled by its logical successor, the **[TDV (Test-Driven Vibing) Framework](./03a-The-TDV-Framework.md)**.
+    
 6.  **Verify and Update:** After each phase, you can use the AI to check the work against the original spec and update the status in `SPECS.md`.
     > @SPECS.md check if Phase 1 was implemented properly. If so, update its status to "Complete". Otherwise, list what's missing.
 
@@ -115,4 +120,4 @@ The "Status" column should initially be set to "TBD" or a similar placeholder.
 
 ---
 
-[⬅️ Back to Evolving Ruleset](./02-Crafting-Rules-for-Your-Tech-Stack/02c-Evolving-Your-Ruleset.md) | [Up: Cursor for Developers](./README.md) | [Next: Terminal Integration ➡️](./04-Leveraging-Terminal-Integration.md)
+[⬅️ Back to Evolving Ruleset](./02-Crafting-Rules-for-Your-Tech-Stack/02c-Evolving-Your-Ruleset.md) | [Up: Cursor for Developers](./README.md) | [Next: TDV Framework ➡️](./03a-The-TDV-Framework.md)

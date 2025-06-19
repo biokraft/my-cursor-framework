@@ -48,17 +48,17 @@ Alright, code ninjas 🥷, this is where we crank it to ELEVEN! We're unleashing
     -   [Why Tech-Specific Rules Are THE GOAT 🐐 (Greatest Of All Time!)](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/02a-Why-Tech-Specific-Rules-Matter.md)
     -   [Auto-Generating Rules from @Docs: AI DOING YOUR HOMEWORK SO YOU CAN PLAY MORE VIDEO GAMES! 🤖📚🎮](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/02b-Auto-Generating-Rules-from-Docs.md)
     -   [Evolving Your Ruleset: LEVEL UP YOUR RULE GAME LIKE A POKÉMON MASTER! 📈🏆](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/02c-Evolving-Your-Ruleset.md)
--   🛠️ [The SpecsForge Framework: FORGE YOUR EPIC CODE DESTINY (LIKE A DWARVEN BLACKSMITH, BUT WITH LESS GRIME!) 🔥🔨💪](./02-Cursor-for-Developers/03-The-SpecsForge-Framework.md)
+-   ⚡ [The SpecsForge Framework & 🧪 The TDV Framework: FORGE YOUR EPIC CODE DESTINY & VIBE WITH TESTS! 🔥🔨💪](./02-Cursor-for-Developers/03-The-SpecsForge-Framework.md)
 -   💡 [From Specs to Code: IMPLEMENTATION STRATEGIES FROM MOUNT OLYMPUS (ZEUS APPROVED!) ⚡🏛️](./02-Cursor-for-Developers/04-From-Specs-to-Code-Implementation-Strategies.md)
--   ⇄ [Working Across Repositories: CONQUER ALL THE CODEBASES LIKE A DIGITAL GENGHIS KHAN! 🌍🏹](./02-Cursor-for-Developers/05-Working-Across-Repositories.md)
+-   ⚙️ [Leveraging Terminal Integration: BEND THE VERY FABRIC OF YOUR MACHINE TO YOUR WILL! 🤖](./02-Cursor-for-Developers/04-Leveraging-Terminal-Integration.md)
 
 ---
 
-## 🏁 READY?! SET?! GO FULL SEND!!! 🚦💨💥
+## 🏁 GET IN, LOSER, WE'RE GOING CODING 🏁
 
-1.  YEET YOURSELF into **Part 1** like it's a free concert for your favorite artist 🎤🎶 and build a Cursor foundation so solid, it's practically earthquake-proof 🏗️.
-2.  Developers, STRAP ON YOUR ROCKET BOOTS 🚀 and blast off into **Part 2** to download battle-tested coding workflows and the omnipotent `SpecsForge` framework directly into your brain 🧠.
-3.  DON'T JUST READ IT, LIVE IT! STEAL THESE IDEAS, REMIX 'EM, MAKE 'EM YOUR OWN! This is a living, breathing BEAST – turn these practices into YOUR ultimate secret weapon! ⚔️🤫
+1.  **READ PART 1, NOOB!** Don't make me say it again. Build your foundation. Or don't. I'm a README, not a cop.
+2.  **DEVELOPERS, ASSEMBLE!** Proceed to **Part 2** and inject my advanced coding workflows and the omnipotent `SpecsForge` & `TDV` frameworks directly into your brain 🧠.
+3.  **GO WILD!** This ain't your grandma's documentation. Fork it, remix it, make it your own. Just don't make it boring.
 
 ---
 

@@ -39,6 +39,17 @@ A small but satisfying feature for positive reinforcement.
 -   **Why it's nice:** Provides a clear auditory cue when a task is complete, so you don't have to keep checking the screen.  
     ![Play Sound on Finish Setting](../assets/play_sound_on_finish.png)
 
+### 5. Use the Command Denylist for Stability
+
+After every prompt, Cursor saves the full state of your workspace, including all files. This is an amazing feature—it means you can restore your project to its exact previous state if the AI makes a mistake. Just hit "Restore," and you're back to where you were.
+
+However, this feature can cause issues with very large files.
+
+-   **The Problem:** If you have a multi-gigabyte file in your project and the AI deletes it, Cursor can become completely unusable. It may try to store the entire file in memory for the restore process, leading to a crash.
+-   **The Solution:** Add `rm` to the **Command Denylist** in your settings.
+
+This prevents the AI from deleting files automatically. It can still *suggest* `rm` commands, but you will have to approve them explicitly. This small change adds a crucial safety net, making Cursor much more stable for projects with large assets, without disrupting your workflow.
+
 ---
 
 By thoughtfully configuring these settings, you can create a highly efficient and context-aware working environment in Cursor.

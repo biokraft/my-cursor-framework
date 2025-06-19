@@ -56,7 +56,29 @@ alwaysApply: false # Optional: Set to true for global rules.
     *   Set to `true` to make a rule global. Use this sparingly for truly universal guidelines (e.g., a master rule about how to write other rules).
     *   If `globs` is empty and `alwaysApply` is `false`, the rule will only be attached when the AI determines the `description` is relevant to the user's query.
 
-> **Note:** For a complete guide on writing rules, including detailed frontmatter instructions, see my foundational rules in the [`.cursor/rules`](../../../.cursor/rules) directory of this repository.
+### 👤 User Rules vs. Project Rules: Global vs. Local
+
+As of a recent update, Cursor introduced **User Rules**, which are distinct from the project-specific rules described above. Think of them as your personal, global instructions for the AI that apply across *all* your projects. They ensure the AI always respects your personal workflow and tool preferences.
+
+| Feature         | **Project Rules (`.cursor/rules`)**                                | **User Rules (In Settings)**                                            |
+|-----------------|--------------------------------------------------------------------|-------------------------------------------------------------------------|
+| **Scope**       | ✅ Scoped to a single project/repository.                          | 🌍 Global, applies across all your projects.                            |
+| **Location**    | `.mdc` files inside the `.cursor/rules` folder.                    | Configured directly in the Cursor application's settings UI.            |
+| **Collaboration** | 🤝 Shared with your team via version control (Git).              | 👤 Private to you. Not shared with the project.                         |
+| **Use Case**    | Enforcing team styles, project dependencies, and architecture.     | Defining your personal CLI commands, tool preferences, or universal coding habits. |
+
+**When should you use User Rules?**
+
+Use User Rules for instructions that apply to *you* and *your* workflow, no matter the project. Because they are configured in the settings, they are perfect for defining personal preferences that aren't necessarily part of a specific project's official conventions.
+
+For example:
+-   "Always use `uv` for Python package management."
+-   "When running tests, use the command `pytest -q --tb=short`."
+-   "I prefer to use pydantic v2 for data models."
+
+You can configure them by navigating to `File` > `Settings` > `Rules` in the Cursor application.
+
+> **Note:** For a complete guide on writing project rules, including detailed frontmatter instructions, see my foundational rules in the [`.cursor/rules`](../../../.cursor/rules) directory of this repository.
 
 ---
 

@@ -1,69 +1,48 @@
-# Mastering the `@Docs` Feature for Developers
+# 📄 Mastering the @Docs Feature
 
-While we introduced the `@Docs` feature in "Part 1: Cursor for Everyone," its true power for developers lies in its ability to deeply integrate external library and framework documentation into the AI's coding process. This section will explore how to leverage `@Docs` to make Cursor an even more effective coding partner when working with specific technologies.
-
-## Why `@Docs` is Crucial for Developers
-
-Modern development relies heavily on a multitude of libraries, frameworks, and APIs. Each comes with its own set of functions, classes, conventions, and best practices.
-
--   **AI's Knowledge Cutoff:** The AI's general training data has a knowledge cutoff date. It might not be aware of the latest versions of libraries, new features, or breaking changes.
--   **Specificity Matters:** General knowledge about a language (e.g., Python) is different from specific knowledge about a library (e.g., Django 4.2 vs. Django 5.0) or a niche SDK.
--   **Avoiding Deprecated Code:** `@Docs` helps prevent the AI from suggesting outdated or deprecated functions by pointing it to current documentation.
--   **Adhering to Best Practices:** Official documentation often contains crucial information about the intended use, performance considerations, and security best practices for a library.
-
-By using `@Docs`, you provide focused, authoritative context that helps the AI generate code that is more accurate, up-to-date, and aligned with the specific technologies you're using.
-
-To add a documentation source:
-1. Go to Cursor's settings/preferences.
-2. Locate the "Features" or "Docs" section.
-3. Add a new documentation source by providing a descriptive **name** (e.g., "FastAPI Official", "Pydantic Latest") and the **URL** or local **path**.
-
-To use an added documentation source in chat:
-1. Type `@Docs` followed by a **space**.
-2. Search for and select the **name** you assigned to the documentation source.
-
-## Effective Strategies for Using `@Docs`
-
-1.  **Target Key Libraries/Frameworks:** Identify the core libraries and frameworks for your project. Add their official documentation via Cursor settings, giving them memorable names.
-    *   *Example:* If you're building a web app with FastAPI and Pydantic, add their official documentation in settings, perhaps named "FastAPI Official" and "Pydantic Docs".
-
-2.  **Use Official Documentation URLs:** Whenever possible, link directly to the official online documentation when adding a source in settings. This is generally the most up-to-date source.
-    *   In settings, add: Name: "FastAPI Official", URL: `https://fastapi.tiangolo.com/`
-    *   In settings, add: Name: "Pydantic Latest", URL: `https://docs.pydantic.dev/latest/`
-
-3.  **Include Specific API Reference Pages:** For very focused tasks, you can add documentation sources in settings that point to specific API reference pages or guides.
-    *   In settings, add: Name: "FastAPI Path Params", URL: `https://fastapi.tiangolo.com/tutorial/path-params/` (when working on path parameters).
-
-4.  **Combine `@Docs` with Specific Prompts:** After referencing a documentation source in chat using `@Docs [Name]`, tailor your prompts to make it clear you want the AI to use that context.
-    *   First, in chat: `@Docs FastAPI Official`
-    *   Then prompt: "Using the FastAPI documentation I provided, show me how to implement OAuth2 password flow with a Pydantic model for the user."
-    *   First, in chat: `@Docs Internal UI Lib`
-    *   Then prompt: "Based on the documentation for our internal UI library, generate a React component for a data table with sorting and pagination."
-
-5.  **Iteratively Manage `@Docs` Context:** For a large project, you might have many documentation sources defined in settings. Reference the specific docs relevant to your current task using `@Docs [Name]`. Cursor typically allows you to see which `@Docs` are active and provides ways to clear the context if needed (e.g., a "Clear context" button or command if multiple docs are active).
-
-## Example Workflow: Working with a New Library
-
-Let's say you need to integrate a new data visualization library, `Plotly Express`, into your Python project.
-
-1.  **Find Official Docs:** A quick search leads you to `https://plotly.com/python/plotly-express/`.
-2.  **Add to Cursor Settings:**
-    *   Go to Cursor settings -> Docs.
-    *   Add new doc: Name: "Plotly Express", URL: `https://plotly.com/python/plotly-express/`
-3.  **Ask for Help in Chat:**
-    *   Type in chat: `@Docs Plotly Express`
-    *   Then ask: "Okay, I've referenced the Plotly Express docs. Can you show me a simple example of how to create a scatter plot from a Pandas DataFrame using this library?"
-    *   "Based on the Plotly Express documentation, how do I customize the colors and add a title to my chart?"
-    *   "Generate a Python function that takes a DataFrame and column names, and returns a Plotly Express bar chart figure, ensuring it follows best practices from the docs."
-
-## `@Docs` and Cursor Rules
-
-A powerful workflow emerges when you combine `@Docs` with the creation of new Cursor Rules. This involves using `@Docs` to provide the AI with relevant documentation *during the rule definition process itself*, helping to create highly accurate and context-aware rules.
-
-For a detailed guide on how to leverage `@Docs` for auto-generating rules from documentation, please see [Auto-Generating Rules from @Docs](./02-Crafting-Rules-for-Your-Tech-Stack/02b-Auto-Generating-Rules-from-Docs.md).
-
-By mastering the `@Docs` feature, you transform Cursor from a general-purpose AI into a highly specialized assistant that understands the nuances of your specific tech stack, leading to more efficient and accurate development.
+> **🔑 Key Takeaways:**
+> 
+> - **Provide Authoritative Context:** `@Docs` is crucial for developers because it points the AI to the *exact* documentation for the libraries and frameworks you are using, overcoming the AI's knowledge cutoff.
+> - **The Core Workflow:** 1) Find the official docs URL for your library (e.g., `https://fastapi.tiangolo.com/`). 2) Add it in Cursor Settings with a memorable name (e.g., "FastAPI Docs"). 3) Reference it in chat with `@Docs FastAPI Docs` before asking your question.
+> - **Be Specific in Your Prompts:** After referencing the docs, explicitly tell the AI to use them: "Using the FastAPI docs I provided, show me how to..."
+> - **Combine with Rules:** Use `@Docs` to provide context when asking the AI to help you write new Cursor Rules for your tech stack.
 
 ---
 
-[⬅️ Back](../README.md) | [Next: Crafting Rules for Your Tech Stack ➡️](./02-Crafting-Rules-for-Your-Tech-Stack/README.md) 
+For developers, `@Docs` is a superpower. It allows you to ground the AI in the specific, authoritative documentation for your project's tech stack, leading to more accurate, up-to-date, and reliable code generation.
+
+## Why It's Essential for Developers
+
+-   **Beats Knowledge Cutoffs:** The AI's training data is not always current. `@Docs` ensures it uses the latest version of a library's API.
+-   **Prevents Deprecated Code:** By pointing to official docs, you stop the AI from suggesting outdated functions or patterns.
+-   **Enforces Best Practices:** Ensures the AI follows the specific conventions and security guidelines outlined in the official documentation.
+
+## A Practical Workflow
+
+Here is a step-by-step example for working with a new library, like `Plotly Express`.
+
+1.  **Find the Official Docs:** A quick web search leads you to `https://plotly.com/python/plotly-express/`.
+
+2.  **Add the Source in Settings:**
+    -   Navigate to Cursor Settings → `Docs`.
+    -   Click "Add" and provide a name and the URL:
+        -   **Name:** `Plotly Express`
+        -   **URL:** `https://plotly.com/python/plotly-express/`
+    ![Add Docs Source UI](../assets/add_docs_sources_ui.png)
+
+3.  **Use it in Chat:**
+    -   First, provide the context: `@Docs Plotly Express`
+    -   Then, ask your specific question, reminding the AI to use the context:
+        > "Using the Plotly Express documentation, show me a simple example of how to create a scatter plot from a Pandas DataFrame."
+    -   Follow up with more detailed requests:
+        > "Based on those same docs, how do I customize the chart's title and colors?"
+
+This simple but powerful workflow ensures the AI's suggestions are directly relevant to the technology you're actively using.
+
+## Advanced Strategy: Combining `@Docs` and Rules
+
+You can create incredibly powerful, tech-stack-specific guidance by using `@Docs` to help you write new Cursor Rules. For a detailed guide on this, see [Auto-Generating Rules from Docs](./02-Crafting-Rules-for-Your-Tech-Stack/02b-Auto-Generating-Rules-from-Docs.md).
+
+---
+
+[⬅️ Back to Manifesto](./00-The-Vibe-Programmer-Manifesto.md) | [Up: Cursor for Developers](./README.md) | [Next: Crafting Rules ➡️](./02-Crafting-Rules-for-Your-Tech-Stack/README.md) 

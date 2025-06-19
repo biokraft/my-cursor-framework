@@ -1,8 +1,10 @@
 # 🎨 Custom Modes: Tailoring Cursor to You
 
-> **🎯 In This Section:**
+> **🔑 Key Takeaways:**
 >
-> Discover how to use Custom Modes to create specialized AI assistants for different tasks. You'll learn what they are and see spotlights on practical examples for learning, planning, research, and more.
+> - **Create AI Personas:** Custom Modes let you create specialized AI assistants (e.g., a "Tutor," "Researcher," or "Planner") for different tasks.
+> - **Combine Rules and Instructions:** Modes bundle a set of rules with specific instructions to define an AI's behavior and expertise.
+> - **Practical Examples:** This section provides concrete examples for learning, planning (MDP), research, and even a "just for fun" mode (Yolo).
 
 ---
 

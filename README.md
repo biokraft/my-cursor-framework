@@ -1,5 +1,12 @@
 # A Comprehensive Guide to 🚀 Cursor AI 🚀
 
+> **🔑 Key Takeaways:**
+>
+> - **🎯 For Everyone:** Start with [Part 1](./01-Cursor-for-Everyone/) to master core concepts like Rules, Custom Modes, and the Model Context Protocol (MCP).
+> - **💻 For Developers:** Dive into [Part 2](./02-Cursor-for-Developers/) for advanced workflows, including tech-specific rules and the `SpecsForge` framework for spec-driven development.
+> - **🚀 Core Philosophy:** This guide emphasizes that providing clear, relevant context is the "golden rule" for getting the most out of Cursor.
+> - **🛠️ Actionable Resources:** The repository includes a rich set of [reusable rules](./.cursor/rules/) and practical examples to accelerate your learning.
+
 Welcome to this personal collection of best practices, rules, and workflows designed to maximize your productivity with Cursor. This framework aims to help everyone, from Product Managers to Developers, harness the full potential of AI-assisted coding and documentation.
 
 **💡 Pro Tip for Everyone (Especially Non-Developers):** One of the most impactful ways to boost your productivity with Cursor is through [Markdown-Driven Planning & Brainstorming](./01-Cursor-for-Everyone/08-Markdown-Driven-Planning.md). It's a simple yet powerful technique to manage knowledge and projects, and you'll find it covered in Part 1.
@@ -10,9 +17,9 @@ This repository is structured to guide you through understanding core Cursor con
 
 ## 🎯 How This Guide is Structured
 
-This framework is divided into two main parts:
+This framework is divided into two main parts. Before diving in, check the `README.md` in each subdirectory for a table of contents.
 
-### 🌟 Part 1: Cursor for Everyone
+### 🌟 Part 1: [Cursor for Everyone](./01-Cursor-for-Everyone/README.md)
 
 This section is designed for *anyone* using Cursor, regardless of their technical role. It covers fundamental concepts, setup, and features that enhance productivity for tasks like documentation, research, and project management.
 
@@ -24,12 +31,12 @@ This section is designed for *anyone* using Cursor, regardless of their technica
 -   ⚙️ [Essential Cursor Settings](./01-Cursor-for-Everyone/05-Essential-Cursor-Settings.md)
 -   🔗 [The Model Context Protocol (MCP)](./01-Cursor-for-Everyone/06-The-Model-Context-Protocol-MCP/README.md)
 -   👀 [Quick Look: The @Docs Feature](./01-Cursor-for-Everyone/07-Quick-Look-The-Docs-Feature.md)
--   💡 [Markdown-Driven Planning & Brainstorming](./01-Cursor-for-Everyone/08-Markdown-Driven-Planning.md)  
+-   💡 [Markdown-Driven Planning & Brainstorming](./01-Cursor-for-Everyone/08-Markdown-Driven-Planning.md)
     > 💼 **Product Managers:** Check this out!
 
 ---
 
-### 💻 Part 2: Cursor for Developers
+### 💻 Part 2: [Cursor for Developers](./02-Cursor-for-Developers/README.md)
 
 This section delves into advanced techniques and workflows tailored for developers. It covers topics like building tech-stack specific rules, the `SpecsForge` framework, and efficient implementation strategies. While aimed at developers, Product Managers and technical leads might also find these insights valuable.
 
@@ -38,7 +45,7 @@ This section delves into advanced techniques and workflows tailored for develope
 -   🛠️ [Crafting Rules for Your Tech Stack](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/README.md)
 -   🛠️ [The SpecsForge Framework](./02-Cursor-for-Developers/03-The-SpecsForge-Framework.md)
     > 🧑‍💻 **Listen up devs:** this is where the secret sauce is at!
--   ⚙️ [Leveraging Terminal Integration for Debugging](./02-Cursor-for-Developers/04-Leveraging-Terminal-Integration.md)  
+-   ⚙️ [Leveraging Terminal Integration for Debugging](./02-Cursor-for-Developers/04-Leveraging-Terminal-Integration.md)
 -   ⇄ [Working Across Repositories](./02-Cursor-for-Developers/05-Working-Across-Repositories.md)
 
 ---

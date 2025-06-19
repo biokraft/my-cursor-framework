@@ -1,13 +1,3 @@
-Unlock a **new level of AI-assisted development!** Cursor doesn't just *read* documentation with `@Docs`; it can ***forge*** brand new, tailor-made rules directly from it.
-
-Imagine this:
-> Instead of manually crafting every rule, you empower Cursor to do the heavy lifting.
-
-And here's the **masterstroke** 🍆  
-by guiding this process with your own foundational rule blueprints—like the essential [@00-cursor-rules.mdc](../../.cursor/rules/00-cursor-rules.mdc) for universal rule standards and [@01-mdc-guidelines.mdc](../../.cursor/rules/01-mdc-guidelines.mdc) for precise MDC file structure—you ensure every AI-generated rule is *born perfectly aligned* with your project's DNA.
-
-This isn't just automation; it's about **instilling your standards into the AI from the get-go**, ensuring consistency and *dramatically* speeding up your workflow.
-
 # 🤖 Auto-Generating Rules from @Docs
 
 > **🔑 Key Takeaways:**
@@ -38,7 +28,7 @@ Now, construct a prompt that does two things:
 
 For ultimate consistency, you should also `@` mention your own "master rule" for how rules should be written, like `01-mdc-guidelines.mdc`.
 
-![Generate Cursor Rules Command](../assets/generate_cursor_rules_command.png)
+![Generate Cursor Rules Command](../../assets/generate_cursor_rules_command.png)
 
 Here is the prompt used in the image above:
 ```plaintext

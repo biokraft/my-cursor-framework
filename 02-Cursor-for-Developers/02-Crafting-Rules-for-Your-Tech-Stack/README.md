@@ -1,8 +1,10 @@
 # 🛠️ Crafting Rules for Your Tech Stack
 
-> **🎯 In This Section:**
+> **🔑 Key Takeaways:**
 >
-> Learn how to create and maintain powerful Cursor Rules tailored specifically to your project's tech stack. This is key to enforcing coding standards, architectural patterns, and library-specific best practices automatically.
+> - **Enforce Consistency:** Create rules that are specific to your tech stack (e.g., Python/FastAPI, React/TypeScript) to enforce coding standards and architectural patterns.
+> - **Automate Best Practices:** Codify library-specific best practices directly into rules, ensuring the AI generates code that follows your team's conventions.
+> - **Bootstrap from Documentation:** Learn how to auto-generate a base set of rules by pointing Cursor's AI at the official documentation for your framework or library.
 
 ---
 

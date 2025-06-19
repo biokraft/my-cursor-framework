@@ -61,6 +61,23 @@ All project READMEs must include:
 5.  **Usage**
 ```
 
+### Example 3: Doc Update Reminder Rule
+
+A rule can remind the AI to update documentation when code changes.
+
+```markdown
+---
+description: Documentation update reminder
+globs: '**/*.py,**/*.js,**/*.ts' # Trigger when code files are edited
+---
+# Documentation Update Reminder
+
+When making changes to code, especially API endpoints or core features, always remember to check if the corresponding documentation needs to be updated.
+
+- Check `docs/api/` and relevant READMEs.
+- If you are unsure which documents to update, please ask.
+```
+
 ## 🛠️ How to Use These Rules
 
 -   **Generating New Docs:** When asking Cursor to draft a new document, it will automatically follow any relevant rules.

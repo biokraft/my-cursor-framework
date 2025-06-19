@@ -46,4 +46,4 @@ Here are the primary ways to provide context, which we will explore throughout t
 
 ---
 
-[⬅️ Back to Welcome](./01-Welcome-to-Cursor.md) | [Up: Cursor for Everyone](../README.md) | [Next: Understanding Rules ➡️](./02-Understanding-Cursor-Rules/README.md) 
+[⬅️ Back to main README](../README.md) | [Up: Cursor for Everyone](../README.md) | [Next: Welcome to Cursor ➡️](./01-Welcome-to-Cursor.md) 

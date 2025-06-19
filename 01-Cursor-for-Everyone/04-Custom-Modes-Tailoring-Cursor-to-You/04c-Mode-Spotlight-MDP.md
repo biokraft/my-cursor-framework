@@ -95,6 +95,13 @@ TOOL USAGE:
     *   "Convert this single large file into a multi-file documentation system with a main README."
     *   `@folder/` "Read this folder and suggest a better structure, then create a README.md to serve as an index."
 
+## ✅ When to Use MDP Mode
+
+This mode is ideal when you need to:
+-   Organize content across multiple files and folders.
+-   Create documentation that others will navigate and use.
+-   Build knowledge bases or technical reference guides.
+
 ---
 
 [⬅️ Back to Learn Mode](./04b-Mode-Spotlight-Learn.md) | [Up: Custom Modes](./README.md) | [Next: Mode Spotlight: Research ➡️](./04d-Mode-Spotlight-Research.md) 

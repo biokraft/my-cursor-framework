@@ -30,4 +30,4 @@ This manifesto sets the stage for the rest of this section. Our goal is to help 
 
 ---
 
-[⬅️ Back to "Cursor for Everyone"](../01-Cursor-for-Everyone/README.md) | [Up: Main README](../../README.md) | [Next: Mastering @Docs ➡️](./01-Mastering-the-Docs-Feature.md) 
+[⬅️ Back to Developer Home](./README.md) | [Up: Main README](../README.md) | [Next: Mastering @Docs ➡️](./01-Mastering-the-Docs-Feature.md) 

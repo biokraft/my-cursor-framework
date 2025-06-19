@@ -32,7 +32,7 @@ Cursor Rules are a powerful feature for providing persistent, project-specific i
 
 ### Understanding MDC Frontmatter
 
-The frontmatter block is critical for configuring how a rule is applied.
+The frontmatter block at the top of every `.mdc` file is critical for configuring how a rule is applied.
 
 ```yaml
 ---
@@ -44,12 +44,20 @@ alwaysApply: false # Optional: Set to true for global rules.
 
 **Key Properties:**
 
--   **`description` (Required):** A concise explanation of the rule. This is heavily used by the AI to decide when to apply the rule.
--   **`globs` (Optional):** A comma-separated string of file patterns (e.g., `**/*.py,**/*.mdc`) that trigger the rule when a matching file is active.
--   **`alwaysApply` (Optional):** Set to `true` to make a rule global. Use this sparingly for truly universal guidelines.
+-   **`description` (Required):**
+    *   A concise explanation of the rule. This is heavily used by the AI to decide when to apply the rule.
+    *   Include trigger keywords if the rule should be auto-suggested for specific topics (e.g., "Dependency management with UV: Attaches when dealing with dependencies").
+
+-   **`globs` (Optional):**
+    *   A comma-separated string of file patterns (e.g., `**/*.py,**/*.mdc`) that trigger the rule when a matching file is active. Be as specific as possible.
+    *   If a rule is not file-specific, leave `globs` empty. The AI may still apply it based on the `description`.
+
+-   **`alwaysApply` (Optional):**
+    *   Set to `true` to make a rule global. Use this sparingly for truly universal guidelines (e.g., a master rule about how to write other rules).
+    *   If `globs` is empty and `alwaysApply` is `false`, the rule will only be attached when the AI determines the `description` is relevant to the user's query.
 
 > **Note:** For a complete guide on writing rules, including detailed frontmatter instructions, see my foundational rules in the [`.cursor/rules`](../../../.cursor/rules) directory of this repository.
 
 ---
 
-[⬅️ Back to Rules Overview](./README.md) | [Up: Cursor for Everyone](../../README.md) | [Next: Interactive Development ➡️](./02b-Interactive-Rule-Development.md) 
+[⬅️ Back to Rules Overview](./README.md) | [Up: Cursor for Everyone](../README.md) | [Next: Interactive Development ➡️](./02b-Interactive-Rule-Development.md) 

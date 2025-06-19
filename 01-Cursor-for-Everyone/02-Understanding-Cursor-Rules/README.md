@@ -1,8 +1,10 @@
 # 🧩 Understanding Cursor Rules
 
-> **🎯 In This Section:**
-> 
-> This section explains Cursor Rules—a powerful feature for defining standing instructions to guide the AI. You will learn what they are, how to create them, and how to apply them for both code and documentation.
+> **🔑 Key Takeaways:**
+>
+> - **Define and Forget:** Rules are standing instructions for the AI, ensuring consistent behavior without repeating yourself in every prompt.
+> - **Structure and Content:** Learn the "What, Why, and How" of rules to provide effective, project-specific context.
+> - **Iterative Development:** Discover how to develop rules interactively for both code and documentation, improving their quality over time.
 
 ---
 
@@ -21,4 +23,4 @@ Welcome! Rules are one of the most powerful features in Cursor. They allow you t
 
 ---
 
-[⬅️ Back to Welcome](../01-Welcome-to-Cursor.md) | [Up: Cursor for Everyone](../../README.md) | [Next: What, Why, How? ➡️](./02a-What-Why-How.md) 
+[⬅️ Back to Welcome](../01-Welcome-to-Cursor.md) | [Up: Cursor for Everyone](../README.md) | [Next: What, Why, How? ➡️](./02a-What-Why-How.md) 

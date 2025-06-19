@@ -39,4 +39,4 @@ Welcome, Vibe Programmer!
 
 ---
 
-[⬅️ Back](../../README.md) | [Next: Mastering the @Docs Feature ➡️](./01-Mastering-the-Docs-Feature.md) 
+[⬅️ Back](../README.md) | [Next: Mastering the @Docs Feature ➡️](./01-Mastering-the-Docs-Feature.md) 

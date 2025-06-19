@@ -66,4 +66,4 @@ By mastering the `@Docs` feature, you transform Cursor from a general-purpose AI
 
 ---
 
-[⬅️ Back](../../README.md) | [Next: Crafting Rules for Your Tech Stack ➡️](./02-Crafting-Rules-for-Your-Tech-Stack/README.md) 
+[⬅️ Back](../README.md) | [Next: Crafting Rules for Your Tech Stack ➡️](./02-Crafting-Rules-for-Your-Tech-Stack/README.md) 

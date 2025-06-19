@@ -1,6 +1,6 @@
 # Mode Spotlight: Research Mode
 
-A "Research Mode" turns Cursor into a focused assistant for gathering, summarizing, and synthesizing information on a given topic. This is incredibly useful for Product Managers investigating new features, developers exploring new technologies, or anyone needing to quickly get up to speed on a particular subject.
+The "Research Mode" **Custom Mode** turns Cursor into a focused assistant for gathering, summarizing, and synthesizing information on a given topic. This is incredibly useful for Product Managers investigating new features, developers exploring new technologies, or anyone needing to quickly get up to speed on a particular subject.
 
 ## Purpose of Research Mode
 
@@ -58,6 +58,10 @@ Tool Usage:
     *   "What are the pros and cons of using Microfrontends?"
     *   "Find information on the best practices for API security in 2024."
     *   "Investigate the company 'Acme Corp' and summarize their main products."
+
+### ⚙️ Setting Up Research Mode
+
+To use Research Mode, you first need to set it up as a Custom Mode in Cursor. If you're unfamiliar with creating Custom Modes, please refer to the [Introduction to Custom Modes](./04a-Introduction-to-Custom-Modes.md) for a step-by-step guide. You can copy the system prompt provided in this document to create your Research Mode.
 
 Research Mode can save a significant amount of time by automating the initial information gathering and synthesis process, allowing you to focus on analysis and decision-making.
 

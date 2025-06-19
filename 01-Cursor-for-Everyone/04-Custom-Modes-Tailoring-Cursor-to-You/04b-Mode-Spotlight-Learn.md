@@ -1,6 +1,6 @@
 # Mode Spotlight: Learn Mode
 
-One of the most immediately useful Custom Modes you can create is a "Learn Mode." This mode transforms Cursor into a patient and knowledgeable tutor, ready to help you understand new concepts, technologies, or even unfamiliar parts of your own codebase.
+One of the most immediately useful **Custom Modes** you can create is a "Learn Mode." This specialized mode transforms Cursor into a patient and knowledgeable tutor, ready to help you understand new concepts, technologies, or even unfamiliar parts of your own codebase.
 
 ## Purpose of Learn Mode
 
@@ -60,6 +60,10 @@ Tool Usage:
     *   "@my_complex_function.py Can you explain how this function works?"
     *   "What's the difference between REST and GraphQL?"
     *   "Tell me about the basics of Docker."
+
+### ⚙️ Setting Up Learn Mode
+
+To use Learn Mode, you first need to set it up as a Custom Mode in Cursor. If you're unfamiliar with creating Custom Modes, please refer to the [Introduction to Custom Modes](./04a-Introduction-to-Custom-Modes.md) for a step-by-step guide. You can copy the system prompt provided in this document to create your Learn Mode.
 
 By creating a dedicated Learn Mode, you make the process of acquiring new knowledge more interactive, efficient, and enjoyable within your Cursor environment. 
 

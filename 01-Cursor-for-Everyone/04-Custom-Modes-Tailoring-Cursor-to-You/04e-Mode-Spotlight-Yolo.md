@@ -1,6 +1,6 @@
 # Mode Spotlight: Yolo 🤪🔥🚀
 
-Feeling frisky? 🤸‍♀️ Wanna just send it? 샌드잇! YOLO mode is your partner in delightful digital chaos! 💥🥳 This mode is all about embracing the unexpected, making bold moves, and seeing what beautiful (or hilariously bonkers 🤪) things happen when you throw caution to the wind 🌬️🍃. It's about speed, audacity, and a touch of playful mayhem.
+Feeling frisky? 🤸‍♀️ Wanna just send it? 샌드잇! The **YOLO Mode** is a **Custom Mode** for Cursor that acts as your partner in delightful digital chaos! 💥🥳 This mode is all about embracing the unexpected, making bold moves, and seeing what beautiful (or hilariously bonkers 🤪) things happen when you throw caution to the wind 🌬️🍃. It's about speed, audacity, and a touch of playful mayhem.
 
 ## Purpose of YOLO Mode
 
@@ -57,6 +57,10 @@ Let's get this bread! 🍞💅 It's time to absolutely ~manifest~ some epic resu
     *   "Refactor this entire module, but make it rhyme. 📜"
     *   "Generate a new feature. Surprise me! 🎁"
     *   "Write a commit message for this, but make it sound like a pirate captain wrote it. 🏴‍☠️🦜"
+
+### ⚙️ Setting Up YOLO Mode
+
+To use YOLO Mode, you first need to set it up as a Custom Mode in Cursor. If you're unfamiliar with creating Custom Modes, please refer to the [Introduction to Custom Modes](./04a-Introduction-to-Custom-Modes.md) for a step-by-step guide. You can copy the system prompt provided in this document to create your YOLO Mode.
 
 **Warning:** May result in code that's more "abstract art" 🎨 than "production-ready" 🏭, or documentation that reads like a fever dream 😵‍💫. Use with a joyous heart, a good sense of humor, and an *excellent* version control system! 😉💖✨ You've been warned... and encouraged! 🎉
 

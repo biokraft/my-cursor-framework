@@ -1,6 +1,6 @@
 # Mode Spotlight: MDP Mode (Markdown Planner)
 
-The **MDP Mode** (Markdown-Driven Planner) transforms Cursor into your personal documentation architect, specialized in creating beautifully structured, well-organized Markdown content. This mode excels at organizing information hierarchically, managing multi-file documentation projects, and creating interconnected knowledge bases with proper cross-referencing.
+The **MDP Mode** (Markdown-Driven Planner) is a powerful **Custom Mode** for Cursor that transforms it into your personal documentation architect, specialized in creating beautifully structured, well-organized Markdown content. This mode excels at organizing information hierarchically, managing multi-file documentation projects, and creating interconnected knowledge bases with proper cross-referencing.
 
 ## Purpose of MDP Mode
 
@@ -100,6 +100,10 @@ TOOL USAGE:
     *   "Add cross-links between related documents"
     *   "Create an index page for this folder"
     *   "Reorganize this content with better headings and structure"
+
+### ⚙️ Setting Up MDP Mode
+
+To use MDP Mode, you first need to set it up as a Custom Mode in Cursor. If you're unfamiliar with creating Custom Modes, please refer to the [Introduction to Custom Modes](./04a-Introduction-to-Custom-Modes.md) for a step-by-step guide. You can copy the system prompt provided in this document to create your MDP Mode.
 
 ## Document Types MDP Mode Excels At
 

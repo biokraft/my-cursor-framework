@@ -24,6 +24,9 @@ Welcome! Custom Modes are a powerful feature that lets you define specific perso
 -   **[🔍 Mode Spotlight: Research](./04d-Mode-Spotlight-Research.md)**  
     *Create an AI research assistant to help you gather and synthesize information.*
 
+-   **[🧪 Mode Spotlight: TDV (Test-Driven Vibing)](./04f-Mode-Spotlight-TDV.md)**  
+    *A developer-focused mode to guide implementation via TDD.*
+
 -   **[🤪 Mode Spotlight: Yolo](./04e-Mode-Spotlight-Yolo.md)**  
     *A fun example of creating a mode with a unique and entertaining personality.*
 

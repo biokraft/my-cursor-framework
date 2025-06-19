@@ -16,6 +16,7 @@ Cursor Custom Modes allow you to create specialized "personas" or "experts" with
 -   **Efficiency:** Instead of re-typing long instructions for common tasks, activate a mode with one click.
 -   **Consistency:** Ensure the AI approaches specific tasks in a consistent way every time.
 -   **Specialization:** Create expert AI assistants for different domains (e.g., a "Documentation Writer" mode or a "Code Refactoring" mode).
+-   **Workflow Enforcement:** Guide the AI through specific development methodologies, like the `TDV` mode for Test-Driven Development.
 -   **Focus:** Help the AI stay on task by defining its scope and available tools.
 
 ## 🛠️ How to Set Up a Custom Mode

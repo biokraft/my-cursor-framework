@@ -102,4 +102,9 @@ Here's a simplified guide to get you started. This assumes you are running the `
    - Test it in the chat: "Get details for Jira ticket PROJ-123".
 
 ---
-[⬅️ Back to MCP Overview](./06a-MCP-The-Big-Picture.md) | [Up: Cursor for Everyone](../../README.md) | [Next: MCP Spotlight: DBHub ➡️](./06c-MCP-Spotlight-DBHub.md) 
+
+-   **Analyze & Comment:** Ask Cursor to analyze the ticket and suggest a comment.
+
+---
+
+[⬅️ Back to MCP Overview](./06a-MCP-The-Big-Picture.md) | [Up: Cursor for Everyone](../README.md) | [Next: MCP Spotlight: DBHub ➡️](./06c-MCP-Spotlight-DBHub.md) 

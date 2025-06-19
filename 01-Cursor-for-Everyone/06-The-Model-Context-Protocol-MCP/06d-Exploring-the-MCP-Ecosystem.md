@@ -44,4 +44,4 @@ For more details, see the [official MCP Inspector documentation](https://modelco
 
 ---
 
-[⬅️ Back to DBHub](./06c-MCP-Spotlight-DBHub.md) | [Up: Cursor for Everyone](../../README.md) | [Next: Quick Look: @Docs ➡️](../07-Quick-Look-The-Docs-Feature.md) 
+[⬅️ Back to DBHub](./06c-MCP-Spotlight-DBHub.md) | [Up: Cursor for Everyone](../README.md) | [Next: Quick Look: @Docs ➡️](../07-Quick-Look-The-Docs-Feature.md) 

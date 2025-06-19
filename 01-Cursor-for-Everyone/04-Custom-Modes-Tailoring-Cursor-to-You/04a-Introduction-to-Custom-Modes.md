@@ -36,8 +36,10 @@ The process is straightforward and handled through Cursor's UI.
 
 4.  **Save and Activate:** Save the mode, and it will be available to select in your chat panel.
 
+    *   Once saved, your new mode will appear in the chat input's model selector.
+
 In the following sections, we'll explore concrete examples of useful custom modes.
 
 ---
 
-[⬅️ Back to Custom Modes Overview](./README.md) | [Up: Cursor for Everyone](../../README.md) | [Next: Mode Spotlight: Learn ➡️](./04b-Mode-Spotlight-Learn.md)
+[⬅️ Back to Custom Modes Overview](./README.md) | [Up: Custom Modes](../README.md) | [Next: Mode Spotlight: Learn ➡️](./04b-Mode-Spotlight-Learn.md)

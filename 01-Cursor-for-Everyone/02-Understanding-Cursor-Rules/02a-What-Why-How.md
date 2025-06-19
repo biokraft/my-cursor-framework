@@ -60,4 +60,4 @@ alwaysApply: false # Optional: Set to true for global rules.
 
 ---
 
-[⬅️ Back to Rules Overview](./README.md) | [Up: Cursor for Everyone](../README.md) | [Next: Interactive Development ➡️](./02b-Interactive-Rule-Development.md) 
+[⬅️ Back to Rules Overview](./README.md) | [Up: Understanding Rules](../README.md) | [Next: Interactive Development ➡️](./02b-Interactive-Rule-Development.md) 

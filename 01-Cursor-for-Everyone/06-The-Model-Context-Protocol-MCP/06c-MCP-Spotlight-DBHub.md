@@ -77,4 +77,8 @@ Here's a simplified guide to get you started. The easiest way to run DBHub is wi
 
 ---
 
-[⬅️ Back to Jira/Confluence](./06b-MCP-in-Action-Jira-and-Confluence.md) | [Up: Cursor for Everyone](../../README.md) | [Next: MCP Ecosystem ➡️](./06d-Exploring-the-MCP-Ecosystem.md) 
+This powerful combination allows the AI to understand your application's data layer, leading to more accurate and context-aware code generation.
+
+---
+
+[⬅️ Back to Jira/Confluence](./06b-MCP-in-Action-Jira-and-Confluence.md) | [Up: Cursor for Everyone](../README.md) | [Next: MCP Ecosystem ➡️](./06d-Exploring-the-MCP-Ecosystem.md) 

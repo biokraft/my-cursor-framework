@@ -32,4 +32,4 @@ Welcome to the section on the Model Context Protocol (MCP)! This system is key t
 
 ---
 
-[⬅️ Back to Essential Settings](../05-Essential-Cursor-Settings.md) | [Up: Cursor for Everyone](../../README.md) | [Next: MCP: The Big Picture ➡️](./06a-MCP-The-Big-Picture.md) 
+[⬅️ Back to Essential Settings](../05-Essential-Cursor-Settings.md) | [Up: Cursor for Everyone](../README.md) | [Next: MCP: The Big Picture ➡️](./06a-MCP-The-Big-Picture.md) 

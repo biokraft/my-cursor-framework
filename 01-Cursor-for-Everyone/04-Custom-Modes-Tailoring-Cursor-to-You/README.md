@@ -29,4 +29,4 @@ Welcome! Custom Modes are a powerful feature that lets you define specific perso
 
 ---
 
-[⬅️ Back to AI Models](../03-Choosing-Your-AI-Model.md) | [Up: Cursor for Everyone](../../README.md) | [Next: Intro to Custom Modes ➡️](./04a-Introduction-to-Custom-Modes.md) 
+[⬅️ Back to AI Models](../03-Choosing-Your-AI-Model.md) | [Up: Cursor for Everyone](../README.md) | [Next: Intro to Custom Modes ➡️](./04a-Introduction-to-Custom-Modes.md) 

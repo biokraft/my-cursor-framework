@@ -5,13 +5,13 @@ alwaysApply: false
 ---
 # My Medium Article Writing Style Guide
 
-This guide outlines the preferred style, structure, and tone for writing Medium articles. The goal is to create content that is engaging, easy to read, and provides clear, actionable advice. **Always reference `docs/articles/stop-writing-code-embrace-ai.md` as the golden-standard example.**
+This guide outlines the preferred style, structure, and tone for writing Medium articles. The goal is to create content that is engaging, easy to read, and provides clear, actionable advice.
 
 ## Core Principles
 
 - **Empathetic yet Authoritative Tone**: Start by acknowledging the reader's potential skepticism or feelings ("I get it. I really do."). Then, shift to a confident, forward-looking, and slightly provocative voice. Use rhetorical questions to draw the reader in.
 - **Simplify Complexity**: Break down complex topics into simple, digestible pieces. Use analogies to make abstract concepts concrete (e.g., "like a master architect insisting on laying every brick themself").
-- **Grounded in Personal Experience**: Use personal anecdotes and specific, real-world examples (like the `auto-make` project) to build credibility and make the content relatable.
+- **Grounded in Personal Experience**: Use personal anecdotes and specific, real-world examples to build credibility and make the content relatable. You can also ask the user for ideas.
 - **Focus on a "Mindset Shift"**: Frame the core message as a challenge to a conventional perspective. The goal is not just to inform, but to change the reader's way of thinking.
 
 ## Structure & Formatting Checklist

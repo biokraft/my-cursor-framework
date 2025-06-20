@@ -1,0 +1,321 @@
+---
+description: JIRA ticket formatting: Use whenever you are writing a JIRA ticket.
+globs:
+alwaysApply: false
+---
+# JIRA Markdown Syntax Guide
+
+## Overview
+
+JIRA uses its own wiki markup syntax that differs significantly from standard Markdown. This guide provides the correct formatting patterns for JIRA Cloud and Server to ensure proper rendering of text in tickets, comments, and descriptions.
+
+## Key Differences from Standard Markdown
+
+JIRA wiki markup is **NOT** standard Markdown. Using standard Markdown syntax will result in broken formatting and poor readability in JIRA.
+
+## Headers
+
+Use `h1.` through `h6.` syntax for headers:
+
+```
+h1. Main Title
+h2. Section Header
+h3. Subsection Header
+h4. Sub-subsection Header
+h5. Minor Header
+h6. Smallest Header
+```
+
+**❌ Don't use:** `#`, `##`, `###` (standard Markdown)
+**✅ Use:** `h1.`, `h2.`, `h3.` (JIRA wiki markup)
+
+## Text Formatting
+
+### Bold and Emphasis
+
+```
+*bold text*
+_italic text_
+*_bold and italic_*
+```
+
+**❌ Don't use:** `**bold**`, `*italic*` (standard Markdown)
+**✅ Use:** `*bold*`, `_italic_` (JIRA wiki markup)
+
+### Other Text Effects
+
+```
+-strikethrough-
++inserted text+
+^superscript^
+~subscript~
+{{monospaced text}}
+??citation??
+```
+
+## Lists
+
+### Bullet Lists
+
+```
+* First item
+* Second item
+** Nested item
+** Another nested item
+* Third item
+```
+
+### Numbered Lists
+
+```
+# First item
+# Second item
+## Nested numbered item
+## Another nested item
+# Third item
+```
+
+### Mixed Lists
+
+```
+# Numbered item
+#* Nested bullet
+#* Another nested bullet
+# Another numbered item
+```
+
+## Code Formatting
+
+### Inline Code
+
+Use double curly braces for inline code:
+
+```
+{{variable_name}}
+{{function()}}
+{{package>=1.0.0}}
+```
+
+**❌ Don't use:** `backticks` (standard Markdown)
+**✅ Use:** `{{double curly braces}}` (JIRA wiki markup)
+
+### Code Blocks
+
+Use the `{code}` macro with optional parameters:
+
+```
+{code}
+Basic code block
+{code}
+
+{code:title=Example.py}
+def hello_world():
+    print("Hello, World!")
+{code}
+
+{code:language=python}
+# Python code with syntax highlighting
+import requests
+{code}
+
+{code:title=Configuration|language=yaml}
+database:
+  host: localhost
+  port: 5432
+{code}
+```
+
+**❌ Don't use:** Triple backticks (standard Markdown)
+**✅ Use:** `{code}` macro (JIRA wiki markup)
+
+## Links
+
+### External Links
+
+```
+[Link text|http://example.com]
+[http://example.com]
+```
+
+### Internal Links
+
+```
+[Page Title]
+[PROJ-123]  # Link to issue
+[~username] # Link to user profile
+```
+
+## Images
+
+```
+!image.png!
+!image.png|thumbnail!
+!image.png|align=center!
+!http://example.com/image.png!
+```
+
+## Tables
+
+```
+||Header 1||Header 2||Header 3||
+|Cell 1|Cell 2|Cell 3|
+|Cell 4|Cell 5|Cell 6|
+```
+
+**Note:** Use double pipes `||` for headers, single pipes `|` for regular cells.
+
+## Special Elements
+
+### Quotes
+
+```
+bq. This is a block quote
+
+{quote}
+This is a longer quote
+that spans multiple lines
+{quote}
+```
+
+### Panels
+
+```
+{panel:title=Important Note}
+This is content in a panel
+{panel}
+
+{panel:title=Warning|borderColor=red}
+This is a warning panel
+{panel}
+```
+
+### Horizontal Rules
+
+```
+----
+```
+
+**Note:** JIRA requires 4 dashes, not 3 like standard Markdown.
+
+## Checkboxes and Task Lists
+
+```
+* [ ] Incomplete task
+* [x] Completed task
+* (/) Checkmark (renders as green checkmark)
+* (x) X mark (renders as red X)
+* (!) Exclamation (renders as warning icon)
+* (?) Question mark (renders as question icon)
+```
+
+## Color Text
+
+```
+{color:red}This text is red{color}
+{color:#FF0000}This text is also red{color}
+{color:blue}This text is blue{color}
+```
+
+## Emoticons
+
+JIRA supports various emoticons:
+
+```
+:) :( :P :D ;)
+(y) (n) (i) (/) (x) (!) (?)
+(+) (-) (*)
+```
+
+## Best Practices
+
+### Do's
+
+- **Always use JIRA wiki markup syntax** instead of standard Markdown
+- **Test formatting** in JIRA preview before saving
+- **Use code blocks** with language specification for better syntax highlighting
+- **Structure content** with proper headers and lists
+- **Use panels** for important information or warnings
+
+### Don'ts
+
+- **Don't mix** standard Markdown with JIRA wiki markup
+- **Don't use** triple backticks for code blocks
+- **Don't use** `#` for headers
+- **Don't use** `**bold**` or `*italic*` standard Markdown formatting
+- **Don't forget** to use double pipes for table headers
+
+## Common Migration Patterns
+
+When converting from standard Markdown to JIRA wiki markup:
+
+| Standard Markdown | JIRA Wiki Markup |
+|-------------------|------------------|
+| `# Header` | `h1. Header` |
+| `## Header` | `h2. Header` |
+| `**bold**` | `*bold*` |
+| `*italic*` | `_italic_` |
+| `` `code` `` | `{{code}}` |
+| ```` ```code``` ```` | `{code}code{code}` |
+| `---` | `----` |
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Headers not rendering**: Ensure space after `h1.`, `h2.`, etc.
+2. **Code not formatting**: Use `{{}}` for inline, `{code}` for blocks
+3. **Lists not nesting**: Use `**` for nested bullets, `##` for nested numbers
+4. **Tables broken**: Use `||` for headers, `|` for cells
+5. **Links not working**: Use `[text|url]` format for external links
+
+### Testing Your Formatting
+
+Always use JIRA's preview functionality to verify formatting before saving tickets or comments.
+
+## Examples
+
+### Well-Formatted JIRA Ticket Description
+
+```
+h1. Bug Report: Login Authentication Issue
+
+h2. Problem Description
+
+Users are experiencing authentication failures when logging in with {{OAuth}} providers.
+
+h3. Steps to Reproduce
+
+# Navigate to login page
+# Click on "Login with Google"
+# Enter valid credentials
+# Observe error message
+
+h3. Expected vs Actual Results
+
+||Expected||Actual||
+|Successful login|Authentication error|
+|Redirect to dashboard|Stuck on login page|
+
+h3. Technical Details
+
+{code:title=Error Log|language=javascript}
+ERROR: OAuth token validation failed
+Status: 401 Unauthorized
+{code}
+
+h3. Environment
+
+* *Browser*: Chrome 120.0.6099.109
+* *OS*: macOS 14.2.1
+* *Environment*: Production
+
+h2. Priority
+
+(!) This is a *critical* issue affecting user login functionality.
+
+{panel:title=Workaround|borderColor=blue}
+Users can still login using email/password authentication
+{panel}
+```
+
+This rule ensures all JIRA content is properly formatted and renders correctly in the JIRA interface.

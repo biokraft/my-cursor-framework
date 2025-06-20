@@ -3,7 +3,7 @@
 > **🔑 Key Takeaways:**
 >
 > - **🎯 For Everyone:** Start with [Part 1](./01-Cursor-for-Everyone/) to master core concepts like Rules, Custom Modes, and the Model Context Protocol (MCP).
-> - **💻 For Developers:** Dive into [Part 2](./02-Cursor-for-Developers/) for advanced workflows, including tech-specific rules and the `SpecsForge` framework for spec-driven development, followed by the `TDV` framework for test-driven implementation.
+> - **💻 For Developers:** Dive into [Part 2](./02-Cursor-for-Developers/) for advanced workflows, including tech-specific rules and the `SpecsForge` framework for spec-driven development, followed by the `TDV` mode for test-driven implementation.
 > - **🚀 Core Philosophy:** This guide emphasizes that providing clear, relevant context is the "golden rule" for getting the most out of Cursor.
 > - **🛠️ Actionable Resources:** The repository includes a rich set of [reusable rules](./.cursor/rules/) and practical examples to accelerate your learning.
 
@@ -38,21 +38,21 @@ This section is designed for *anyone* using Cursor, regardless of their technica
 
 ### 💻 Part 2: [Cursor for Developers](./02-Cursor-for-Developers/README.md)
 
-This section delves into advanced techniques and workflows tailored for developers. It covers topics like building tech-stack specific rules, the `SpecsForge` framework for planning, the `TDV` framework for implementation, and efficient debugging strategies. While aimed at developers, Product Managers and technical leads might also find these insights valuable.
+This section delves into advanced techniques and workflows tailored for developers. It covers topics like building tech-stack specific rules, the `SpecsForge` framework for planning, the `TDV` mode for implementation, and efficient debugging strategies. While aimed at developers, Product Managers and technical leads might also find these insights valuable.
 
 -   宣言 [The Vibe Programmer Manifesto](./02-Cursor-for-Developers/00-The-Vibe-Programmer-Manifesto.md)
 -   📚 [Mastering the @Docs Feature](./02-Cursor-for-Developers/01-Mastering-the-Docs-Feature.md)
 -   🛠️ [Crafting Rules for Your Tech Stack](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/README.md)
--   ⚡ [The SpecsForge Framework](./02-Cursor-for-Developers/03-The-SpecsForge-Framework.md) & [🧪 The TDV Framework](./02-Cursor-for-Developers/03a-The-TDV-Framework.md)
+-   ⚡ [The SpecsForge Framework](./02-Cursor-for-Developers/03-The-SpecsForge-Framework.md) & [🧪 The TDV Mode](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04f-Mode-Spotlight-TDV.md)
     > 🧑‍💻 **Listen up devs:** this is where the secret sauce is at!
 -   ⚙️ [Leveraging Terminal Integration for Debugging](./02-Cursor-for-Developers/04-Leveraging-Terminal-Integration.md)
 -   ⇄ [Working Across Repositories](./02-Cursor-for-Developers/05-Working-Across-Repositories.md)
 
 ---
 
-## ✨ Featured Workflow in Action: The SpecsForge & TDV Frameworks
+## ✨ Featured Workflow in Action: The SpecsForge Framework & TDV Mode
 
-See the `SpecsForge` and `TDV` frameworks in action! This video gives a practical look at how to turn a high-level idea into a detailed specification (`SpecsForge`) and then into well-tested code (`TDV`). The footage is from my open-source CLI tool, [`automake`](https://github.com/biokraft/auto-make), an AI-native shell that turns natural language into actions.
+See the `SpecsForge` framework and `TDV` mode in action! This video gives a practical look at how to turn a high-level idea into a detailed specification (`SpecsForge`) and then into well-tested code (`TDV`). The footage is from my open-source CLI tool, [`automake`](https://github.com/biokraft/auto-make), an AI-native shell that turns natural language into actions.
 
 [![Watch the SpecsForge Workflow Demo](https://img.youtube.com/vi/3mSPPsbOkyU/hqdefault.jpg)](https://youtu.be/3mSPPsbOkyU)
 
@@ -63,7 +63,7 @@ See the `SpecsForge` and `TDV` frameworks in action! This video gives a practica
 ## 🏁 Getting Started
 
 1.  Explore **Part 1** to build a solid foundation in Cursor's core functionalities.
-2.  If you're a developer, proceed to **Part 2** to learn about my specific coding workflows, including the `SpecsForge` and `TDV` frameworks.
+2.  If you're a developer, proceed to **Part 2** to learn about my specific coding workflows, including the `SpecsForge` framework and `TDV` mode.
 3.  Adapt and adopt what works for you! This is a living guide, and I encourage you to tailor these practices to your own needs.
 
 ---

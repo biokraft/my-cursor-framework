@@ -32,4 +32,4 @@ By integrating the command line into your AI-driven workflow, you can investigat
 
 ---
 
-[⬅️ Back to TDV Framework](./03a-The-TDV-Framework.md) | [Up: Cursor for Developers](./README.md) | [Next: Working Across Repositories ➡️](./05-Working-Across-Repositories.md) 
+[⬅️ Back to SpecsForge Framework](./03-The-SpecsForge-Framework.md) | [Up: Cursor for Developers](./README.md) | [Next: Working Across Repositories ➡️](./05-Working-Across-Repositories.md) 

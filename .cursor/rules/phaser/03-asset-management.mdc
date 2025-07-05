@@ -1,0 +1,112 @@
+---
+description: "Phaser 3 Asset Management: Guidelines for loading and managing game assets."
+globs: "**/scenes/PreloadScene.js, **/scenes/PreloadScene.ts"
+alwaysApply: false
+---
+
+Efficiently loading and managing assets is critical for game performance and user experience. This guide covers best practices for handling images, spritesheets, audio, and other assets in Phaser 3.
+
+## 1. Use a Dedicated Preloader Scene
+
+Create a dedicated `PreloadScene` to load all the assets your game will need. This scene should display a loading bar or animation to provide feedback to the user. Once all assets are loaded, it should transition to the main menu or the first game scene.
+
+### Example `PreloadScene`
+
+```javascript
+import Phaser from 'phaser';
+
+export default class PreloadScene extends Phaser.Scene {
+    constructor() {
+        super('PreloadScene');
+    }
+
+    preload() {
+        // Display a loading bar
+        const progressBar = this.add.graphics();
+        const progressBox = this.add.graphics();
+        progressBox.fillStyle(0x222222, 0.8);
+        progressBox.fillRect(240, 270, 320, 50);
+
+        this.load.on('progress', (value) => {
+            progressBar.clear();
+            progressBar.fillStyle(0xffffff, 1);
+            progressBar.fillRect(250, 280, 300 * value, 30);
+        });
+
+        this.load.on('complete', () => {
+            progressBar.destroy();
+            progressBox.destroy();
+            // All assets loaded, start the main menu
+            this.scene.start('MainMenuScene');
+        });
+
+        // Load all your assets here
+        this.load.image('sky', 'assets/images/sky.png');
+        this.load.spritesheet('player', 'assets/spritesheets/player.png', {
+            frameWidth: 32,
+            frameHeight: 48
+        });
+        this.load.audio('backgroundMusic', ['assets/audio/music.ogg', 'assets/audio/music.mp3']);
+    }
+}
+```
+
+## 2. Use Consistent Asset Keys
+
+Use clear and consistent keys for your assets. A good convention is to use `camelCase` or `snake_case` and to be descriptive.
+
+**Good:**
+`this.load.image('playerShip', 'assets/images/player_ship.png');`
+`this.load.audio('laserSound', 'assets/audio/laser_sound.wav');`
+
+**Bad:**
+`this.load.image('img1', 'assets/images/player_ship.png');`
+`this.load.audio('sfx', 'assets/audio/laser_sound.wav');`
+
+## 3. Use Texture Atlases and Spritesheets
+
+To optimize rendering and reduce memory usage, pack individual images into a single texture atlas or spritesheet. A texture atlas is generally preferred as it can be more efficient and flexible.
+
+-   **Spritesheet**: A single image containing multiple frames of an animation in a grid.
+-   **Texture Atlas**: A single image containing multiple, irregularly sized images, with a corresponding JSON or XML file that defines the position and size of each image.
+
+Tools like **TexturePacker** can help you create these files.
+
+### Loading a Spritesheet
+
+```javascript
+this.load.spritesheet('explosion', 'assets/spritesheets/explosion.png', {
+    frameWidth: 64,
+    frameHeight: 64
+});
+```
+
+### Loading a Texture Atlas
+
+```javascript
+// The 'player' key here points to the JSON data.
+// The JSON data, in turn, points to the image file.
+this.load.atlas('player', 'assets/atlases/player.png', 'assets/atlases/player.json');
+```
+
+## 4. Lazy Load Assets for Different Levels
+
+If your game has multiple levels or distinct sections, don't load all assets at the very beginning. Load only the assets needed for the initial scenes (e.g., main menu). Then, for each level, have a short loading phase to load only the assets required for that specific level.
+
+This reduces initial load time and memory consumption.
+
+## 5. Provide Multiple Audio Formats
+
+Different browsers support different audio formats. To ensure cross-browser compatibility, provide your audio files in at least two formats, typically `.mp3` and `.ogg`. Phaser will automatically load the first one the browser supports.
+
+```javascript
+this.load.audio('backgroundMusic', [
+    'assets/audio/background_music.ogg',
+    'assets/audio/background_music.mp3'
+]);
+```
+
+description:
+globs:
+alwaysApply: false
+---

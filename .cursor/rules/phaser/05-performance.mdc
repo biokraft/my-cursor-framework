@@ -1,0 +1,92 @@
+---
+description: "Phaser 3 Performance: Tips and best practices for optimizing game performance."
+globs: "**/*.js, **/*.ts"
+alwaysApply: false
+---
+
+Optimizing your game's performance ensures a smooth experience for all players, regardless of their device.
+
+## 1. Use Object Pooling
+
+Constantly creating and destroying objects (like bullets or enemies) can cause performance issues due to garbage collection. Use object pools to reuse objects instead. Phaser's `Group` is perfect for this.
+
+```javascript
+// 1. Create a group
+this.bulletPool = this.add.group({
+    classType: Bullet, // Your custom Bullet class
+    maxSize: 50, // Max number of bullets
+    runChildUpdate: true
+});
+
+// 2. Get an object from the pool
+const bullet = this.bulletPool.get(this.player.x, this.player.y);
+
+// 3. When done, "kill" the object to return it to the pool
+if (bullet) {
+   bullet.setActive(false);
+   bullet.setVisible(false);
+   // The object is now available via bulletPool.get() again
+}
+```
+
+## 2. Optimize the Game Loop (`update`)
+
+The `update` loop runs on every frame. Keep it as lean as possible.
+
+-   **Only update what's needed**: Use groups to iterate only over active objects.
+    ```javascript
+    // Instead of iterating all children, get only the active ones
+    this.enemies.getMatching('active', true).forEach(enemy => {
+        enemy.move();
+    });
+    ```
+-   **Deactivate off-screen objects**: If an object is not on screen, set it to inactive.
+    ```javascript
+    if (enemy.y > this.sys.game.config.height) {
+        enemy.setActive(false);
+        enemy.setVisible(false);
+    }
+    ```
+-   **Cache references**: Avoid expensive lookups like `document.getElementById` or deep searches within arrays inside the `update` loop. Cache the results in `create()`.
+
+## 3. Compress and Pack Assets
+
+Large assets are a primary cause of long loading times.
+
+-   **Compress Images**: Use tools like [Squoosh](https://squoosh.app/) to reduce image file sizes.
+-   **Compress Audio**: Use `ffmpeg` or an online tool to compress audio files.
+-   **Use Texture Atlases**: Combine multiple images into a single spritesheet or texture atlas using a tool like [TexturePacker](https://www.codeandweb.com/texturepacker). This reduces the number of files the browser needs to download and can optimize rendering.
+
+## 4. Lazy Load Assets
+
+Don't load all game assets at once. Create a `PreloadScene` for common assets, but for level-specific assets, load them just before the level begins.
+
+```javascript
+// In your level selection scene
+this.scene.start('Level1LoadScene');
+
+// In Level1LoadScene.js
+preload() {
+    this.load.image('level1Boss', 'assets/bosses/level1.png');
+    // ... other level 1 assets
+}
+create() {
+    this.scene.start('Level1GameScene');
+}
+```
+
+## 5. Consider the Canvas Renderer
+
+While WebGL is often faster, it has more overhead. For games with simple graphics or on certain low-end mobile devices, the `Canvas` renderer can surprisingly result in better performance. It's worth testing both.
+
+```javascript
+// In your game config
+const config = {
+    type: Phaser.CANVAS, // Force the canvas renderer
+    // ...
+};
+```
+description:
+globs:
+alwaysApply: false
+---

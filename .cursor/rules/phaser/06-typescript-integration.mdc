@@ -1,0 +1,126 @@
+---
+description: "Phaser 3 TypeScript Integration: Best practices for integrating TypeScript with Phaser 3."
+globs: "**/src/**/*.ts"
+alwaysApply: false
+---
+
+Using TypeScript with Phaser 3 provides type safety and better autocompletion, reducing bugs and improving developer experience.
+
+## 1. Project Setup
+
+Use a modern bundler template like `phaser3-vite-template` that comes pre-configured for TypeScript. If setting up manually, ensure your `tsconfig.json` is correctly configured:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node"
+  },
+  "include": ["src"]
+}
+```
+
+## 2. Typing Custom GameObjects
+
+When creating custom `GameObject` classes, use TypeScript to define their properties and methods.
+
+```typescript
+// src/gameobjects/Player.ts
+import Phaser from 'phaser';
+
+export default class Player extends Phaser.Physics.Arcade.Sprite {
+    private speed: number = 160;
+
+    constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
+        super(scene, x, y, texture, frame);
+        scene.add.existing(this);
+        scene.physics.add.existing(this);
+    }
+
+    public moveLeft(): void {
+        this.setVelocityX(-this.speed);
+        this.anims.play('left', true);
+    }
+}
+```
+
+## 3. Typing Scene Properties
+
+Declare scene properties in the class body to ensure they are correctly typed.
+
+```typescript
+// src/scenes/GameScene.ts
+import Phaser from 'phaser';
+import Player from '../gameobjects/Player';
+
+export default class GameScene extends Phaser.Scene {
+    private player!: Player; // Use '!' to assert it will be initialized in create()
+    private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
+
+    constructor() {
+        super('GameScene');
+    }
+
+    create() {
+        this.player = new Player(this, 100, 450, 'player-texture');
+        this.cursors = this.input.keyboard.createCursorKeys();
+    }
+
+    update() {
+        if (this.cursors.left.isDown) {
+            this.player.moveLeft();
+        }
+    }
+}
+```
+
+## 4. Typing Data Passed Between Scenes
+
+Define an interface for the data object you pass via `scene.start()` and use it in the `init` method.
+
+```typescript
+// src/scenes/GameScene.ts
+interface ILevelData {
+    level: number;
+    difficulty: 'easy' | 'hard';
+}
+
+export default class GameScene extends Phaser.Scene {
+    private currentLevel: number = 1;
+
+    init(data: ILevelData) {
+        this.currentLevel = data.level;
+    }
+    // ...
+}
+
+// When starting the scene from another scene
+this.scene.start('GameScene', { level: 2, difficulty: 'hard' } as ILevelData);
+
+```
+
+## 5. Extending the GameObjectFactory (Declaration Merging)
+
+To add typed factory methods (e.g., `this.add.player()`), use TypeScript's declaration merging. Create a `.d.ts` file (e.g., `src/types/custom.d.ts`) and add the following:
+
+```typescript
+// src/types/custom.d.ts
+import Player from '../gameobjects/Player';
+
+declare namespace Phaser.GameObjects {
+    interface GameObjectFactory {
+        player(x: number, y: number, texture: string, frame?: string | number): Player;
+    }
+}
+```
+
+Then, register the factory as usual in your `Player.ts` file, and TypeScript will know the correct types when you call `this.add.player()`.
+description:
+globs:
+alwaysApply: false
+---

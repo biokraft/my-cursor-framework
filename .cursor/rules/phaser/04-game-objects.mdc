@@ -1,0 +1,123 @@
+---
+description: "Phaser 3 Custom GameObjects: Best practices for creating and managing custom GameObject classes."
+globs: "**/gameobjects/**/*.js, **/gameobjects/**/*.ts"
+alwaysApply: false
+---
+
+For complex game entities, it's best to create custom classes that extend Phaser's built-in `GameObject` types (like `Sprite`, `Image`, or `Container`). This approach encapsulates logic and state, leading to cleaner, more maintainable code.
+
+## 1. Create a Custom Class
+
+Extend a base Phaser class (e.g., `Phaser.Physics.Arcade.Sprite`) to create your custom game object. Keep these classes in the `src/gameobjects/` directory.
+
+### Example: Custom `Player` Sprite
+
+```javascript
+// src/gameobjects/Player.js
+import Phaser from 'phaser';
+
+export default class Player extends Phaser.Physics.Arcade.Sprite {
+    constructor(scene, x, y, texture, frame) {
+        super(scene, x, y, texture, frame);
+
+        // Add the player to the scene's existing systems
+        scene.add.existing(this);
+        scene.physics.add.existing(this);
+
+        // Set player properties
+        this.setCollideWorldBounds(true);
+        this.setBounce(0.1);
+    }
+
+    // Add custom methods for player actions
+    jump() {
+        if (this.body.touching.down) {
+            this.setVelocityY(-330);
+        }
+    }
+
+    moveLeft() {
+        this.setVelocityX(-160);
+        this.anims.play('left', true);
+    }
+
+    moveRight() {
+        this.setVelocityX(160);
+        this.anims.play('right', true);
+    }
+    
+    standStill() {
+        this.setVelocityX(0);
+        this.anims.play('turn');
+    }
+}
+```
+
+## 2. Register a Factory for Easy Creation
+
+To maintain Phaser's clean, factory-based syntax (e.g., `this.add.sprite()`), you can register your custom class with the `GameObjectFactory`. This allows you to create instances using a custom method like `this.add.player()`.
+
+Register the factory at the bottom of your custom class file.
+
+### Registering the `Player` Factory
+
+```javascript
+// Add this to the bottom of src/gameobjects/Player.js
+
+Phaser.GameObjects.GameObjectFactory.register('player', function (x, y, texture, frame) {
+    const player = new Player(this.scene, x, y, texture, frame);
+
+    this.displayList.add(player);
+    this.updateList.add(player);
+    // Note: If using Arcade Physics, you might need to add to the physics list as well,
+    // but scene.physics.add.existing(this) in the constructor is the preferred way.
+
+    return player;
+});
+```
+
+## 3. Use the Custom Factory in a Scene
+
+Once registered, you can create instances of your custom object in any scene. Make sure to import the custom class file once in your project (e.g., in your main game scene) to ensure the factory is registered before you use it.
+
+```javascript
+// In a scene file, e.g., GameScene.js
+import '../gameobjects/Player'; // Import to register the factory
+
+// ... inside the create() method
+create() {
+    // ...
+    this.player = this.add.player(100, 450, 'player-spritesheet');
+    
+    // Now you can call custom methods on it
+    if (this.cursors.left.isDown) {
+        this.player.moveLeft();
+    }
+}
+```
+
+## 4. Using Groups with Custom Classes
+
+For managing multiple instances (e.g., enemies, bullets), use `Phaser.GameObjects.Group` configured with your custom class. This is the foundation for object pooling.
+
+```javascript
+// In a scene's create() method
+import Bullet from '../gameobjects/Bullet';
+
+const bulletGroup = this.add.group({
+    classType: Bullet,
+    maxSize: 10,
+    runChildUpdate: true // Automatically calls update() on each bullet
+});
+
+// To get a bullet from the pool:
+const bullet = bulletGroup.get(x, y, 'bullet-texture');
+if (bullet) {
+    bullet.fire(angle); // Call a custom method
+}
+```
+    enemy.spawn(); // Call a custom method on the enemy
+}
+```
+
+This pattern is highly effective for object pooling. See the [Performance Best Practices](mdc:.cursor/rules/phaser/05-performance.mdc) for more on object pooling.

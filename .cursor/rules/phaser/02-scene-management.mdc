@@ -1,0 +1,117 @@
+---
+description: "Phaser 3 Scene Management: Best practices for creating, managing, and transitioning between scenes."
+globs: "**/scenes/**/*.js, **/scenes/**/*.ts"
+alwaysApply: false
+---
+
+Effective scene management is key to building complex games. A scene in Phaser can be thought of as a self-contained part of your game, like a main menu, a level, or a game-over screen.
+
+## 1. One Class, One Scene
+
+Each scene should be its own class that extends `Phaser.Scene`. This keeps your code organized and modular.
+
+```javascript
+// src/scenes/MainMenuScene.js
+import Phaser from 'phaser';
+
+export default class MainMenuScene extends Phaser.Scene {
+    constructor() {
+        // Each scene needs a unique key.
+        super('MainMenuScene');
+    }
+
+    create() {
+        this.add.text(100, 100, 'Main Menu', { color: '#ffffff' });
+
+        // Example: Start the game on click
+        this.input.on('pointerdown', () => {
+            this.scene.start('GameScene');
+        });
+    }
+}
+```
+
+## 2. Use Unique Scene Keys
+
+Every scene must be registered with a unique key. This key is used to identify and switch between scenes. It's a good practice to use the class name as the scene key for consistency.
+
+```javascript
+// In the scene class
+constructor() {
+    super('UniqueSceneKey'); // This key must be unique
+}
+
+// When starting a scene
+this.scene.start('UniqueSceneKey');
+```
+
+## 3. Decompose Your Game into Multiple Scenes
+
+Don't put all your game logic into a single scene. Break your game into logical parts:
+
+-   **`PreloadScene`**: Loads all essential assets for the entire game or for the next scene. After loading, it typically transitions to the main menu.
+-   **`MainMenuScene`**: The main title screen with options to start the game, view settings, etc.
+-   **`GameScene`**: The core gameplay scene where the player interacts with the game world.
+-   **`UIScene`**: A separate, often parallel, scene for UI elements like the score, health bar, and pause buttons. Running the UI in a separate scene prevents it from being affected by the game world's camera or time scale.
+-   **`GameOverScene`**: Displays the player's score and offers options to restart or return to the main menu.
+
+### Example: Running a UI Scene in Parallel
+
+You can run a UI scene on top of your main game scene.
+
+```javascript
+// In GameScene.js, inside create()
+create() {
+    // ... game logic ...
+
+    // Launch the UI scene to run in parallel
+    this.scene.launch('UIScene');
+}
+```
+
+## 4. Transitioning and Passing Data Between Scenes
+
+Use `this.scene.start(key, data)` to switch to a new scene and shut down the current one. You can pass an object containing data to the next scene's `init` method.
+
+### Passing Data
+
+```javascript
+// In GameOverScene.js
+this.scene.start('GameScene', { level: 2, score: 0 });
+```
+
+### Receiving Data
+
+The data is received in the `init` method of the new scene. The `init` method is called before `preload` and `create`.
+
+```javascript
+// In GameScene.js
+export default class GameScene extends Phaser.Scene {
+    constructor() {
+        super('GameScene');
+        this.currentLevel = 1;
+        this.score = 0;
+    }
+
+    // The data object from scene.start() is passed here
+    init(data) {
+        if (data.level) {
+            this.currentLevel = data.level;
+        }
+        if (data.score) {
+            this.score = data.score;
+        }
+    }
+
+    preload() {
+        // Load assets for this.currentLevel
+    }
+
+    // ...
+}
+```
+
+description:
+globs:
+alwaysApply: false
+---

@@ -1,0 +1,107 @@
+---
+description: "Phaser 3 Project Structure: Guidelines for organizing files and folders in a Phaser 3 project."
+globs: "**/src/**/*.js, **/src/**/*.ts"
+alwaysApply: false
+---
+
+# Phaser 3: Project Structure Guidelines
+
+A well-organized project structure is crucial for maintainability, especially as the game grows in complexity. This guide outlines best practices for structuring a modern Phaser 3 project using ES6 modules.
+
+## 1. Directory Layout
+
+Adopt a clear directory structure to separate different parts of your application. A recommended layout is:
+
+```
+project-root/
+├── public/
+│   ├── assets/
+│   │   ├── images/
+│   │   ├── audio/
+│   │   └── spritesheets/
+│   └── index.html
+├── src/
+│   ├── main.js         # Entry point
+│   ├── scenes/         # Game scenes
+│   ├── gameobjects/    # Custom game object classes
+│   ├── utils/          # Helper functions
+│   └── services/       # External services (e.g., API clients)
+├── package.json
+└── vite.config.js      # Or other bundler config
+```
+
+-   **`public/`**: Contains static assets that are copied directly to the build output.
+    -   **`assets/`**: All game assets like images, audio files, and spritesheets.
+    -   **`index.html`**: The main HTML file for the game.
+-   **`src/`**: Contains the game's source code.
+    -   **`main.js` or `index.js`**: The main entry point of the application. This is where you initialize the Phaser `Game` instance.
+    -   **`scenes/`**: Each file in this directory should represent a single `Phaser.Scene`. This promotes separation of concerns (e.g., `MainMenuScene.js`, `GameScene.js`, `UIScene.js`).
+    -   **`gameobjects/`**: Store custom `GameObject` classes here (e.g., `Player.js`, `Enemy.js`). See the rule on [Custom GameObjects](mdc:.cursor/rules/phaser/04-game-objects.mdc).
+    -   **`utils/`**: Reusable helper functions and constants that don't fit elsewhere.
+    -   **`services/`**: Modules for interacting with external APIs or services.
+
+## 2. Main Entry Point (`main.js`)
+
+The entry point should be responsible for creating the Phaser `Game` configuration object and instance. It should import the initial scene and pass it to the configuration.
+
+```javascript
+import Phaser from 'phaser';
+import PreloadScene from './scenes/PreloadScene';
+import GameScene from './scenes/GameScene';
+
+const config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 300 }
+        }
+    },
+    scene: [PreloadScene, GameScene] // List all scenes here
+};
+
+const game = new Phaser.Game(config);
+```
+
+## 3. Use ES6 Modules
+
+Always use `import` and `export` to manage dependencies between files. This makes the code more modular and easier to reason about compared to using global variables or older script-tag-based approaches.
+
+### Example: Importing a Scene
+
+```javascript
+// main.js
+import GameScene from './scenes/GameScene';
+
+// ...
+const config = {
+    // ...
+    scene: [GameScene]
+};
+```
+
+### Example: Exporting a Scene
+
+```javascript
+// scenes/GameScene.js
+import Phaser from 'phaser';
+
+export default class GameScene extends Phaser.Scene {
+    constructor() {
+        super('GameScene');
+    }
+
+    preload() {
+        // ...
+    }
+
+    create() {
+        // ...
+    }
+}
+```
+
+alwaysApply: false
+---

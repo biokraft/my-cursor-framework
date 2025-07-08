@@ -31,7 +31,7 @@ These badges should be present in every `README.md` file.
     *   **Languages:** Python, TypeScript, Go, Rust, etc.
     *   **Frameworks:** FastAPI, React, Django, Vue, etc.
     *   **Databases:** PostgreSQL, Redis, MongoDB, etc.
-    *   **Tools:** Docker, pre-commit, Ruff, etc.
+    *   **Tools:** Docker, pre-commit, Ruff, uv, etc.
     *   **How to identify:** Scan files like `pyproject.toml`, `package.json`, `go.mod`, `Dockerfile`, and `docker-compose.yml` to determine the stack.
 
 ### 2. Recommended Badges (Context-Dependent)
@@ -45,8 +45,11 @@ Add these badges if they are relevant to the project.
 *   **Code Quality & Coverage:**
     *   **Code Coverage:** If the project tracks test coverage (e.g., via Codecov, Coveralls).
     *   **Linter/Formatter:** A badge for the code formatter or linter used (e.g., Ruff, Prettier, Black).
+    *   **Dependency Manager:** For Python projects using [uv](https://github.com/astral-sh/uv), add the uv badge:
+        *   `[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)`
     *   **Example (Codecov):** `[![codecov](https://codecov.io/gh/your-user/your-repo/graph/badge.svg?token=YOUR_TOKEN)](https://codecov.io/gh/your-user/your-repo)`
     *   **Example (Ruff):** `[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)`
+    *   **Example (uv):** `[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)`
 
 *   **License:** Include a badge for the project's license.
     *   **Source:** Check for a `LICENSE` or `COPYING` file.
@@ -67,13 +70,14 @@ Here is an example of a well-formatted badge section:
 [![CI](https://github.com/your-user/your-repo/actions/workflows/ci.yml/badge.svg)](https://github.com/your-user/your-repo/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 
 [![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=fff)](https://fastapi.tiangolo.com/)
 [![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff)](https://www.docker.com/)
 
 ... rest of README ...
-\`\`\`
+\`
 description:
 globs:
 alwaysApply: false

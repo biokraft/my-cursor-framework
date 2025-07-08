@@ -1,5 +1,7 @@
 # A Comprehensive Guide to 🚀 Cursor AI 🚀
 
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/biokraft/my-cursor-framework)](https://github.com/biokraft/my-cursor-framework/releases/latest)
+
 > **🔑 Key Takeaways:**
 >
 > - **🎯 For Everyone:** Start with [Part 1](./01-Cursor-for-Everyone/) to master core concepts like Rules, Custom Modes, and the Model Context Protocol (MCP).

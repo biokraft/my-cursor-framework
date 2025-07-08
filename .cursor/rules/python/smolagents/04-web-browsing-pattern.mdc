@@ -1,0 +1,86 @@
+---
+description: Smolagents web browsing: Best practices for implementing web browsing with the multi-agent pattern in smolagents.
+globs: **/*.py
+alwaysApply: false
+---
+# Smolagents: Multi-Agent Pattern for Web Browsing
+
+This rule outlines the recommended pattern for implementing effective and robust web browsing capabilities in `smolagents` by using a hierarchical, multi-agent system.
+
+## The Challenge of Web Browsing
+
+A capable web browsing agent needs to perform multiple steps:
+1.  **Search**: Use a search engine to find relevant URLs for a given query.
+2.  **Visit & Scrape**: Access a URL and extract its text content.
+3.  **Analyze & Synthesize**: Read the extracted content, identify the relevant information, and synthesize an answer to the original query.
+
+Combining all these responsibilities into a single agent can make its context messy and its reasoning process prone to errors.
+
+## The Multi-Agent Solution
+
+A more robust and maintainable pattern is to delegate web browsing to a specialized "worker" agent. A high-level "manager" agent oversees the task, delegating the low-level mechanics of searching and scraping to the specialist.
+
+### Components of the System
+
+1.  **Web Surfer Agent (The Worker)**: A simple `ToolCallingAgent` whose only job is to use web-related tools.
+    -   **Tools**: `DuckDuckGoSearchTool` (for searching) and `VisitWebpageTool` (for scraping).
+    -   **Model**: Can be a smaller, faster, and cheaper model (e.g., `qwen:0.5b`), as its task is narrowly defined.
+
+2.  **ManagedAgent (The Wrapper)**: This wraps the *Web Surfer Agent*, giving it a name and a description. This description is what the *Manager Agent* sees, effectively turning the entire worker agent into a "tool."
+
+3.  **Manager Agent (The Orchestrator)**: A more powerful `CodeAgent` that handles the main user query.
+    -   **Tools**: It has no direct tools of its own. Its only "tool" is the `managed_web_agent`.
+    -   **Model**: Should be a more powerful reasoning model (e.g., `qwen:7b`), as it needs to understand the user's high-level goal, delegate to the web surfer, and process the results to formulate a final answer.
+
+### Example Implementation
+
+```python
+from smolagents import (
+    CodeAgent,
+    ToolCallingAgent,
+    LiteLLMModel,
+    ManagedAgent,
+    DuckDuckGoSearchTool,
+)
+from smolagents.tools.web_search import VisitWebpageTool
+
+# Use a powerful model for the manager for better reasoning
+manager_model = LiteLLMModel(model_id="ollama/qwen:7b") 
+
+# A smaller, faster model is sufficient for the specialized web agent
+web_agent_model = LiteLLMModel(model_id="ollama/qwen:0.5b")
+
+# 1. Create the specialized Web Surfer Agent
+# A ToolCallingAgent is efficient for this focused task.
+web_surfer_agent = ToolCallingAgent(
+    tools=[DuckDuckGoSearchTool(), VisitWebpageTool()],
+    model=web_agent_model,
+    max_steps=10, # Give it enough steps to search and visit multiple pages if needed
+)
+
+# 2. Wrap it in a ManagedAgent to make it a "tool" for the manager
+managed_web_agent = ManagedAgent(
+    agent=web_surfer_agent,
+    name="web_surfer",
+    description="An expert web surfer. Give it a clear and specific query to search the web, visit pages, and find information.",
+)
+
+# 3. Create the Manager Agent
+# A CodeAgent has superior reasoning abilities for orchestrating tasks.
+manager_agent = CodeAgent(
+    tools=[], # The manager has no direct tools; it only delegates
+    model=manager_model,
+    managed_agents=[managed_web_agent], # Provide the worker agent here
+)
+
+# 4. Run the multi-agent system
+task = "Research the main benefits of using the smolagents library for building AI applications and list them."
+# result = manager_agent.run(task)
+# print(result)
+```
+
+This hierarchical setup separates concerns, keeps each agent's context clean, and allows you to use the best (and most cost-effective) model for each job, leading to a more robust and efficient system.
+description:
+globs:
+alwaysApply: false
+---

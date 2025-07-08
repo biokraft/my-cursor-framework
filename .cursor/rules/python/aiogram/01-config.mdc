@@ -1,0 +1,90 @@
+---
+description: 'Aiogram Configuration: Best practices for managing settings and secrets in aiogram projects.'
+globs: 
+alwaysApply: false
+---
+
+# Aiogram: Configuration Management
+
+## Introduction
+This rule outlines the best practices for managing configuration in an `aiogram`-based bot. Proper configuration management is essential for security and maintainability.
+
+## Guidelines
+
+### 1. Use Environment Variables for Secrets
+**Never** hardcode sensitive data such as bot tokens, database credentials, or API keys directly in your code. The recommended approach is to use environment variables.
+
+- **Local Development**: Use a `.env` file to store environment variables locally. Ensure `.env` is listed in your `.gitignore` file to prevent it from being committed to version control.
+- **Production**: Set environment variables directly in your deployment environment (e.g., Docker, Heroku, server system).
+
+### 2. Use Pydantic for Settings Management
+Leverage `pydantic-settings` to create a strongly-typed configuration object. This provides several advantages:
+- **Type Hinting**: Your configuration is fully type-hinted, enabling autocompletion and static analysis.
+- **Validation**: Pydantic automatically validates that environment variables are of the correct type.
+- **Centralization**: All configuration is managed in a single, predictable place.
+
+## Example Implementation
+
+### `src/config.py`
+Create a `config.py` file to define your settings model and load it.
+
+```python
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import SecretStr
+
+class Settings(BaseSettings):
+    """
+    Application settings loaded from environment variables.
+    """
+    # To load variables from a .env file, specify the file path.
+    # Pydantic will automatically look for a .env file in the same directory
+    # if python-dotenv is installed.
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+
+    # Bot token from BotFather
+    bot_token: SecretStr
+
+    # Database connection URL
+    # Example for PostgreSQL: "postgresql+asyncpg://user:pass@host:port/db"
+    db_url: str
+
+    # Optional settings with default values
+    admin_chat_id: int | None = None
+
+
+# Create a single settings instance to be used throughout the application
+settings = Settings()
+
+```
+
+### `.env.example`
+Provide an example `.env` file in your repository so other developers know which variables are required. **Do not** include real secrets in this file.
+
+```dotenv
+# Telegram Bot API token from @BotFather
+BOT_TOKEN="123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
+
+# Database connection URL
+DB_URL="postgresql+asyncpg://user:pass@localhost:5432/mydatabase"
+
+# Optional: Admin Chat ID for notifications
+# ADMIN_CHAT_ID=
+```
+
+### Usage in other modules
+You can then import the `settings` object wherever you need to access configuration values.
+
+```python
+# In bot.py or any other module
+from .config import settings
+
+# When initializing the bot
+bot = Bot(token=settings.bot_token.get_secret_value())
+
+# Accessing other settings
+if settings.admin_chat_id:
+    # ... send a notification to the admin
+    pass
+```
+
+> **Security Note**: The `SecretStr` type from Pydantic helps prevent accidental exposure of secrets in logs or tracebacks. Always use `get_secret_value()` to access the actual string value when needed.

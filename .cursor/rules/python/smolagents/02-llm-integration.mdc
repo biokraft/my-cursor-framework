@@ -1,0 +1,67 @@
+---
+description: Smolagents LLM integration: Best practices for connecting smolagents to LLMs via LiteLLM and Ollama.
+globs: **/*.py
+alwaysApply: false
+---
+# Smolagents: LLM Integration
+
+This rule provides guidelines for connecting `smolagents` to different Large Language Models (LLMs), with a specific focus on using local models via Ollama and other providers through LiteLLM.
+
+## Using `LiteLLMModel` for Maximum Flexibility
+
+The `smolagents` library includes the `LiteLLMModel` class, which acts as a universal adapter to over 100 different LLM providers, including local setups with Ollama. This is the recommended approach for integrating `qwen3` or other custom models into your project.
+
+### Step 1: Installation
+
+Ensure you have the necessary packages installed. The `[litellm]` extra for `smolagents` includes everything you need. If you're using Ollama, you'll need that installed as well.
+
+```bash
+pip install "smolagents[litellm]" ollama
+```
+
+### Step 2: Model Initialization
+
+Once installed, you can instantiate the `LiteLLMModel` and pass it to your agent.
+
+#### Connecting to a Local Ollama Model
+
+Make sure your Ollama server is running. To specify a model served by Ollama, prefix the model name with `ollama/`.
+
+```python
+from smolagents import CodeAgent, LiteLLMModel
+
+# Example using a local qwen:0.5b model served by Ollama
+model = LiteLLMModel(model_id="ollama/qwen:0.5b") 
+
+agent = CodeAgent(
+    tools=[], 
+    model=model,
+    add_base_tools=True, # Includes a Python interpreter, etc.
+)
+
+# The agent is now powered by your local qwen model
+# result = agent.run("What is the capital of France?")
+# print(result)
+```
+
+#### Connecting to Other LiteLLM Providers
+
+The same `LiteLLMModel` class can be used to connect to any other provider supported by LiteLLM, such as Groq, Anthropic, or Cohere. You simply need to change the `model_id` string.
+
+```python
+from smolagents import LiteLLMModel
+
+# Example for a model hosted on Groq
+# Note: This would require setting the GROQ_API_KEY environment variable
+groq_model = LiteLLMModel(model_id="groq/llama3-8b-8192")
+
+# Example for a model from Anthropic
+# Note: This would require setting the ANTHROPIC_API_KEY environment variable
+anthropic_model = LiteLLMModel(model_id="claude-3-haiku-20240307")
+```
+
+This unified interface allows you to easily switch between local models for development and testing (which is fast and free) and powerful, proprietary cloud models for production or more demanding tasks, without changing your agent's core logic.
+description:
+globs:
+alwaysApply: false
+---

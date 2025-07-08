@@ -1,0 +1,102 @@
+---
+description: 'Aiogram Routing: Guidelines for structuring handlers with Routers for modular bot development.'
+globs: 
+alwaysApply: false
+---
+
+# Aiogram: Dispatching & Routing with Routers
+
+## Introduction
+For any bot with more than a few handlers, using `Router` is the recommended pattern for modularizing your code. Routers are analogous to Blueprints in web frameworks like Flask or FastAPI, allowing you to group related handlers and then include them in a main `Dispatcher`.
+
+## Guidelines
+
+### 1. Create Dedicated Routers
+Organize handlers into logical groups and place each group in its own file with its own `Router` instance. For example, a `user_commands.py` file would handle general user interactions, while `admin_commands.py` would handle admin-specific ones.
+
+### 2. Include Routers in the Main Dispatcher
+In your main `bot.py` or `__main__.py`, import the router instances and include them in the `Dispatcher`. The order of inclusion matters: events will be processed by routers in the order they are included.
+
+### 3. Nesting Routers (Advanced)
+You can nest routers within other routers. This can be useful for creating hierarchical structures, but be mindful of complexity. Avoid circular dependencies between routers.
+
+## Example Implementation
+
+### `src/handlers/user_commands.py`
+A router for basic user commands.
+
+```python
+from aiogram import Router, types
+from aiogram.filters import CommandStart
+
+# Create a new Router instance
+user_router = Router(name=__name__)
+
+@user_router.message(CommandStart())
+async def handle_start(message: types.Message):
+    await message.answer(f"Hello, {message.from_user.full_name}!")
+
+@user_router.message()
+async def handle_echo(message: types.Message):
+    await message.answer(f"Echo: {message.text}")
+```
+
+### `src/handlers/admin_commands.py`
+A separate router for admin-only commands. It could have its own middleware for checking admin privileges.
+
+```python
+from aiogram import Router, types
+from aiogram.filters import Command
+
+# It's good practice to give each router a name for debugging
+admin_router = Router(name=__name__)
+ADMIN_IDS = {123456789} # Example admin ID
+
+# A simple filter to check for admin privileges
+admin_router.message.filter(lambda message: message.from_user.id in ADMIN_IDS)
+
+@admin_router.message(Command("admin"))
+async def handle_admin_command(message: types.Message):
+    await message.answer("Welcome, Admin!")
+
+```
+
+### `src/bot.py`
+The main file where the `Dispatcher` is configured and all routers are included.
+
+```python
+import asyncio
+import logging
+
+from aiogram import Bot, Dispatcher
+
+# Import your settings
+from .config import settings
+# Import your routers
+from .handlers import user_commands, admin_commands
+
+async def main():
+    # Set up logging
+    logging.basicConfig(level=logging.INFO)
+
+    # Initialize Bot and Dispatcher
+    bot = Bot(token=settings.bot_token.get_secret_value())
+    dp = Dispatcher()
+
+    # Include routers
+    # The order of inclusion determines the processing order
+    dp.include_router(admin_commands.admin_router)
+    dp.include_router(user_commands.user_router) # Catches all other messages
+
+    # Start polling
+    await bot.delete_webhook(drop_pending_updates=True)
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+> **Note on Order**: In the example above, `admin_router` is included before `user_router`. If an admin sends a message that is not the `/admin` command, it will be caught by the echo handler in `user_router`. If the order were reversed, the `user_router`'s echo handler would catch all messages, and the `admin_router`'s handlers would never be reached. Plan your router order carefully.
+
+alwaysApply: false
+---

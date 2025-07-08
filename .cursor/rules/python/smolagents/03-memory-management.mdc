@@ -1,0 +1,86 @@
+---
+description: Smolagents memory management: Guidelines for managing conversational state and memory in smolagents chatbots.
+globs: **/*.py
+alwaysApply: false
+---
+# Smolagents: Conversational Memory Management
+
+This rule provides best practices for managing an agent's memory, which is critical for building stateful, conversational applications like chatbots.
+
+## 1. Persisting Conversation History
+
+By default, an agent's memory is reset on each `.run()` call. To maintain context across multiple turns in a conversation, you must set `reset=False`.
+
+-   Set `reset=True` (or omit it, as it's the default) for the **first** message of a new conversation.
+-   Set `reset=False` for all subsequent messages in that same conversation.
+
+This allows the agent to "remember" previous interactions and build upon them.
+
+```python
+from smolagents import CodeAgent, LiteLLMModel
+
+# Assume agent is already configured
+agent = CodeAgent(model=LiteLLMModel(model_id="ollama/qwen:0.5b")) 
+
+# Start of a new conversation
+print("User: My name is Alex.")
+response1 = agent.run("My name is Alex.", reset=True) 
+print(f"Agent: {response1}")
+
+
+# Continuation of the conversation
+print("User: What is my name?")
+response2 = agent.run("What is my name?", reset=False) # Agent now has memory of the first turn
+print(f"Agent: {response2}") # Output should reference "Alex"
+```
+
+## 2. Inspecting and Modifying Memory
+
+For debugging or advanced use cases, you can directly access and manipulate the agent's memory via the `agent.memory` attribute. The memory consists of a list of `TaskStep` and `ActionStep` objects, which you can inspect to see the agent's thought process.
+
+## 3. Advanced Memory Control with Callbacks
+
+For long-running conversations, the agent's memory can grow large, potentially exceeding the context window of the LLM and increasing costs. `smolagents` provides a powerful `step_callbacks` mechanism to manage this.
+
+A callback is a function that executes after each step the agent takes. It receives the latest memory step and the agent instance itself, allowing you to implement custom memory pruning or summarization logic.
+
+### Example: Simple Memory Pruning Callback
+
+This callback ensures that the agent's memory never exceeds a specific number of steps, preventing the context from growing indefinitely. It preserves the initial task and the most recent steps.
+
+```python
+from smolagents import ActionStep, CodeAgent, LiteLLMModel
+
+def memory_manager_callback(memory_step: ActionStep, agent: CodeAgent) -> None:
+    """
+    A simple callback to prune old steps to manage the context window.
+    It keeps the first step (the initial task) and the N most recent steps.
+    """
+    # Define the maximum number of steps to keep in memory
+    MAX_STEPS_IN_MEMORY = 5 
+    
+    current_step_count = len(agent.memory.steps)
+
+    if current_step_count > MAX_STEPS_IN_MEMORY:
+        print(f"Memory has {current_step_count} steps. Pruning to {MAX_STEPS_IN_MEMORY}...")
+        
+        # Preserve the very first step (system prompt/task) and the last N-1 steps
+        pruned_steps = agent.memory.steps[0:1] + agent.memory.steps[-MAX_STEPS_IN_MEMORY + 1:]
+        agent.memory.steps = pruned_steps
+        
+        print(f"Memory pruned to {len(agent.memory.steps)} steps.")
+
+# When creating your agent, pass the callback function in a list
+agent = CodeAgent(
+    model=LiteLLMModel(model_id="ollama/qwen:0.5b"),
+    step_callbacks=[memory_manager_callback]
+)
+
+# Now, as you run the agent in a loop, the callback will automatically manage its memory.
+```
+
+This technique is essential for building robust chatbots that can handle long conversations without failure.
+description:
+globs:
+alwaysApply: false
+---

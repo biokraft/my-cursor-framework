@@ -1,0 +1,128 @@
+---
+description: 'Aiogram FSM: Best practices for managing conversational state in aiogram bots using the Finite State Machine.'
+globs: 
+alwaysApply: false
+---
+
+# Aiogram: State Management (Finite State Machine - FSM)
+
+## Introduction
+The Finite State Machine (FSM) is a powerful tool in `aiogram` for creating multi-step conversational flows, such as registration forms, surveys, or sequential command interactions. It allows the bot to remember the user's "state" between messages.
+
+## Guidelines
+
+### 1. Define States in a Dedicated Module
+Group related states together in a `StatesGroup`. It's best practice to define these groups in a dedicated file, such as `src/states/order_states.py`, to keep your project organized.
+
+### 2. Use a Persistent Storage for Production
+While `MemoryStorage` is convenient for development and testing, it is not suitable for production because it loses all data when the bot restarts. For production bots, use a persistent storage backend:
+-   **`aiogram.fsm.storage.redis.RedisStorage`**: A popular and fast choice.
+-   **`aiogram.fsm.storage.mongo.MongoStorage`**: A good option if you are already using MongoDB.
+-   Other third-party storages are also available.
+
+Configure the storage when you initialize the `Dispatcher`.
+
+### 3. Explicitly Filter Handlers by State
+In `aiogram` 3.x, you must explicitly specify which state a handler should trigger on. This makes the logic clearer and less prone to errors.
+
+### 4. Manage State Data
+-   Use `state.set_state()` to move the user to a new state.
+-   Use `state.update_data()` to store user input associated with the current state.
+-   Use `state.get_data()` to retrieve the collected data.
+-   Use `state.clear()` to completely reset the state and clear all data for a user once the flow is complete or cancelled.
+
+## Example Implementation
+
+### `src/states/registration.py`
+Defines the states for a user registration flow.
+
+```python
+from aiogram.fsm.state import State, StatesGroup
+
+class RegistrationStates(StatesGroup):
+    waiting_for_name = State()
+    waiting_for_email = State()
+    confirmation = State()
+```
+
+### `src/handlers/registration.py`
+The handlers that manage the registration flow.
+
+```python
+from aiogram import Router, types
+from aiogram.filters import Command
+from aiogram.fsm.context import FSMContext
+
+from ..states.registration import RegistrationStates
+
+registration_router = Router(name=__name__)
+
+@registration_router.message(Command("register"))
+async def start_registration(message: types.Message, state: FSMContext):
+    await message.answer("Welcome to registration! Please enter your name.")
+    await state.set_state(RegistrationStates.waiting_for_name)
+
+@registration_router.message(RegistrationStates.waiting_for_name)
+async def process_name(message: types.Message, state: FSMContext):
+    await state.update_data(name=message.text)
+    await message.answer("Great! Now, please enter your email address.")
+    await state.set_state(RegistrationStates.waiting_for_email)
+
+@registration_router.message(RegistrationStates.waiting_for_email)
+async def process_email(message: types.Message, state: FSMContext):
+    await state.update_data(email=message.text)
+    user_data = await state.get_data()
+    
+    await message.answer(
+        f"Thank you, {user_data['name']}!\n"
+        f"Your email is {user_data['email']}.\n"
+        f"Registration complete."
+    )
+    # End the conversation and clear all data
+    await state.clear()
+
+@registration_router.message(Command("cancel"))
+async def cancel_handler(message: types.Message, state: FSMContext):
+    """Allow user to cancel any action."""
+    current_state = await state.get_state()
+    if current_state is None:
+        return
+
+    await state.clear()
+    await message.answer("Cancelled.")
+```
+
+### `src/bot.py` (Dispatcher Setup with Redis)
+How to configure the `Dispatcher` with `RedisStorage`.
+
+```python
+import asyncio
+from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.redis import RedisStorage
+from redis.asyncio.client import Redis
+
+from .config import settings
+from .handlers import registration_router # and other routers
+
+async def main():
+    # For production, it's recommended to use a persistent storage.
+    # Here we use Redis.
+    redis = Redis.from_url("redis://localhost:6379/0")
+    storage = RedisStorage(redis=redis)
+
+    bot = Bot(token=settings.bot_token.get_secret_value())
+    # Pass the storage to the Dispatcher
+    dp = Dispatcher(storage=storage)
+
+    # Include your FSM router
+    dp.include_router(registration_router)
+    # ... include other routers
+
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+alwaysApply: false
+---

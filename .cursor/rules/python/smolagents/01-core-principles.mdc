@@ -1,0 +1,70 @@
+---
+description: Smolagents core principles: Guidelines for building effective and reliable agents using smolagents.
+globs: **/*.py
+alwaysApply: false
+---
+# Smolagents: Core Principles
+
+This rule outlines the core principles for building effective and reliable agents with `smolagents`.
+
+## 1. Keep it Simple
+
+The most effective `smolagents` are the simplest. Introducing agency adds complexity and potential for errors. Strive to minimize complexity wherever possible.
+
+-   **Reduce LLM Calls**: Each call to the LLM increases latency, cost, and the chance of an unexpected result. Design your agent's workflow to be as efficient as possible.
+-   **Group Tools**: If an agent frequently calls two or more tools in succession to achieve a single logical outcome, combine them into a single, more powerful tool. For example, instead of separate tools for getting weather and traffic, create a unified `get_location_report` tool.
+-   **Prefer Deterministic Logic**: Whenever a decision can be made with conventional code (e.g., `if/else` statements, loops), use it. Rely on the LLM for high-level reasoning and planning, not for simple conditional logic that can be handled deterministically.
+
+## 2. Improve Information Flow to the LLM
+
+An LLM-powered agent knows nothing beyond the context provided to it. To ensure reliable and predictable behavior, you must provide it with high-quality, unambiguous information.
+
+-   **Clear Task Formulation**: Be explicit and detailed in your task descriptions. Minor ambiguities can lead to vastly different outcomes. Provide all necessary context for the task at hand.
+-   **Descriptive Tool Documentation**: A tool's docstring is its API for the LLM. It must be crystal clear and comprehensive.
+    -   **Description**: Clearly state what the tool does.
+    -   **Arguments**: Explain each argument, its purpose, and its expected format (e.g., for dates, specify the exact format like `'%Y-%m-%d %H:%M:%S'`).
+    -   **Return Value**: Describe what the tool returns, including its type and structure.
+-   **Informative Logging in Tools**: Use `print()` statements within your tools to log important information and intermediate steps. If a tool fails, it should raise a descriptive `ValueError` that explains precisely what went wrong and how to fix it. The agent will see this error in its "Observation" and can use the information to self-correct its next action.
+
+### Example: A Well-Documented Tool
+
+```python
+from smolagents import tool
+import datetime
+
+# Dummy underlying functions for demonstration
+def get_coordinates_from_location(location): return [48.85, 2.35]
+def get_weather_report_at_coordinates(coords, dt): return {"temp": 15, "precip": 0.8, "wind": 12}
+
+@tool
+def get_weather_api(location: str, date_time: str) -> str:
+    """
+    Returns the weather report for a specific location and time.
+
+    Args:
+        location: The name of the place, e.g., "Paris, France".
+        date_time: The date and time for the report, formatted as '%Y-%m-%d %H:%M:%S'.
+    """
+    print(f"Fetching weather for {location} at {date_time}")
+    try:
+        parsed_date = datetime.datetime.strptime(date_time, '%Y-%m-%d %H:%M:%S')
+    except ValueError as e:
+        # Provide a clear error message for the agent to understand
+        raise ValueError(
+            "Conversion of `date_time` failed. Ensure it is in '%Y-%m-%d %H:%M:%S' format. Error: " + str(e)
+        )
+
+    coords = get_coordinates_from_location(location)
+    weather_data = get_weather_report_at_coordinates(coords, parsed_date)
+
+    return (
+        f"Weather for {location} on {date_time}: "
+        f"Temp: {weather_data['temp']}°C, "
+        f"Precipitation: {weather_data['precip']*100:.0f}%, "
+        f"Wind: {weather_data['wind']} km/h."
+    )
+```
+description:
+globs:
+alwaysApply: false
+---

@@ -19,10 +19,10 @@ We will walk through these demos to illustrate how you can go from a vague idea 
    - **Problem:** Manual context-switching, copy-pasting, and poorly defined tickets.
    - **Solution:** Use the **Jira MCP integration** to create perfectly-defined tickets directly from the editor.
 
-### 3. **[Building a CLI Tool with TDV Mode](./03-uc-cli-tool-tdv/README.md)**
+### 3. **[Rapidly Scaffolding a CLI Tool](./03-uc-cli-tool/README.md)**
    - **Scenario:** A Data Scientist needs a quick utility to extract text from PDFs.
-   - **Problem:** Skipping tests for "simple" scripts, unstructured code, manual library research.
-   - **Solution:** Use the **TDV Mode** to enforce a test-first workflow, building a reliable and robust tool from scratch.
+   - **Problem:** Writing boilerplate for "simple" scripts is a tedious distraction.
+   - **Solution:** Use the **stock agent** to generate a complete, working tool from a single prompt, perfect for rapid prototyping.
 
 ---
 

@@ -1,0 +1,80 @@
+---
+description: "README Badges: Guidelines for adding tech stack and project status badges to README.md files."
+globs: README.md
+alwaysApply: false
+---
+# Guidelines for README Badges
+
+This document provides instructions for adding and maintaining informative badges in project `README.md` files. The goal is to provide a quick, at-a-glance overview of the project's status, technology stack, and community links.
+
+Refer to this repository for a comprehensive list of available badges: [inttter/md-badges](https://github.com/inttter/md-badges)
+
+## Placement
+
+All badges should be placed in a single block at the top of the `README.md` file, immediately following the main project title (H1).
+
+## Badge Selection Guidelines
+
+When adding or updating badges, you should analyze the project to select the most relevant ones.
+
+### 1. Mandatory Badges
+
+These badges should be present in every `README.md` file.
+
+*   **Latest Version:** Always include a badge indicating the latest stable version or release of the project.
+    *   For packages published to a registry (PyPI, npm, Crates.io, etc.), use a version badge from that registry.
+    *   For other projects, use the latest GitHub release or tag.
+    *   **Example (PyPI):** `[![PyPI version](https://img.shields.io/pypi/v/your-package.svg)](https://pypi.python.org/pypi/your-package)`
+    *   **Example (GitHub Release):** `[![GitHub release (latest by date)](https://img.shields.io/github/v/release/your-user/your-repo)](https://github.com/your-user/your-repo/releases/latest)`
+
+*   **Technology Stack:** Display badges for all major technologies used in the project.
+    *   **Languages:** Python, TypeScript, Go, Rust, etc.
+    *   **Frameworks:** FastAPI, React, Django, Vue, etc.
+    *   **Databases:** PostgreSQL, Redis, MongoDB, etc.
+    *   **Tools:** Docker, pre-commit, Ruff, etc.
+    *   **How to identify:** Scan files like `pyproject.toml`, `package.json`, `go.mod`, `Dockerfile`, and `docker-compose.yml` to determine the stack.
+
+### 2. Recommended Badges (Context-Dependent)
+
+Add these badges if they are relevant to the project.
+
+*   **Build & CI/CD Status:** If the project uses CI/CD, add a badge showing the build status of the main branch.
+    *   **Source:** Look for configuration files in `.github/workflows`, `.circleci/`, `travis.yml`, etc.
+    *   **Example (GitHub Actions):** `[![CI](https://github.com/your-user/your-repo/actions/workflows/ci.yml/badge.svg)](https://github.com/your-user/your-repo/actions/workflows/ci.yml)`
+
+*   **Code Quality & Coverage:**
+    *   **Code Coverage:** If the project tracks test coverage (e.g., via Codecov, Coveralls).
+    *   **Linter/Formatter:** A badge for the code formatter or linter used (e.g., Ruff, Prettier, Black).
+    *   **Example (Codecov):** `[![codecov](https://codecov.io/gh/your-user/your-repo/graph/badge.svg?token=YOUR_TOKEN)](https://codecov.io/gh/your-user/your-repo)`
+    *   **Example (Ruff):** `[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)`
+
+*   **License:** Include a badge for the project's license.
+    *   **Source:** Check for a `LICENSE` or `COPYING` file.
+    *   **Example (MIT):** `[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)`
+
+*   **Community & Social:**
+    *   Links to Discord, Slack, Twitter, etc.
+    *   **Example (Discord):** `[![Discord](https://img.shields.io/discord/YOUR_SERVER_ID?logo=discord)](https://discord.gg/YOUR_INVITE_CODE)`
+
+### Example Implementation
+
+Here is an example of a well-formatted badge section:
+
+\`\`\`markdown
+# My Awesome Project
+
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/your-user/your-repo)](https://github.com/your-user/your-repo/releases/latest)
+[![CI](https://github.com/your-user/your-repo/actions/workflows/ci.yml/badge.svg)](https://github.com/your-user/your-repo/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
+[![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=fff)](https://fastapi.tiangolo.com/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff)](https://www.docker.com/)
+
+... rest of README ...
+\`\`\`
+description:
+globs:
+alwaysApply: false
+---

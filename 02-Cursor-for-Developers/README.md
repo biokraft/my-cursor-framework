@@ -34,4 +34,4 @@ The goal is to establish a "vibe" with the AI—a seamless partnership where Cur
 
 ---
 
-[⬅️ Back to Home](../../README.md) | [Next: Cursor for Professionals ➡️](../03-Cursor-for-Professionals/README.md) 
+[⬅️ Back to Home](../../README.md)

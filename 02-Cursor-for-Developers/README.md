@@ -20,18 +20,18 @@ The goal is to establish a "vibe" with the AI—a seamless partnership where Cur
 -   **[📚 Mastering the @Docs Feature](./01-Mastering-the-Docs-Feature.md)**  
     *Go deep on managing context with `@Docs` for complex codebases.*
 
--   **[🛠️ Crafting Rules for Your Tech Stack](./02-Crafting-Rules-for-Your-Tech-Stack/README.md)**  
-    *Build rules that enforce your team's patterns and best practices.*
+-   **[📄 Crafting Rules for Your Tech Stack](./02-Crafting-Rules-for-Your-Tech-Stack/README.md)**  
+    *Learn how to create and evolve a powerful ruleset for your specific technologies.*
 
--   **[🛠️ The SpecsForge Framework](./03-The-SpecsForge-Framework.md)**  
-    *Learn a powerful framework for turning high-level requirements into production-ready code.*
+-   **[⚡️ The SpecsForge Framework](./03-The-SpecsForge-Framework.md) & [🧪 TDV Mode](./03a-Mode-Spotlight-TDV.md)**  
+    *A powerful workflow for turning ideas into tested code, combining the `SpecsForge` architect and the `TDV` TDD expert.*
 
--   **[⚙️ Leveraging Terminal Integration](./04-Leveraging-Terminal-Integration.md)**  
-    *Integrate execution and debugging directly into your AI workflow.*
+-   **[💻 Leveraging Terminal Integration](./04-Leveraging-Terminal-Integration.md)**  
+    *Master the integrated terminal for a seamless coding experience.*
 
--   **[⇄ Working Across Repositories](./05-Working-Across-Repositories.md)**  
-    *Strategies for maintaining context and productivity across multiple codebases.*
+-   **[🌐 Working Across Repositories](./05-Working-Across-Repositories.md)**  
+    *Techniques for managing and referencing code across multiple repositories.*
 
 ---
 
-[⬅️ Back to Part 1](../README.md) | [Up to Main README](../README.md) 
+[⬅️ Back to Home](../../README.md) | [Next: Cursor for Professionals ➡️](../03-Cursor-for-Professionals/README.md) 

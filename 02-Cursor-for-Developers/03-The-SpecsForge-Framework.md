@@ -5,13 +5,13 @@
 > - **A Framework for AI-Driven Development:** SpecsForge is a systematic workflow, powered by a custom Cursor Mode, for turning a high-level idea into a detailed, AI-readable project specification.
 > - **From Vision to Plan:** It guides you through a discovery process to define business goals, features, and architecture *before* writing implementation code.
 > - **Creates a "Specification Library":** The output is a `specs/` directory and a root `SPECS.md` file, which serve as the single source of truth for the project.
-> - **Powers Subsequent Coding:** Once the spec is complete, it becomes the primary context for the **[TDV (Test-Driven Vibing) Mode](../01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04f-Mode-Spotlight-TDV.md)** to generate well-tested application code, phase by phase.
+> - **Powers Subsequent Coding:** Once the spec is complete, it becomes the primary context for the **[TDV (Test-Driven Vibing) Mode](./03a-Mode-Spotlight-TDV.md)** to generate well-tested application code, phase by phase.
 
 ---
 
 The `SpecsForge` framework is a workflow for transforming high-level product ideas into a precise, living specification library that powers efficient, AI-assisted development. It's built around a custom Cursor Mode that acts as an expert software architect, guiding you through a discovery process to build a comprehensive set of specifications before any code is written.
 
-Once the specification is complete, `SpecsForge` hands off the implementation to the [TDV (Test-Driven Vibing) Mode](../01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04f-Mode-Spotlight-TDV.md), which uses the specs to execute a rigorous, test-first development cycle.
+Once the specification is complete, `SpecsForge` hands off the implementation to the [TDV (Test-Driven Vibing) Mode](./03a-Mode-Spotlight-TDV.md), which uses the specs to execute a rigorous, test-first development cycle.
 
 ## The Standard Workflow
 
@@ -27,7 +27,7 @@ Here is the step-by-step process for using the SpecsForge framework:
 ### Phase 2: Implementation (TDV Mode)
 
 5.  **Switch to TDV Mode:** Activate the `TDV` custom mode in Cursor.
-6.  **Implement Phase by Phase:** Work through the implementation plan using the **[TDV (Test-Driven Vibing) Mode](../01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04f-Mode-Spotlight-TDV.md)** with prompts like:
+6.  **Implement Phase by Phase:** Work through the implementation plan using the **[TDV (Test-Driven Vibing) Mode](./03a-Mode-Spotlight-TDV.md)** with prompts like:
     > Using @SPECS.md, let's implement Phase 1: User Authentication.
     
     The TDV mode will:

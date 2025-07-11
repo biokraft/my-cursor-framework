@@ -45,7 +45,7 @@ This section delves into advanced techniques and workflows tailored for develope
 -   宣言 [The Vibe Programmer Manifesto](./02-Cursor-for-Developers/00-The-Vibe-Programmer-Manifesto.md)
 -   📚 [Mastering the @Docs Feature](./02-Cursor-for-Developers/01-Mastering-the-Docs-Feature.md)
 -   🛠️ [Crafting Rules for Your Tech Stack](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/README.md)
--   ⚡ [The SpecsForge Framework](./02-Cursor-for-Developers/03-The-SpecsForge-Framework.md) & [🧪 The TDV Mode](./01-Cursor-for-Everyone/04-Custom-Modes-Tailoring-Cursor-to-You/04f-Mode-Spotlight-TDV.md)
+-   ⚡ [The SpecsForge Framework](./02-Cursor-for-Developers/03-The-SpecsForge-Framework.md) & [🧪 The TDV Mode](./02-Cursor-for-Developers/03a-Mode-Spotlight-TDV.md)
     > 🧑‍💻 **Listen up devs:** this is where the secret sauce is at!
 -   ⚙️ [Leveraging Terminal Integration for Debugging](./02-Cursor-for-Developers/04-Leveraging-Terminal-Integration.md)
 -   ⇄ [Working Across Repositories](./02-Cursor-for-Developers/05-Working-Across-Repositories.md)

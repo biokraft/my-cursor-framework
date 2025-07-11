@@ -24,11 +24,16 @@ Welcome! Custom Modes are a powerful feature that lets you define specific perso
 -   **[🔍 Mode Spotlight: Research](./04d-Mode-Spotlight-Research.md)**  
     *Create an AI research assistant to help you gather and synthesize information.*
 
--   **[🧪 Mode Spotlight: TDV (Test-Driven Vibing)](./04f-Mode-Spotlight-TDV.md)**  
-    *A developer-focused mode to guide implementation via TDD.*
-
 -   **[🤪 Mode Spotlight: Yolo](./04e-Mode-Spotlight-Yolo.md)**  
     *A fun example of creating a mode with a unique and entertaining personality.*
+
+### 💻 Developer-Focused Modes - Part of [Cursor for Developers](../../02-Cursor-for-Developers/README.md)
+
+-   **[⚡️ Mode Spotlight: SpecsForge](../../02-Cursor-for-Developers/03-The-SpecsForge-Framework.md)**  
+    *A framework for turning ideas into detailed, AI-readable project specifications.*
+
+-   **[🧪 Mode Spotlight: TDV (Test-Driven Vibing)](../../02-Cursor-for-Developers/03a-Mode-Spotlight-TDV.md)**  
+    *A developer-focused mode to guide implementation via TDD.*
 
 ---
 

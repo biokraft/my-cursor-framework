@@ -14,19 +14,29 @@ We will walk through these demos to illustrate how you can go from a vague idea 
    - **Problem:** Vague requirements, scattered notes, endless meetings.
    - **Solution:** Use the **MDP Mode** to transform a raw idea into a structured, actionable project plan.
 
-### 2. **[Defining and Creating Jira Tickets with MCP](./02-uc-jira-mcp/README.md)**
-   - **Scenario:** A Team Lead needs to create a Jira ticket from the project plan.
-   - **Problem:** Manual context-switching, copy-pasting, and poorly defined tickets.
-   - **Solution:** Use the **Jira MCP integration** to create perfectly-defined tickets directly from the editor.
-
-### 3. **[Rapidly Scaffolding a CLI Tool](./03-uc-cli-tool/README.md)**
+### 2. **[Rapidly Scaffolding a CLI Tool](./02-uc-cli-tool/README.md)**
    - **Scenario:** A Data Scientist needs a quick utility to extract text from PDFs.
    - **Problem:** Writing boilerplate for "simple" scripts is a tedious distraction.
    - **Solution:** Use the **stock agent** to generate a complete, working tool from a single prompt, perfect for rapid prototyping.
 
+### 3. **[Crafting Your First Cursor Rule: Taming Jira Tickets](./03-uc-creating-rules/README.md)**
+   - **Scenario:** A team wants to standardize how they write Jira tickets to improve clarity and consistency.
+   - **Problem:** Inconsistent Jira tickets cause confusion and slow down development cycles.
+   - **Solution:** Create a powerful Cursor Rule using the Docs feature to learn and enforce Jira's Markdown syntax, ensuring every ticket is perfectly formatted.
+
+### 4. **[The Jira MCP Superpower: From Rule to Reality](./04-uc-jira-mcp/README.md)**
+   - **Scenario:** With a formatting rule in place, it's time to put it to use by interacting with Jira directly from the editor.
+   - **Problem:** Constantly switching between your editor and Jira's web interface is a major context-switching drain.
+   - **Solution:** Set up the Jira Model Context Protocol (MCP) and use your newly created rule to create well-formatted tickets without ever leaving Cursor.
+
+### 5. **[From Code to Specs: Documenting with SpecsForge](./05-uc-specs-forge/README.md)**
+   - **Scenario:** A developer needs to create technical specifications for an existing, undocumented part of their project.
+   - **Problem:** Writing detailed technical specs is time-consuming and often gets out of sync with the actual code.
+   - **Solution:** Use the **SpecsForge Mode** to analyze existing code and generate comprehensive, accurate technical specifications automatically.
+
 ---
 
-### 🚀 **[Grand Finale: Building "Pomo-Go" From Scratch](./04-uc-final-project-pomo-go/README.md)**
+### 🚀 **[Grand Finale: Building "Pomo-Go" From Scratch](./06-uc-final-project-pomo-go/README.md)**
    - **Scenario:** A full, end-to-end project build.
    - **Problem:** How to combine research, planning, TDD, and implementation into one seamless workflow.
-   - **Solution:** A live-coded demonstration building a Terminal Pomodoro Timer, showcasing the entire framework in action. 
+   - **Solution:** A live-coded demonstration building a Terminal Pomodoro Timer, showcasing the entire framework in action. mcp.json

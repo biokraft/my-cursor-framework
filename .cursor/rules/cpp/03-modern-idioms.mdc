@@ -1,0 +1,219 @@
+---
+description: Modern C++ Idioms: Apply when writing new C++ code to use modern C++17 features and patterns
+globs: **/*.cpp, **/*.h, **/*.hpp
+alwaysApply: false
+---
+# Modern C++ Idioms & Patterns
+
+This rule promotes the use of modern C++17 features to improve code clarity, correctness, and safety.
+
+## Core Principle: Leverage Modern C++ Features
+
+**Rule: New code should use C++17 features to improve expressiveness and reduce errors.**
+
+Modern C++ provides language and library features that make code more readable and less error-prone.
+
+## Essential Modern Idioms
+
+### const and constexpr
+
+Enforce immutability and enable compile-time computation:
+
+```cpp
+// Before: Magic numbers and runtime calculations
+int scale(int x) { return x * 32; }
+
+// After: Clear constants, compile-time optimization
+constexpr int SCALE_FACTOR = 32;
+constexpr int scale(int x) { return x * SCALE_FACTOR; }
+```
+
+### nullptr (Type-Safe Null Pointers)
+
+Provides type-safe null pointers, avoiding ambiguity:
+
+```cpp
+void foo(int);
+void foo(char*);
+
+// foo(NULL);    // Ambiguity error: which foo()?
+foo(nullptr);    // Unambiguous: calls foo(char*)
+```
+
+### enum class (Strongly-Typed Enumerations)
+
+Creates scoped, type-safe enumerations:
+
+```cpp
+// Before: Global scope, implicit conversion
+enum Color { RED, GREEN };
+enum Feeling { BLUE, GREEN }; // Error: GREEN redefined
+if (RED == 0) { /* true - problematic */ }
+
+// After: Scoped, type-safe
+enum class Color { RED, GREEN };
+enum class Feeling { BLUE, GREEN }; // OK
+Color c = Color::RED;
+// if (c == 0) -> Compile Error: no conversion to int
+```
+
+### std::optional (Safe Optional Values)
+
+Clearly represents values that may or may not be present:
+
+```cpp
+// Before: Using pointer to indicate failure
+Widget* findWidget(int id); // Returns nullptr if not found
+if (Widget* w = findWidget(42)) { 
+    w->do_stuff(); 
+}
+
+// After: Type-safe, explicit presence handling
+std::optional<Widget> findWidget(int id);
+if (auto w_opt = findWidget(42)) { 
+    w_opt->do_stuff(); 
+}
+```
+
+### Structured Bindings
+
+Improves readability with tuple-like objects:
+
+```cpp
+std::map<int, std::string> my_map;
+
+// Before:
+for (const auto& pair : my_map) {
+    process(pair.first, pair.second);
+}
+
+// After:
+for (const auto& [key, value] : my_map) {
+    process(key, value);
+}
+```
+
+### Range-Based for Loops
+
+Simplifies container iteration:
+
+```cpp
+std::vector<int> v = {1, 2, 3};
+
+// Before:
+for (auto it = v.begin(); it != v.end(); ++it) { 
+    *it *= 2; 
+}
+
+// After:
+for (auto& x : v) { 
+    x *= 2; 
+}
+```
+
+### override and final
+
+Prevents inheritance bugs and states design intent:
+
+```cpp
+struct Base { 
+    virtual void do_work(int); 
+    virtual ~Base() = default;
+};
+
+struct Derived : Base {
+    // Good: Compiler ensures this actually overrides
+    void do_work(int) override; 
+    
+    // Compile error if Base::do_work signature changes!
+    // void do_work(float) override; // Compile error: does not override
+};
+
+struct FinalImpl final : Base {
+    void do_work(int) override final; // Cannot be overridden further
+};
+```
+
+### Namespaces
+
+Prevent global namespace pollution and logically group code:
+
+```cpp
+namespace OrcaSlicer {
+    namespace GCodeProcessing {
+        class CustomProcessor {
+            // Implementation
+        };
+        
+        enum class ProcessingMode {
+            STANDARD,
+            OPTIMIZED
+        };
+    }
+}
+
+// Usage
+using namespace OrcaSlicer::GCodeProcessing;
+auto processor = std::make_unique<CustomProcessor>();
+```
+
+## Additional Modern Features
+
+### auto Keyword
+
+Use `auto` for type deduction when the type is obvious or complex:
+
+```cpp
+// Good uses of auto
+auto widget = std::make_unique<Widget>();
+auto result = some_complex_template_function();
+for (const auto& item : container) { /* ... */ }
+
+// Avoid when type clarity is important
+auto x = 42;        // OK, obviously int
+auto y = getValue(); // Bad: unclear what type is returned
+```
+
+### Lambda Expressions
+
+Use for short, local functions:
+
+```cpp
+std::vector<int> numbers = {3, 1, 4, 1, 5};
+
+// Sort in descending order
+std::sort(numbers.begin(), numbers.end(), 
+          [](int a, int b) { return a > b; });
+
+// Capture by reference to modify external state
+int total = 0;
+std::for_each(numbers.begin(), numbers.end(),
+              [&total](int n) { total += n; });
+```
+
+## Code Review Checklist
+
+- [ ] Are `const` and `constexpr` used appropriately?
+- [ ] Does code use `nullptr` instead of `NULL`?
+- [ ] Are new enums declared as `enum class`?
+- [ ] Could `std::optional` clarify function return values?
+- [ ] Are structured bindings used to simplify code?
+- [ ] Are range-based for loops used for iteration?
+- [ ] Are `override` and `final` used on virtual functions?
+- [ ] Is new code placed in appropriate namespaces?
+- [ ] Is `auto` used judiciously for type deduction?
+
+## Best Practices
+
+1. **Default to `const`** - make variables immutable unless they need to change
+2. **Use `constexpr`** for compile-time constants and simple functions
+3. **Prefer `enum class`** over plain enums for all new enumeration types
+4. **Consider `std::optional`** instead of special return values or exceptions
+5. **Use structured bindings** when working with pairs, tuples, or simple structs
+6. **Embrace range-based loops** for cleaner iteration code
+7. **Always use `override`** on virtual function overrides
+8. **Organize code in namespaces** to prevent naming conflicts
+description:
+globs:
+alwaysApply: false
+---

@@ -1,0 +1,179 @@
+---
+description: C++ Best Practices Overview: Comprehensive guide for applying modern C++ development guidelines to new features
+globs: **/*.cpp, **/*.h, **/*.hpp
+alwaysApply: false
+---
+# C++ Best Practices Overview
+
+This rule provides an overview of C++ development guidelines for new features in the OrcaSlicer project, focusing on incremental improvement without requiring large-scale refactoring.
+
+## Philosophy: Incremental Excellence
+
+**Goal: Ensure all new code is modern, safe, and maintainable while respecting existing codebase constraints.**
+
+These guidelines apply specifically to **new features** and code additions. We aim to incrementally improve the codebase by writing exemplary new code rather than rewriting existing functionality.
+
+## The Four Pillars of Modern C++ Development
+
+### 1. Architecture & Design
+[Architecture Guidelines](mdc:.cursor/rules/cpp/01-architecture.mdc)
+
+- **Isolate new features** in self-contained classes and files
+- **Apply Single Responsibility Principle** - one reason to change per class
+- **Separate concerns** between data processing, storage, and UI
+- **Enable parallel development** and reduce merge conflicts
+
+### 2. Resource Management
+[Resource Management Guidelines](mdc:.cursor/rules/cpp/02-resource-management.mdc)
+
+- **Use RAII principles** for all resource management
+- **Prefer smart pointers** over raw owning pointers
+- **Default to `std::unique_ptr`** for single ownership
+- **Use `std::shared_ptr`** only when shared ownership is necessary
+- **Break cycles** with `std::weak_ptr`
+
+### 3. Modern C++ Features
+[Modern Idioms Guidelines](mdc:.cursor/rules/cpp/03-modern-idioms.mdc)
+
+- **Leverage C++17 features** for safer, clearer code
+- **Use `const` and `constexpr`** extensively
+- **Prefer `enum class`** over plain enums
+- **Embrace `std::optional`** for optional values
+- **Use structured bindings** and range-based for loops
+- **Always use `override`** on virtual function overrides
+
+### 4. Code Style & Readability
+[Code Style Guidelines](mdc:.cursor/rules/cpp/04-code-style.mdc)
+
+- **Write self-documenting code** with descriptive names
+- **Eliminate magic numbers** with named constants
+- **Keep functions short** and focused
+- **Comment the "why"**, not the "what"
+- **Organize code logically** within files and namespaces
+
+## Application Strategy
+
+### When to Apply These Rules
+
+**Always Apply To:**
+- New feature implementations
+- New classes and functions
+- New files and modules
+- Refactored code sections
+
+**Consider for Existing Code:**
+- When making significant modifications
+- During bug fixes that touch substantial code
+- When code is already being reviewed/updated
+
+**Don't Apply To:**
+- Working legacy code that functions correctly
+- Third-party dependencies
+- Code scheduled for deprecation
+
+### Integration with Existing Codebase
+
+1. **Start Small**: Apply guidelines to new, isolated components first
+2. **Lead by Example**: New code demonstrates best practices
+3. **Gradual Adoption**: Existing code adopts patterns as it's naturally modified
+4. **Consistent Style**: Match existing naming conventions where integration is needed
+
+## Code Review Process
+
+### Pre-Review Checklist
+
+Before submitting new C++ code, verify:
+
+- [ ] **Architecture**: Is the feature properly isolated and following SRP?
+- [ ] **Resources**: Are smart pointers used for all memory management?
+- [ ] **Modern Features**: Are C++17 idioms applied appropriately?
+- [ ] **Style**: Is the code clear, well-named, and properly documented?
+
+### Review Focus Areas
+
+**Priority 1 (Must Fix):**
+- Resource management violations (`new`/`delete`, memory leaks)
+- Missing RAII for resources
+- Unclear or misleading naming
+- Functions with too many responsibilities
+
+**Priority 2 (Should Fix):**
+- Missing `const`/`constexpr` opportunities
+- Plain enums instead of `enum class`
+- Magic numbers without names
+- Missing `override` on virtual functions
+
+**Priority 3 (Nice to Have):**
+- Opportunities for structured bindings
+- Range-based for loop simplifications
+- More descriptive variable names
+- Better comment explanations
+
+## Common Patterns
+
+### Feature Implementation Template
+
+```cpp
+// feature_name/config.h
+namespace OrcaSlicer::FeatureName {
+    struct FeatureConfig {
+        // Configuration parameters
+    };
+}
+
+// feature_name/processor.h
+namespace OrcaSlicer::FeatureName {
+    class FeatureProcessor {
+    public:
+        static std::optional<Result> process(const Input& input, 
+                                             const FeatureConfig& config);
+    };
+}
+
+// feature_name/ui_integration.cpp (in UI layer)
+void MainFrame::onFeatureActivated() {
+    auto config = FeatureConfigDialog::getConfig();
+    if (auto result = FeatureProcessor::process(current_data, config)) {
+        apply_result(*result);
+        update_ui();
+    }
+}
+```
+
+### Error Handling Pattern
+
+```cpp
+// Use std::optional for expected failures
+std::optional<Data> try_load_data(const std::string& filename);
+
+// Use exceptions for programmer errors
+void validate_input(const InputData& data) {
+    if (data.empty()) {
+        throw std::invalid_argument("Input data cannot be empty");
+    }
+}
+```
+
+## Benefits of Following These Guidelines
+
+1. **Reduced Bugs**: RAII and modern features prevent common errors
+2. **Easier Testing**: Isolated, focused classes are simpler to test
+3. **Parallel Development**: Well-isolated features enable team collaboration
+4. **Better Performance**: `constexpr` and move semantics improve efficiency
+5. **Maintenance**: Clear, self-documenting code reduces maintenance burden
+6. **Future-Proofing**: Modern C++ practices prepare for language evolution
+
+## Getting Started
+
+1. **Read the specific guidelines** for each area you're working on
+2. **Start with architecture** - plan your feature's structure first
+3. **Apply resource management** patterns consistently
+4. **Use modern features** where they improve clarity
+5. **Focus on readability** throughout the implementation
+6. **Review against checklists** before submitting code
+
+Remember: These guidelines are tools to help write better code, not obstacles to productivity. When in doubt, prioritize clarity and safety over adherence to any specific rule.
+description:
+globs:
+alwaysApply: false
+---

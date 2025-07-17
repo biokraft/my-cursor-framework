@@ -1,0 +1,265 @@
+---
+description: C++ Code Style and Readability: Apply when writing C++ code to ensure clear, maintainable, and self-documenting practices
+globs: **/*.cpp, **/*.h, **/*.hpp
+alwaysApply: false
+---
+
+# C++ Code Style & Readability
+
+This rule enforces clear, self-documenting code practices to improve maintainability and reduce bugs.
+
+## Core Principle: Write Clear, Self-Documenting Code
+
+**Rule: New code should prioritize clarity and readability for easy understanding and maintenance.**
+
+Code is read far more often than written. Clear code reduces bugs and speeds up development.
+
+## Naming Conventions
+
+### Descriptive Naming
+
+Good names reveal purpose, reducing the need for comments:
+
+```cpp
+// Before: Vague names require comments or context
+int t = 300; // Time in seconds
+bool flag = false; // Is the data ready?
+void proc(Data& d); // What does this do?
+
+// After: Self-documenting names
+constexpr int timeout_seconds = 300;
+bool is_data_ready_for_processing = false;
+void process_incoming_sensor_data(Data& sensor_data);
+```
+
+### Naming Style Guidelines
+
+- **Variables & Functions**: `snake_case` or `camelCase` (be consistent within project)
+- **Classes & Structs**: `PascalCase`
+- **Constants**: `UPPER_SNAKE_CASE` or `kConstantName`
+- **Private Members**: Suffix with `_` (e.g., `private_member_`)
+- **Namespaces**: `snake_case` or `PascalCase`
+
+```cpp
+class DataProcessor {
+private:
+    int processing_timeout_;
+    bool is_initialized_;
+    
+public:
+    static constexpr int MAX_RETRY_COUNT = 3;
+    
+    void process_sensor_data(const SensorData& input_data);
+    std::optional<ProcessedResult> get_last_result() const;
+};
+```
+
+## Eliminate Magic Numbers
+
+Give raw numbers meaningful names for context and maintainability:
+
+```cpp
+// Before: What do 80 and 0.4 mean?
+if (temperature > 80 && pressure_ratio < 0.4) {
+    trigger_emergency_shutdown();
+}
+
+// After: Context is clear
+constexpr double MAX_SAFE_TEMPERATURE = 80.0;
+constexpr double CRITICAL_PRESSURE_RATIO = 0.4;
+
+if (temperature > MAX_SAFE_TEMPERATURE && 
+    pressure_ratio < CRITICAL_PRESSURE_RATIO) {
+    trigger_emergency_shutdown();
+}
+```
+
+## Function Design
+
+### Keep Functions Short and Focused
+
+Small functions that do one thing well are easier to understand, test, and reuse:
+
+```cpp
+// Before: Long function with multiple responsibilities
+void process_user_data(int user_id) {
+    // 1. Fetch user from database (20 lines)
+    // 2. Validate user permissions (15 lines)
+    // 3. Check for stale data (10 lines)
+    // 4. Process the data (25 lines)
+    // 5. Save results back to database (12 lines)
+}
+
+// After: Decomposed into focused functions
+std::optional<User> fetch_user(int user_id);
+bool has_valid_permissions(const User& user);
+bool is_data_stale(const User& user);
+ProcessedData process_data(const UserData& data);
+void save_processed_data(const ProcessedData& result);
+
+void process_user_data(int user_id) {
+    if (auto user = fetch_user(user_id)) {
+        if (has_valid_permissions(*user) && !is_data_stale(*user)) {
+            auto result = process_data(user->data());
+            save_processed_data(result);
+        }
+    }
+}
+```
+
+### Function Parameters
+
+- **Prefer `const` references** for large objects that won't be modified
+- **Use value parameters** for small, cheap-to-copy types
+- **Use pointers** only when the parameter can be null or for C-style APIs
+- **Limit parameter count** - consider grouping related parameters into structs
+
+```cpp
+// Good parameter practices
+void process_mesh(const TriangleMesh& mesh,           // const ref for large objects
+                  int layer_height,                   // value for small types
+                  const ProcessingConfig& config);    // const ref for config objects
+
+// Consider grouping when many parameters
+struct RenderSettings {
+    float ambient_light;
+    Color background_color;
+    bool enable_shadows;
+    int max_iterations;
+};
+
+void render_scene(const Scene& scene, const RenderSettings& settings);
+```
+
+## Comments and Documentation
+
+### Comment the "Why", Not the "What"
+
+Good code explains *what* it does. Comments should explain *why*:
+
+```cpp
+// Before: Redundant comment
+// Increment i
+i++;
+
+// After: Useful comment explaining non-obvious reasoning
+// Process events in reverse order to correctly handle nested dependencies
+for (auto it = events.rbegin(); it != events.rend(); ++it) {
+    process_event(*it);
+}
+
+// Explain complex algorithms or business logic
+// Use binary search since the array is guaranteed to be sorted by timestamp
+auto it = std::lower_bound(events.begin(), events.end(), target_time,
+                          [](const Event& e, time_t t) { return e.timestamp < t; });
+```
+
+### Documentation Comments
+
+Use standardized documentation comments for public APIs:
+
+```cpp
+/**
+ * @brief Processes mesh data to detect overhanging surfaces
+ * 
+ * @param mesh The triangle mesh to analyze
+ * @param angle_threshold Maximum angle (in degrees) before considering surface an overhang
+ * @return Vector of face indices that exceed the angle threshold
+ * 
+ * @note This function assumes the mesh has consistent winding order
+ * @throws std::invalid_argument if angle_threshold is not in range [0, 90]
+ */
+std::vector<size_t> detect_overhangs(const TriangleMesh& mesh, 
+                                     double angle_threshold);
+```
+
+## Code Organization
+
+### File Structure
+
+Organize code logically within files:
+
+```cpp
+// Header file structure (.h/.hpp)
+#pragma once
+
+// 1. Standard library includes
+#include <vector>
+#include <memory>
+
+// 2. Third-party library includes
+#include <boost/geometry.hpp>
+
+// 3. Project includes
+#include "base/mesh.h"
+#include "utils/math_utils.h"
+
+// 4. Forward declarations
+class ProcessingEngine;
+
+// 5. Namespace opening
+namespace OrcaSlicer {
+
+// 6. Class/struct definitions
+class MeshProcessor {
+    // Public interface first
+public:
+    // Constructors/destructor
+    // Public methods
+    
+    // Private implementation last
+private:
+    // Private methods
+    // Data members
+};
+
+} // namespace OrcaSlicer
+```
+
+### Error Handling
+
+Use exceptions for exceptional circumstances, return values for expected failures:
+
+```cpp
+// Use std::optional for expected failures
+std::optional<MeshData> load_mesh_file(const std::string& filename) {
+    if (!file_exists(filename)) {
+        return std::nullopt; // Expected case - file might not exist
+    }
+    // ... loading logic
+}
+
+// Use exceptions for programmer errors or unexpected system failures
+void validate_mesh_topology(const TriangleMesh& mesh) {
+    if (mesh.vertices().empty()) {
+        throw std::invalid_argument("Mesh cannot have zero vertices");
+    }
+    // ... validation logic
+}
+```
+
+## Code Review Checklist
+
+- [ ] Are variable and function names descriptive and clear?
+- [ ] Are there any magic numbers that should be named constants?
+- [ ] Are functions focused on a single responsibility?
+- [ ] Do functions have a reasonable number of parameters (≤ 5)?
+- [ ] Do comments explain "why" rather than "what"?
+- [ ] Is the code organized logically within files?
+- [ ] Are error conditions handled appropriately?
+- [ ] Could a new developer understand this code without asking for help?
+
+## Best Practices Summary
+
+1. **Choose descriptive names** that reveal intent and purpose
+2. **Eliminate magic numbers** by creating named constants
+3. **Keep functions small** and focused on single responsibilities
+4. **Use const references** for parameters when appropriate
+5. **Comment complex logic** and non-obvious design decisions
+6. **Organize code logically** within files and namespaces
+7. **Handle errors appropriately** with exceptions or optional returns
+8. **Prioritize readability** over cleverness in code design
+description:
+globs:
+alwaysApply: false
+---

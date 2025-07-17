@@ -1,0 +1,86 @@
+---
+description: C++ Architecture Guidelines: Apply when implementing new features in C++ projects to ensure proper code organization and single responsibility
+globs: **/*.cpp, **/*.h, **/*.hpp
+alwaysApply: false
+---
+# C++ Architecture Guidelines for New Features
+
+This rule provides architectural guidelines for implementing new features in C++ projects, emphasizing code organization and the Single Responsibility Principle.
+
+## Core Principle: Isolate New Features
+
+**Rule: New features MUST be implemented in new, self-contained classes and files.**
+
+- Avoid adding new functionality directly into existing large classes
+- Create focused, purpose-built components for each feature
+- Enable parallel development and reduce merge conflicts
+
+## Single Responsibility Principle (SRP)
+
+Each new class should have only one "reason to change" tied to a specific actor or role.
+
+### Good Example: Overhang Detection Feature
+
+```cpp
+// OverhangConfig.h - Simple configuration struct
+struct OverhangConfig {
+    float angle;
+    int fan_speed;
+};
+
+// OverhangDetector.h - Pure data processing class
+class OverhangDetector {
+public:
+    // Takes mesh and config, returns data. No UI or slicing knowledge.
+    static OverhangData find(const TriangleMesh& mesh, const OverhangConfig& config);
+};
+
+// In UI-specific class (e.g., MainFrame.cpp)
+void MainFrame::onDetectOverhangsClicked() {
+    OverhangConfig config = OverhangDialog::run(); // UI logic
+    auto overhangs = OverhangDetector::find(m_mesh, config); // Processing
+    m_model->setOverhangs(overhangs); // Data storage
+    m_canvas->update(); // UI update
+}
+```
+
+### Anti-Pattern to Avoid
+
+```cpp
+// DON'T: Mix UI, processing, and storage in one function
+void OrcaSlicer::onDetectOverhangsClicked() {
+    // 1. UI logic to get angle from dialog
+    // 2. Mesh processing logic
+    // 3. Data storage logic
+    // 4. Slicing logic modification
+    // 5. UI logic to highlight overhangs
+}
+```
+
+## Separation of Concerns
+
+Clearly separate these three aspects in new features:
+
+1. **Data Processing (Logic)**: Pure algorithms and computations
+2. **Data Storage (State)**: How data is stored and managed
+3. **User Interface (Presentation)**: How users interact with the feature
+
+## Code Review Checklist
+
+- [ ] Does this new class have one clear, single responsibility?
+- [ ] Who are the "actors" that would request changes? Is there more than one?
+- [ ] Are data processing, storage, and UI concerns clearly separated?
+- [ ] Can this class be understood without knowing the entire application?
+- [ ] Is the feature isolated from existing large classes?
+
+## Implementation Strategy
+
+1. **Identify the Feature Boundary**: Clearly define what the feature does
+2. **Separate Concerns**: Break down into processing, storage, and UI components
+3. **Create Focused Classes**: Each class handles one specific aspect
+4. **Use Clear Interfaces**: Define how components communicate
+5. **Minimize Dependencies**: Keep coupling between components low
+description:
+globs:
+alwaysApply: false
+---

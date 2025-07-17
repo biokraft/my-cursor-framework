@@ -1,0 +1,132 @@
+---
+description: C++ Resource Management: Apply when working with memory allocation, file handles, or any resource management in C++ code
+globs: **/*.cpp, **/*.h, **/*.hpp
+alwaysApply: false
+---
+# C++ Resource Management & Ownership
+
+This rule enforces RAII principles and smart pointer usage for safe resource management in C++ code.
+
+## Core Principle: RAII and Smart Pointers
+
+**Rule: All resource management in new code MUST follow RAII principles using smart pointers for memory.**
+
+- Bind resource lifetime to object lifetime on the stack
+- Automatic cleanup when objects go out of scope
+- Eliminate manual `new`/`delete` calls
+
+## Smart Pointer Guidelines
+
+### std::unique_ptr (Default Choice)
+
+Use for exclusive ownership of resources. Nearly as lightweight as raw pointers with clear ownership semantics.
+
+```cpp
+void create_and_use_widget() {
+    // Create using std::make_unique
+    auto widget_ptr = std::make_unique<Widget>();
+    
+    // Use the pointer
+    widget_ptr->do_something();
+    
+    // Transfer ownership
+    std::unique_ptr<Widget> other_ptr = std::move(widget_ptr);
+    
+} // other_ptr automatically destroyed here, widget_ptr is null
+```
+
+### std::shared_ptr (For Shared Ownership)
+
+Use only when multiple objects genuinely need shared ownership. Higher overhead than `unique_ptr`.
+
+```cpp
+void share_a_resource() {
+    // Create using std::make_shared for efficiency
+    auto shared_res = std::make_shared<Resource>();
+    
+    // Both users share ownership
+    auto user1 = std::make_unique<ResourceUser>(shared_res);
+    auto user2 = std::make_unique<ResourceUser>(shared_res);
+    
+} // Resource destroyed when last shared_ptr is gone
+```
+
+### std::weak_ptr (To Break Cycles)
+
+Use to observe `shared_ptr` without affecting reference count, preventing circular references.
+
+```cpp
+struct Son;
+struct Father {
+    std::shared_ptr<Son> son;
+    ~Father() { std::cout << "Father destroyed\n"; }
+};
+
+struct Son {
+    // weak_ptr breaks the cycle - doesn't increase ref count
+    std::weak_ptr<Father> father; 
+    ~Son() { std::cout << "Son destroyed\n"; }
+};
+
+void create_family() {
+    auto f = std::make_shared<Father>();
+    auto s = std::make_shared<Son>();
+    f->son = s;
+    s->father = f; // No cycle - weak_ptr doesn't own
+    
+    // Both will be correctly destroyed when function exits
+}
+```
+
+## RAII for Other Resources
+
+Apply RAII to all resources, not just memory:
+
+```cpp
+// File handles
+class FileProcessor {
+    std::ifstream file;
+public:
+    FileProcessor(const std::string& filename) : file(filename) {
+        if (!file.is_open()) {
+            throw std::runtime_error("Cannot open file");
+        }
+    }
+    // File automatically closed in destructor
+};
+
+// Mutex locks
+void thread_safe_operation() {
+    std::lock_guard<std::mutex> lock(my_mutex);
+    // Critical section
+    // Mutex automatically unlocked when lock goes out of scope
+}
+```
+
+## What to Avoid
+
+- **Raw owning pointers**: Don't use `new`/`delete` directly
+- **Manual resource management**: Avoid explicit cleanup calls
+- **std::auto_ptr**: Deprecated, use `std::unique_ptr` instead
+- **Unnecessary shared_ptr**: Default to `unique_ptr`, upgrade only when needed
+
+## Code Review Checklist
+
+- [ ] Does new memory allocation use `std::make_unique` or `std::make_shared`?
+- [ ] Is `std::unique_ptr` the default choice for single ownership?
+- [ ] If `std::shared_ptr` is used, is shared ownership truly necessary?
+- [ ] Are potential ownership cycles broken with `std::weak_ptr`?
+- [ ] Are there any manual `new`/`delete` calls that could be replaced?
+- [ ] Do all resources follow RAII principles?
+
+## Best Practices
+
+1. **Prefer `std::make_unique`** over `new` for single ownership
+2. **Use `std::make_shared`** over `new` for shared ownership
+3. **Consider `std::weak_ptr`** when objects have parent-child relationships
+4. **Wrap all resources** in RAII objects or smart pointers
+5. **Avoid raw pointers** for ownership - use them only for non-owning references
+description:
+globs:
+alwaysApply: false
+---

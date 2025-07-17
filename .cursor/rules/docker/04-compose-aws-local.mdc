@@ -1,0 +1,77 @@
+---
+description: "Docker Compose & AWS: Best practices for using AWS services locally with Docker Compose, including credential management and LocalStack."
+globs: "**/compose.yml,**/docker-compose.yml,**/compose.*.yml,**/docker-compose.*.yml"
+alwaysApply: false
+---
+# Using AWS Services Locally with Docker Compose
+
+This guide provides best practices for securely connecting to AWS services from a local Docker Compose environment.
+
+## 1. Method 1: Mounting AWS Credentials File (Simple & Secure)
+
+The most direct method is to mount your local `~/.aws` credentials directory into the container as a read-only volume. The AWS SDK will automatically detect and use them.
+
+**Never hardcode AWS credentials in `environment` variables or bake them into an image.**
+
+```yaml
+services:
+  my-aws-app:
+    build: .
+    volumes:
+      # Mount AWS credentials read-only for the SDK to use
+      - ~/.aws:/root/.aws:ro
+    environment:
+      # Optional: Specify a profile if not using the default
+      - AWS_PROFILE=my-dev-profile
+```
+
+**Key Points:**
+- **Path:** The destination path (`/root/.aws`) must match the home directory of the user inside the container.
+- **Read-Only (`:ro`):** Mounting as read-only is a critical security measure.
+
+## 2. Method 2: Using LocalStack for Service Emulation
+
+For emulating multiple AWS services (S3, SQS, etc.) or testing IAM role-based applications, **LocalStack** is the standard.
+
+Your application should connect to the LocalStack container instead of real AWS endpoints.
+
+```yaml
+services:
+  my-app-that-uses-aws:
+    build: .
+    # Point the AWS SDK to the LocalStack endpoint
+    environment:
+      - AWS_ENDPOINT_URL=http://localstack:4566
+      - AWS_ACCESS_KEY_ID=test # LocalStack uses dummy credentials
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+    depends_on:
+      - localstack
+
+  localstack:
+    image: localstack/localstack:3.5 # Pin the version
+    ports:
+      - "127.0.0.1:4566:4566"            # LocalStack Gateway
+      - "127.0.0.1:4510-4559:4510-4559"  # External services port range
+    environment:
+      - SERVICES=s3,sqs,lambda # Specify only the services you need
+      - DEBUG=0
+    volumes:
+      # Use a named volume to persist LocalStack state
+      - localstack_data:/var/lib/localstack
+      # Mount entrypoint scripts to initialize resources
+      - ./aws-init-scripts:/etc/localstack/init/ready.d
+
+volumes:
+  localstack_data:
+```
+
+**Key Points:**
+- **Endpoint URL:** Configure your application's AWS SDK to use the `localstack` hostname as its endpoint.
+- **Service Isolation:** Specify only the `SERVICES` you need in the `localstack` service definition to improve performance.
+- **Initialization:** Use entrypoint scripts in `/etc/localstack/init/ready.d` to create resources (e.g., S3 buckets) automatically.
+- **Persistence:** Use a named volume to persist LocalStack's state across restarts.
+description:
+globs:
+alwaysApply: false
+---

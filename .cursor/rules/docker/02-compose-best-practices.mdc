@@ -1,0 +1,163 @@
+---
+description: "Docker Compose: Best practices for modern Docker Compose files, covering structure, development, configuration, and health."
+globs: "**/compose.yml,**/docker-compose.yml,**/compose.*.yml,**/docker-compose.*.yml"
+alwaysApply: false
+---
+# Docker Compose Best Practices
+
+This guide provides best practices for creating maintainable, scalable, and modern Docker Compose files.
+
+## 1. File Structure and Organization
+
+### 1.1. Remove `version` Tag
+The top-level `version` key is obsolete. Start your file directly with the `services` block.
+
+```yaml
+# Good: No "version" tag
+services:
+  # ...
+```
+
+### 1.2. Co-locate Compose Files
+Store `compose.yml` and related files with the application source code in version control.
+
+### 1.3. Single-Purpose Services
+Each service should have a single responsibility (e.g., `api`, `db`, `cache`).
+
+### 1.4. Logical Configuration Grouping
+Order service configurations logically for readability:
+1.  `image`, `build`
+2.  `command`, `entrypoint`
+3.  `environment`
+4.  `volumes`, `networks`
+5.  `deploy` (resources, restart policies)
+6.  `healthcheck`
+7.  `user`
+
+### 1.5. Alphabetical Sorting
+For large files, sort services, environment variables, ports, and volumes alphabetically.
+
+### 1.6. Use Comments
+Document non-obvious configurations with comments (`#`).
+
+## 2. Development Workflow
+
+### 2.1. Use `watch` for Live Reloading
+Use the `develop.watch` section for automatic rebuilding and restarting of services on code changes.
+
+```yaml
+services:
+  api:
+    build: .
+    develop:
+      watch:
+        - path: ./src
+          action: rebuild # or 'sync'
+```
+
+## 3. Configuration Management
+
+### 3.1. Use Environment Variables and `.env` Files
+Avoid hardcoding values. Use environment variables with defaults defined in a root `.env` file.
+
+```yaml
+services:
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+```
+
+### 3.2. Use Multiple Compose Files for Environments
+Split configurations into:
+1.  `compose.yml` (base)
+2.  `compose.override.yml` (development, loaded automatically)
+3.  `compose.prod.yml` (production)
+
+Run with:
+```bash
+# Development
+docker compose up
+
+# Production
+docker compose -f compose.yml -f compose.prod.yml up -d
+```
+
+## 4. Data and Networking
+
+### 4.1. Use Named Volumes for Persistence
+Use named volumes for production data. They are safer and managed by Docker.
+
+```yaml
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data: {}
+```
+
+### 4.2. Define Custom Networks
+Create custom networks to isolate services for better security and organization.
+
+```yaml
+services:
+  api:
+    networks:
+      - frontend
+      - backend
+  db:
+    networks:
+      - backend
+
+networks:
+  frontend:
+  backend:
+```
+
+## 5. Container Health and Performance
+
+### 5.1. Pin Image Versions
+Avoid `:latest`. Pin images to specific versions (e.g., `postgres:15.4`) for predictable builds.
+
+### 5.2. Set Resource Limits
+In production, define CPU and memory limits.
+
+```yaml
+services:
+  api:
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+```
+
+### 5.3. Implement Healthchecks
+Use `healthcheck` to ensure your application is ready.
+
+```yaml
+services:
+  web:
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+```
+
+### 5.4. Define a Restart Policy
+In production, set a restart policy like `always` or `on-failure`.
+
+```yaml
+services:
+  api:
+    restart: always
+```
+description:
+globs:
+alwaysApply: false
+---

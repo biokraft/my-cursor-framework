@@ -1,0 +1,113 @@
+---
+description: "Docker Compose Security: Advanced security and hardening practices for production Docker Compose setups."
+globs: "**/compose.yml,**/docker-compose.yml,**/compose.*.yml,**/docker-compose.*.yml"
+alwaysApply: false
+---
+# Docker Compose Advanced Security
+
+This guide covers advanced security and hardening techniques for production Docker Compose environments.
+
+## 1. Image and Build Security
+
+- **Use Trusted, Minimal Images:** Start with official, minimal base images (e.g., `alpine`, `slim-bullseye`).
+- **Scan Images:** Integrate vulnerability scanning (e.g., `Trivy`, `Grype`, Docker Scout) into your CI/CD pipeline.
+- **Enable Content Trust:** Enforce image integrity with Docker Content Trust.
+  ```bash
+  export DOCKER_CONTENT_TRUST=1
+  ```
+
+## 2. Container Runtime Security
+
+- **Run as a Non-Root User:** Create a dedicated user in your Dockerfile and specify it in your Compose file.
+
+  **Dockerfile:**
+  ```Dockerfile
+  # Create a non-root user with a specific UID
+  RUN addgroup --gid 1001 myapp && \
+      adduser --uid 1001 --ingroup myapp --home /home/myapp --shell /bin/sh --disabled-password myapp
+  USER myapp
+  ```
+
+  **Compose file:**
+  ```yaml
+  services:
+    api:
+      build: .
+      user: "1001" # Refer to the user by UID
+  ```
+
+- **Make Filesystem Read-Only:** Prevent modifications to the container's filesystem.
+  ```yaml
+  services:
+    api:
+      image: my-api:1.2.3
+      read_only: true
+      volumes:
+        - type: tmpfs
+          target: /tmp # Only tmp is writable
+  ```
+
+- **Drop Unnecessary Kernel Capabilities:** Drop all capabilities and add back only what is strictly needed.
+  ```yaml
+  services:
+    api:
+      cap_drop:
+        - ALL
+      cap_add:
+        - NET_BIND_SERVICE # If needed for binding to privileged ports
+  ```
+
+- **Prevent Privilege Escalation:** Block the container from gaining new privileges.
+  ```yaml
+  services:
+    api:
+      security_opt:
+        - no-new-privileges:true
+  ```
+
+## 3. Advanced Secret Management
+Secure secrets by specifying the user and group that own the secret file inside the container.
+
+```yaml
+services:
+  db:
+    image: postgres:15
+    secrets:
+      - source: db_password
+        target: postgres_password
+        uid: "999"  # UID for the postgres user
+        gid: "999"  # GID for the postgres group
+        mode: 0400 # Read-only for the user
+
+secrets:
+  db_password:
+    file: ./db_password.txt
+```
+
+## 4. Network Security
+- **Isolate Networks:** Use custom networks and mark backend networks as `internal: true` to prevent public internet access.
+  ```yaml
+  networks:
+    frontend:
+    backend:
+      internal: true
+  ```
+- **Avoid Mounting the Docker Socket:** Never mount `/var/run/docker.sock` in a production container.
+
+## 5. Resource Management to Prevent DoS
+Set resource limits to prevent resource-exhaustion attacks.
+
+```yaml
+services:
+  api:
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+          pids: 1024 # Limit the number of processes
+```
+description:
+globs:
+alwaysApply: false
+---

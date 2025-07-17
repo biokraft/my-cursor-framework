@@ -1,0 +1,286 @@
+---
+description: Ollama Core Setup: Essential patterns for configuring Ollama LLM service with Pydantic settings, model selection, and LiteLLM integration
+globs: **/*.py, **/docker-compose*.yml, **/.env*
+alwaysApply: false
+---
+# Ollama Core Setup and Configuration
+
+This rule provides essential patterns for setting up Ollama as an LLM service in any project, covering configuration management, model selection, and basic integration patterns.
+
+## Core Configuration Pattern
+
+### Configuration Class Structure
+
+Always use a structured configuration approach with clear separation between Ollama-specific and application-specific settings:
+
+```python
+from pydantic import Field
+from pydantic_settings import BaseSettings
+
+class Config(BaseSettings):
+    # Ollama configuration
+    ollama_base_url: str = Field(
+        default="http://localhost:11434",
+        description="Base URL for Ollama API"
+    )
+
+    # Model configuration with LiteLLM format
+    primary_model: str = Field(
+        default="ollama/qwen3:0.6b",
+        description="Primary LLM model in LiteLLM format"
+    )
+
+    # Optional: Secondary model for specialized tasks
+    reasoning_model: str = Field(
+        default="ollama/qwen:7b",
+        description="Model for complex reasoning tasks"
+    )
+```
+
+### Environment Variable Strategy
+
+Implement a two-tier environment variable approach:
+
+**Application Configuration:**
+```bash
+# Used by the application code
+OLLAMA_BASE_URL=http://localhost:11434
+PRIMARY_MODEL=ollama/qwen3:0.6b
+REASONING_MODEL=ollama/qwen:7b
+```
+
+**Container Configuration (if using Docker):**
+```bash
+# Used only by Docker Compose for container setup
+OLLAMA_HOST=0.0.0.0:11434
+OLLAMA_MODEL_NAME=qwen3:0.6b
+OLLAMA_MODELS=qwen3:0.6b
+```
+
+## Model Selection Guidelines
+
+### Performance-Based Model Selection
+
+Choose models based on your target hardware and use case:
+
+```python
+# Resource-constrained environments (Raspberry Pi, edge devices)
+LIGHTWEIGHT_MODELS = [
+    "ollama/qwen3:0.6b",     # 600MB - Fast inference, good for chat
+    "ollama/llama3.2:1b",    # 1GB - Balanced performance
+    "ollama/phi3:mini",      # 2.3GB - Better reasoning
+]
+
+# Standard environments (developer machines, servers)
+STANDARD_MODELS = [
+    "ollama/qwen:7b",        # 7GB - Good reasoning capabilities
+    "ollama/llama3.1:8b",    # 8GB - Strong general purpose
+    "ollama/mistral:7b",     # 7GB - Fast and capable
+]
+
+# High-performance environments
+LARGE_MODELS = [
+    "ollama/qwen:14b",       # 14GB - Advanced reasoning
+    "ollama/llama3.1:70b",   # 70GB - State-of-the-art performance
+]
+```
+
+### Multi-Model Strategy
+
+For projects requiring different capabilities, implement a model selection strategy:
+
+```python
+class ModelManager:
+    def __init__(self, config: Config):
+        self.config = config
+        self.models = {
+            "chat": config.primary_model,      # Fast, conversational
+            "reasoning": config.reasoning_model, # Complex analysis
+            "embedding": "ollama/nomic-embed-text:latest", # Embeddings
+        }
+
+    def get_model_for_task(self, task_type: str) -> str:
+        return self.models.get(task_type, self.models["chat"])
+```
+
+## Integration with LLM Libraries
+
+### LiteLLM Integration (Recommended)
+
+Use LiteLLM for maximum flexibility and provider compatibility:
+
+```python
+from litellm import LiteLLMModel
+
+class LLMService:
+    def __init__(self, config: Config):
+        self.model = LiteLLMModel(
+            model_id=config.primary_model,
+            api_base=config.ollama_base_url,
+        )
+
+    async def generate_response(self, prompt: str) -> str:
+        response = await self.model.acompletion(
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return response.choices[0].message.content
+```
+
+### Direct Ollama Client Integration
+
+For projects that need direct Ollama API access:
+
+```python
+import aiohttp
+import json
+
+class OllamaClient:
+    def __init__(self, base_url: str = "http://localhost:11434"):
+        self.base_url = base_url.rstrip("/")
+
+    async def generate(self, model: str, prompt: str) -> str:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                f"{self.base_url}/api/generate",
+                json={"model": model, "prompt": prompt, "stream": False}
+            ) as response:
+                result = await response.json()
+                return result["response"]
+
+    async def list_models(self) -> list[str]:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"{self.base_url}/api/tags") as response:
+                result = await response.json()
+                return [model["name"] for model in result["models"]]
+```
+
+## Health Check and Service Management
+
+### Service Health Monitoring
+
+Implement health checks to ensure Ollama is available:
+
+```python
+import asyncio
+import logging
+
+class OllamaHealthCheck:
+    def __init__(self, ollama_client: OllamaClient):
+        self.client = ollama_client
+        self.logger = logging.getLogger(__name__)
+
+    async def check_health(self) -> bool:
+        try:
+            models = await self.client.list_models()
+            self.logger.info(f"Ollama healthy. Available models: {len(models)}")
+            return True
+        except Exception as e:
+            self.logger.error(f"Ollama health check failed: {e}")
+            return False
+
+    async def wait_for_service(self, timeout: int = 60) -> bool:
+        """Wait for Ollama service to become available."""
+        start_time = asyncio.get_event_loop().time()
+        while (asyncio.get_event_loop().time() - start_time) < timeout:
+            if await self.check_health():
+                return True
+            await asyncio.sleep(2)
+        return False
+```
+
+## Error Handling and Resilience
+
+### Robust Error Handling
+
+Implement comprehensive error handling for Ollama interactions:
+
+```python
+from typing import Optional
+import asyncio
+
+class ResilientOllamaService:
+    def __init__(self, config: Config, max_retries: int = 3):
+        self.config = config
+        self.max_retries = max_retries
+        self.client = OllamaClient(config.ollama_base_url)
+
+    async def generate_with_retry(
+        self,
+        model: str,
+        prompt: str,
+        timeout: float = 30.0
+    ) -> Optional[str]:
+        """Generate response with retry logic and timeout."""
+        for attempt in range(self.max_retries):
+            try:
+                response = await asyncio.wait_for(
+                    self.client.generate(model, prompt),
+                    timeout=timeout
+                )
+                return response
+            except asyncio.TimeoutError:
+                logging.warning(f"Timeout on attempt {attempt + 1}")
+                if attempt == self.max_retries - 1:
+                    raise
+            except Exception as e:
+                logging.error(f"Error on attempt {attempt + 1}: {e}")
+                if attempt == self.max_retries - 1:
+                    raise
+                await asyncio.sleep(2 ** attempt)  # Exponential backoff
+
+        return None
+```
+
+## Configuration Validation
+
+### Model Availability Validation
+
+Validate that configured models are available:
+
+```python
+async def validate_ollama_config(config: Config) -> bool:
+    """Validate that Ollama is accessible and models are available."""
+    client = OllamaClient(config.ollama_base_url)
+    health_check = OllamaHealthCheck(client)
+
+    # Check service health
+    if not await health_check.check_health():
+        logging.error("Ollama service is not accessible")
+        return False
+
+    # Check model availability
+    available_models = await client.list_models()
+    required_models = [
+        config.primary_model.replace("ollama/", ""),
+        config.reasoning_model.replace("ollama/", ""),
+    ]
+
+    missing_models = [
+        model for model in required_models
+        if model not in available_models
+    ]
+
+    if missing_models:
+        logging.warning(f"Missing models: {missing_models}")
+        logging.info("Consider running: ollama pull <model_name>")
+        return False
+
+    return True
+```
+
+## Best Practices Summary
+
+1. **Always use LiteLLM format** for model names (`ollama/model:tag`)
+2. **Implement health checks** before making model requests
+3. **Use configuration classes** with proper defaults and validation
+4. **Separate application and container configuration**
+5. **Choose models appropriate** for your target hardware
+6. **Implement retry logic** for production resilience
+7. **Validate model availability** during application startup
+8. **Use structured logging** for debugging and monitoring
+
+This foundation enables any project to integrate Ollama effectively with proper configuration management, error handling, and performance optimization.
+description:
+globs:
+alwaysApply: false
+---

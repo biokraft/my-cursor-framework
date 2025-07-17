@@ -1,0 +1,437 @@
+---
+description: Ollama Docker Containerization: Comprehensive patterns for containerizing Ollama services with multi-service orchestration and health checks
+globs: **/docker-compose*.yml, **/Dockerfile*, **/Makefile
+alwaysApply: false
+---
+# Ollama Docker Containerization Patterns
+
+This rule provides comprehensive patterns for containerizing Ollama services, including multi-service orchestration, health checks, and production deployment strategies.
+
+## Multi-Service Docker Compose Architecture
+
+### Basic Ollama Service Configuration
+
+Start with this foundational Ollama service configuration:
+
+```yaml
+services:
+  ollama:
+    container_name: "${PROJECT_NAME:-app}-ollama"
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "${OLLAMA_PORT:-11434}:11434"
+    networks:
+      - app-network
+    environment:
+      - OLLAMA_HOST=${OLLAMA_HOST:-0.0.0.0:11434}
+      - OLLAMA_MODELS=${OLLAMA_MODELS:-qwen3:0.6b}
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
+
+networks:
+  app-network:
+    driver: bridge
+```
+
+### Model Initialization Service Pattern
+
+Implement a separate service for model initialization to ensure models are available before your application starts:
+
+```yaml
+services:
+  ollama:
+    # ... (ollama service configuration as above)
+
+  ollama-init:
+    container_name: "${PROJECT_NAME:-app}-ollama-init"
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - app-network
+    depends_on:
+      ollama:
+        condition: service_healthy
+    entrypoint: ["sh", "-c"]
+    command: |
+      "
+      echo 'Pulling required models...'
+      ollama pull ${PRIMARY_MODEL:-qwen3:0.6b}
+      ollama pull ${REASONING_MODEL:-qwen:7b}
+      echo 'Model initialization complete'
+      "
+    environment:
+      - OLLAMA_HOST=${OLLAMA_INIT_HOST:-http://ollama:11434}
+    restart: "no"
+
+  app:
+    # Your application service
+    depends_on:
+      ollama:
+        condition: service_healthy
+      ollama-init:
+        condition: service_completed_successfully
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+```
+
+## Advanced Containerization Patterns
+
+### Production-Ready Ollama Configuration
+
+For production deployments, enhance the basic configuration with resource limits and security considerations:
+
+```yaml
+services:
+  ollama:
+    container_name: "${PROJECT_NAME}-ollama"
+    image: ollama/ollama:${OLLAMA_VERSION:-latest}
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "${OLLAMA_PORT:-11434}:11434"
+    networks:
+      - app-network
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+      - OLLAMA_MODELS=${OLLAMA_MODELS}
+      - OLLAMA_MAX_LOADED_MODELS=${OLLAMA_MAX_LOADED_MODELS:-3}
+      - OLLAMA_NUM_PARALLEL=${OLLAMA_NUM_PARALLEL:-1}
+      - OLLAMA_MAX_QUEUE=${OLLAMA_MAX_QUEUE:-512}
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: ${OLLAMA_MEMORY_LIMIT:-8G}
+        reservations:
+          memory: ${OLLAMA_MEMORY_RESERVATION:-4G}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+```
+
+### GPU Support Configuration
+
+For systems with GPU support, enable GPU acceleration:
+
+```yaml
+services:
+  ollama:
+    container_name: "${PROJECT_NAME}-ollama"
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - app-network
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+      - NVIDIA_VISIBLE_DEVICES=all
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+```
+
+### Multi-Model Service Strategy
+
+For applications requiring multiple specialized models, consider a multi-instance approach:
+
+```yaml
+services:
+  ollama-chat:
+    container_name: "${PROJECT_NAME}-ollama-chat"
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_chat_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - app-network
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+      - OLLAMA_MODELS=qwen3:0.6b
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  ollama-reasoning:
+    container_name: "${PROJECT_NAME}-ollama-reasoning"
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_reasoning_data:/root/.ollama
+    ports:
+      - "11435:11434"
+    networks:
+      - app-network
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+      - OLLAMA_MODELS=qwen:7b
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  ollama_chat_data:
+  ollama_reasoning_data:
+```
+
+## Development vs Production Configurations
+
+### Development Configuration (docker-compose.yml)
+
+```yaml
+# Development - focus on ease of use and fast iteration
+services:
+  ollama:
+    container_name: "dev-ollama"
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - dev-network
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+      - OLLAMA_MODELS=qwen3:0.6b  # Lightweight model for development
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: "no"  # Don't auto-restart in development
+
+  app:
+    build: .
+    volumes:
+      - .:/app  # Mount source for hot reload
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - PRIMARY_MODEL=ollama/qwen3:0.6b
+    depends_on:
+      ollama:
+        condition: service_healthy
+
+volumes:
+  ollama_data:
+
+networks:
+  dev-network:
+```
+
+### Production Configuration (docker-compose.prod.yml)
+
+```yaml
+# Production - focus on reliability and performance
+services:
+  ollama:
+    container_name: "prod-ollama"
+    image: ollama/ollama:0.5.1  # Pin specific version
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - prod-network
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+      - OLLAMA_MODELS=qwen:7b,qwen3:0.6b
+      - OLLAMA_MAX_LOADED_MODELS=2
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 4G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  app:
+    image: myapp:${APP_VERSION}
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - PRIMARY_MODEL=ollama/qwen:7b
+    depends_on:
+      ollama:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
+    driver: local
+
+networks:
+  prod-network:
+    driver: bridge
+```
+
+## Testing Configuration
+
+### Test Environment (docker-compose.test.yml)
+
+```yaml
+services:
+  ollama-test:
+    container_name: "test-ollama"
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_test_data:/root/.ollama
+    ports:
+      - "11435:11434"  # Different port to avoid conflicts
+    networks:
+      - test-network
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+      - OLLAMA_MODELS=qwen3:0.6b
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  app-test:
+    build: .
+    environment:
+      - OLLAMA_BASE_URL=http://ollama-test:11434
+      - PRIMARY_MODEL=ollama/qwen3:0.6b
+    depends_on:
+      ollama-test:
+        condition: service_healthy
+    networks:
+      - test-network
+
+volumes:
+  ollama_test_data:
+
+networks:
+  test-network:
+    driver: bridge
+```
+
+## Management and Automation
+
+### Makefile Integration
+
+Create convenient management commands:
+
+```makefile
+# Ollama management commands
+.PHONY: ollama-up ollama-down ollama-pull ollama-models ollama-logs
+
+ollama-up: ## Start Ollama service
+	docker compose up ollama -d
+	@echo "Waiting for Ollama to be ready..."
+	@docker compose exec ollama ollama list
+
+ollama-down: ## Stop Ollama service
+	docker compose stop ollama
+
+ollama-pull: ## Pull required models
+	docker compose exec ollama ollama pull qwen3:0.6b
+	docker compose exec ollama ollama pull qwen:7b
+
+ollama-models: ## List available models
+	docker compose exec ollama ollama list
+
+ollama-logs: ## Show Ollama logs
+	docker compose logs -f ollama
+
+ollama-health: ## Check Ollama health
+	@curl -f http://localhost:11434/api/version || echo "Ollama not accessible"
+```
+
+### Environment Variable Templates
+
+Create comprehensive environment templates:
+
+```bash
+# .env.example
+# =============================================================================
+# Ollama Configuration
+# =============================================================================
+
+# Basic Configuration
+PROJECT_NAME=myapp
+OLLAMA_PORT=11434
+OLLAMA_VERSION=latest
+
+# Model Configuration
+PRIMARY_MODEL=qwen3:0.6b
+REASONING_MODEL=qwen:7b
+OLLAMA_MODELS=qwen3:0.6b,qwen:7b
+
+# Performance Tuning
+OLLAMA_MAX_LOADED_MODELS=3
+OLLAMA_NUM_PARALLEL=1
+OLLAMA_MAX_QUEUE=512
+OLLAMA_MEMORY_LIMIT=8G
+OLLAMA_MEMORY_RESERVATION=4G
+
+# Container Configuration
+OLLAMA_HOST=0.0.0.0:11434
+OLLAMA_INIT_HOST=http://ollama:11434
+
+# Application Configuration
+OLLAMA_BASE_URL=http://ollama:11434
+```
+
+## Best Practices Summary
+
+1. **Always implement health checks** for Ollama services
+2. **Use separate initialization services** for model pulling
+3. **Pin Docker image versions** in production
+4. **Implement resource limits** to prevent memory issues
+5. **Use dedicated networks** for service isolation
+6. **Separate configurations** for development, testing, and production
+7. **Implement proper logging** with rotation
+8. **Use environment variables** for configuration flexibility
+9. **Create management scripts** for common operations
+10. **Test connectivity** between services during deployment
+
+These patterns ensure reliable, scalable, and maintainable Ollama deployments across different environments.
+description:
+globs:
+alwaysApply: false
+---

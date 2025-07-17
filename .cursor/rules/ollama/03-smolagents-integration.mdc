@@ -1,0 +1,521 @@
+---
+description: Ollama Smolagents Integration: Patterns for integrating Ollama with smolagents framework including agent creation and multi-agent orchestration
+globs: **/*.py
+alwaysApply: false
+---
+# Ollama Smolagents Integration Patterns
+
+This rule provides comprehensive patterns for integrating Ollama with the smolagents framework, covering agent creation, memory management, multi-agent orchestration, and performance optimization.
+
+## Core Smolagents Integration
+
+### LiteLLMModel Setup for Ollama
+
+Always use LiteLLMModel as the bridge between smolagents and Ollama:
+
+```python
+from smolagents import CodeAgent, ToolCallingAgent, LiteLLMModel, ManagedAgent
+import logging
+
+class OllamaAgentFactory:
+    """Factory for creating smolagents powered by Ollama models."""
+
+    def __init__(self, ollama_base_url: str = "http://localhost:11434"):
+        self.ollama_base_url = ollama_base_url
+        self.logger = logging.getLogger(__name__)
+
+    def create_model(self, model_id: str) -> LiteLLMModel:
+        """Create a LiteLLMModel instance for Ollama."""
+        # Ensure proper ollama/ prefix
+        if not model_id.startswith("ollama/"):
+            model_id = f"ollama/{model_id}"
+
+        return LiteLLMModel(
+            model_id=model_id,
+            api_base=self.ollama_base_url,
+        )
+
+    def create_code_agent(
+        self,
+        model_id: str,
+        system_prompt: str,
+        tools: list = None,
+        max_steps: int = 10
+    ) -> CodeAgent:
+        """Create a CodeAgent with Ollama model."""
+        model = self.create_model(model_id)
+
+        return CodeAgent(
+            tools=tools or [],
+            model=model,
+            system_prompt=system_prompt,
+            max_steps=max_steps,
+            add_base_tools=True,  # Python interpreter, etc.
+        )
+
+    def create_tool_calling_agent(
+        self,
+        model_id: str,
+        tools: list,
+        system_prompt: str = None,
+        max_steps: int = 5
+    ) -> ToolCallingAgent:
+        """Create a ToolCallingAgent for specialized tasks."""
+        model = self.create_model(model_id)
+
+        return ToolCallingAgent(
+            tools=tools,
+            model=model,
+            system_prompt=system_prompt,
+            max_steps=max_steps,
+        )
+```
+
+### Agent Service with Chat-Scoped Caching
+
+Implement efficient agent management with per-chat caching:
+
+```python
+from typing import Dict, Optional
+import asyncio
+from smolagents import ActionStep
+
+class AgentService:
+    """Service for managing smolagents instances with chat-scoped caching."""
+
+    def __init__(self, factory: OllamaAgentFactory):
+        self.factory = factory
+        self._agent_cache: Dict[str, CodeAgent] = {}
+        self._cache_lock = asyncio.Lock()
+
+    async def get_agent_for_context(
+        self,
+        context_id: str,
+        model_id: str = "qwen3:0.6b",
+        system_prompt: str = None
+    ) -> CodeAgent:
+        """Get or create agent instance for specific context (chat, user, etc.)."""
+        cache_key = f"{context_id}:{model_id}"
+
+        async with self._cache_lock:
+            if cache_key not in self._agent_cache:
+                self.factory.logger.info(f"Creating new agent for context {context_id}")
+
+                agent = self.factory.create_code_agent(
+                    model_id=model_id,
+                    system_prompt=system_prompt or self._default_system_prompt(),
+                    max_steps=10,
+                )
+
+                # Add memory callback for conversation tracking
+                agent.step_callbacks = [self._create_memory_callback(context_id)]
+
+                self._agent_cache[cache_key] = agent
+
+        return self._agent_cache[cache_key]
+
+    def _default_system_prompt(self) -> str:
+        return (
+            "You are a helpful AI assistant. Be concise, accurate, and friendly. "
+            "If you need to use tools or write code, explain what you're doing."
+        )
+
+    def _create_memory_callback(self, context_id: str):
+        """Create a callback for tracking agent steps and memory."""
+        def memory_callback(step: ActionStep):
+            # Log agent actions for debugging
+            self.factory.logger.debug(
+                f"Agent step in {context_id}: {step.action} - {step.tool_calls}"
+            )
+            # Here you could implement memory persistence, analytics, etc.
+
+        return memory_callback
+
+    async def process_message(
+        self,
+        context_id: str,
+        message: str,
+        model_id: str = "qwen3:0.6b",
+        reset_context: bool = False
+    ) -> str:
+        """Process a message through the appropriate agent."""
+        try:
+            agent = await self.get_agent_for_context(context_id, model_id)
+
+            # Use reset=False to maintain conversation continuity
+            response = agent.run(message, reset=reset_context)
+
+            self.factory.logger.info(f"Generated response for {context_id}")
+            return response
+
+        except Exception as e:
+            self.factory.logger.error(f"Error processing message: {e}", exc_info=True)
+            return f"I encountered an error: {str(e)}"
+
+    async def clear_context(self, context_id: str):
+        """Clear cached agent for a specific context."""
+        async with self._cache_lock:
+            keys_to_remove = [key for key in self._agent_cache if key.startswith(f"{context_id}:")]
+            for key in keys_to_remove:
+                del self._agent_cache[key]
+```
+
+## Multi-Agent Orchestration Patterns
+
+### Manager-Worker Pattern
+
+Implement a sophisticated multi-agent system with different models for different roles:
+
+```python
+from smolagents import ManagedAgent
+from smolagents.tools import DuckDuckGoSearchTool, PythonCodeTool
+
+class MultiAgentOrchestrator:
+    """Orchestrates multiple specialized agents using different Ollama models."""
+
+    def __init__(self, factory: OllamaAgentFactory):
+        self.factory = factory
+        self.manager_agent = None
+        self.specialized_agents = {}
+
+    def setup_manager_agent(self, model_id: str = "qwen:7b") -> CodeAgent:
+        """Setup the manager agent with a powerful model for reasoning."""
+        if self.manager_agent is None:
+            self.manager_agent = self.factory.create_code_agent(
+                model_id=model_id,
+                system_prompt=(
+                    "You are an orchestrator agent responsible for coordinating tasks. "
+                    "You can delegate specific tasks to specialized agents. "
+                    "Always explain your reasoning and delegation decisions."
+                ),
+                tools=[],  # Manager has no direct tools, only delegates
+                max_steps=15,
+            )
+
+            # Add managed agents as tools
+            self.manager_agent.managed_agents = list(self.specialized_agents.values())
+
+        return self.manager_agent
+
+    def add_web_search_agent(self, model_id: str = "qwen3:0.6b") -> ManagedAgent:
+        """Add a specialized web search agent."""
+        search_agent = self.factory.create_tool_calling_agent(
+            model_id=model_id,
+            tools=[DuckDuckGoSearchTool()],
+            system_prompt="You are a web search specialist. Perform thorough searches and summarize findings.",
+            max_steps=8,
+        )
+
+        managed_agent = ManagedAgent(
+            agent=search_agent,
+            name="web_searcher",
+            description="Searches the web for current information and provides summaries.",
+        )
+
+        self.specialized_agents["web_search"] = managed_agent
+        return managed_agent
+
+    def add_code_analysis_agent(self, model_id: str = "qwen3:0.6b") -> ManagedAgent:
+        """Add a specialized code analysis agent."""
+        code_agent = self.factory.create_tool_calling_agent(
+            model_id=model_id,
+            tools=[PythonCodeTool()],
+            system_prompt="You are a code analysis specialist. Write and execute Python code to solve problems.",
+            max_steps=10,
+        )
+
+        managed_agent = ManagedAgent(
+            agent=code_agent,
+            name="code_analyst",
+            description="Analyzes data, writes code, and performs computational tasks.",
+        )
+
+        self.specialized_agents["code_analysis"] = managed_agent
+        return managed_agent
+
+    async def process_complex_task(self, task: str) -> str:
+        """Process a complex task using the multi-agent system."""
+        # Setup manager if not already done
+        manager = self.setup_manager_agent()
+
+        # Update managed agents
+        manager.managed_agents = list(self.specialized_agents.values())
+
+        try:
+            result = manager.run(task, reset=False)
+            return result
+        except Exception as e:
+            self.factory.logger.error(f"Multi-agent task failed: {e}", exc_info=True)
+            return f"I encountered an error while processing this complex task: {str(e)}"
+```
+
+## Performance Optimization Patterns
+
+### Model Selection Strategy
+
+Implement intelligent model selection based on task complexity and available resources:
+
+```python
+import psutil
+from typing import Tuple
+
+class SmartModelSelector:
+    """Intelligently selects Ollama models based on task type and system resources."""
+
+    def __init__(self):
+        self.model_tiers = {
+            "lightweight": ["qwen3:0.6b", "phi3:mini", "llama3.2:1b"],
+            "standard": ["qwen:7b", "llama3.1:8b", "mistral:7b"],
+            "heavy": ["qwen:14b", "llama3.1:70b", "mixtral:8x7b"],
+        }
+
+    def get_system_tier(self) -> str:
+        """Determine system capability tier based on available resources."""
+        memory_gb = psutil.virtual_memory().total / (1024**3)
+
+        if memory_gb < 8:
+            return "lightweight"
+        elif memory_gb < 32:
+            return "standard"
+        else:
+            return "heavy"
+
+    def select_model_for_task(
+        self,
+        task_type: str,
+        force_tier: str = None
+    ) -> Tuple[str, str]:
+        """Select appropriate model for task type and system capability."""
+        # Task complexity mapping
+        task_complexity = {
+            "chat": "lightweight",
+            "qa": "lightweight",
+            "analysis": "standard",
+            "reasoning": "standard",
+            "complex_reasoning": "heavy",
+            "code_generation": "standard",
+            "research": "heavy",
+        }
+
+        # Determine required tier
+        required_tier = task_complexity.get(task_type, "standard")
+        system_tier = force_tier or self.get_system_tier()
+
+        # Select most appropriate tier (don't exceed system capability)
+        tier_priority = ["lightweight", "standard", "heavy"]
+        max_tier_index = tier_priority.index(system_tier)
+        required_tier_index = tier_priority.index(required_tier)
+
+        selected_tier = tier_priority[min(required_tier_index, max_tier_index)]
+        selected_model = self.model_tiers[selected_tier][0]  # First model in tier
+
+        return selected_model, selected_tier
+
+class AdaptiveAgentService(AgentService):
+    """AgentService with intelligent model selection."""
+
+    def __init__(self, factory: OllamaAgentFactory):
+        super().__init__(factory)
+        self.model_selector = SmartModelSelector()
+
+    async def process_adaptive_message(
+        self,
+        context_id: str,
+        message: str,
+        task_type: str = "chat"
+    ) -> str:
+        """Process message with automatic model selection."""
+        model_id, tier = self.model_selector.select_model_for_task(task_type)
+
+        self.factory.logger.info(f"Selected {model_id} (tier: {tier}) for task: {task_type}")
+
+        return await self.process_message(
+            context_id=context_id,
+            message=message,
+            model_id=model_id,
+        )
+```
+
+## Memory and Context Management
+
+### Persistent Memory Integration
+
+Implement sophisticated memory management for long-term context:
+
+```python
+from typing import List, Dict, Any
+import json
+from datetime import datetime
+
+class AgentMemoryManager:
+    """Manages persistent memory for smolagents using external storage."""
+
+    def __init__(self, storage_backend=None):
+        self.storage = storage_backend  # Could be database, file, etc.
+
+    async def save_conversation_step(
+        self,
+        context_id: str,
+        step: ActionStep,
+        metadata: Dict[str, Any] = None
+    ):
+        """Save a conversation step to persistent memory."""
+        memory_entry = {
+            "context_id": context_id,
+            "timestamp": datetime.utcnow().isoformat(),
+            "action": step.action,
+            "tool_calls": [tool_call.model_dump() for tool_call in step.tool_calls] if step.tool_calls else [],
+            "observations": step.observations,
+            "metadata": metadata or {},
+        }
+
+        if self.storage:
+            await self.storage.save_memory(memory_entry)
+
+    async def get_conversation_history(
+        self,
+        context_id: str,
+        limit: int = 50
+    ) -> List[Dict[str, Any]]:
+        """Retrieve conversation history for context."""
+        if self.storage:
+            return await self.storage.get_memory(context_id, limit)
+        return []
+
+    async def create_memory_enhanced_agent(
+        self,
+        factory: OllamaAgentFactory,
+        context_id: str,
+        model_id: str,
+        system_prompt: str
+    ) -> CodeAgent:
+        """Create an agent with loaded conversation history."""
+        agent = factory.create_code_agent(
+            model_id=model_id,
+            system_prompt=system_prompt,
+        )
+
+        # Load conversation history
+        history = await self.get_conversation_history(context_id)
+
+        if history:
+            # Inject relevant history into system prompt
+            history_summary = self._summarize_history(history)
+            enhanced_prompt = f"{system_prompt}\n\nRecent conversation context:\n{history_summary}"
+            agent.system_prompt = enhanced_prompt
+
+        # Add memory saving callback
+        def memory_callback(step: ActionStep):
+            # Non-blocking save
+            import asyncio
+            asyncio.create_task(
+                self.save_conversation_step(context_id, step)
+            )
+
+        agent.step_callbacks = [memory_callback]
+        return agent
+
+    def _summarize_history(self, history: List[Dict[str, Any]]) -> str:
+        """Create a concise summary of conversation history."""
+        if not history:
+            return "No previous conversation."
+
+        summary_parts = []
+        for entry in history[-10:]:  # Last 10 entries
+            timestamp = entry.get("timestamp", "")
+            action = entry.get("action", "")
+            if action:
+                summary_parts.append(f"- {timestamp}: {action}")
+
+        return "\n".join(summary_parts) if summary_parts else "Recent activity available."
+```
+
+## Error Handling and Resilience
+
+### Robust Agent Error Handling
+
+Implement comprehensive error handling for production agent deployments:
+
+```python
+import asyncio
+from typing import Optional
+from functools import wraps
+
+class ResilientAgentService(AgentService):
+    """AgentService with enhanced error handling and resilience."""
+
+    def __init__(self, factory: OllamaAgentFactory, max_retries: int = 3):
+        super().__init__(factory)
+        self.max_retries = max_retries
+
+    def with_retry(func):
+        """Decorator for adding retry logic to agent operations."""
+        @wraps(func)
+        async def wrapper(self, *args, **kwargs):
+            last_exception = None
+
+            for attempt in range(self.max_retries):
+                try:
+                    return await func(self, *args, **kwargs)
+                except Exception as e:
+                    last_exception = e
+                    self.factory.logger.warning(
+                        f"Attempt {attempt + 1} failed: {e}"
+                    )
+
+                    if attempt < self.max_retries - 1:
+                        # Exponential backoff
+                        await asyncio.sleep(2 ** attempt)
+
+            # All retries failed
+            self.factory.logger.error(f"All {self.max_retries} attempts failed")
+            raise last_exception
+
+        return wrapper
+
+    @with_retry
+    async def process_message_resilient(
+        self,
+        context_id: str,
+        message: str,
+        timeout: float = 60.0,
+        fallback_model: str = "qwen3:0.6b"
+    ) -> str:
+        """Process message with timeout and fallback handling."""
+        try:
+            # Try with default model first
+            return await asyncio.wait_for(
+                self.process_message(context_id, message),
+                timeout=timeout
+            )
+        except asyncio.TimeoutError:
+            self.factory.logger.warning(f"Timeout, trying fallback model: {fallback_model}")
+            # Try with lighter fallback model
+            return await asyncio.wait_for(
+                self.process_message(context_id, message, model_id=fallback_model),
+                timeout=timeout / 2
+            )
+        except Exception as e:
+            # Log the error and provide user-friendly response
+            self.factory.logger.error(f"Agent processing failed: {e}", exc_info=True)
+            return "I'm experiencing technical difficulties. Please try again in a moment."
+```
+
+## Best Practices Summary
+
+1. **Always use LiteLLMModel** as the bridge between smolagents and Ollama
+2. **Implement chat-scoped caching** for memory efficiency
+3. **Use different models for different roles** (manager vs worker agents)
+4. **Implement intelligent model selection** based on task complexity and system resources
+5. **Add comprehensive error handling** with retries and fallbacks
+6. **Use memory callbacks** for conversation tracking and analytics
+7. **Implement proper logging** for debugging and monitoring
+8. **Consider persistent memory** for long-running conversations
+9. **Use managed agents** for specialized tasks in multi-agent systems
+10. **Implement graceful degradation** when models are unavailable
+
+These patterns ensure robust, scalable, and efficient integration between Ollama and the smolagents framework for any project requiring AI agent capabilities.
+description:
+globs:
+alwaysApply: false
+---

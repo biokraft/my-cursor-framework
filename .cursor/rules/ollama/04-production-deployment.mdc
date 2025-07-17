@@ -1,0 +1,785 @@
+---
+description: Ollama Production Deployment: Production-ready patterns for Ollama deployment including monitoring, security, scaling, and maintenance
+globs: **/docker-compose*.yml, **/nginx.conf, **/prometheus.yml, **/*.monitoring.py
+alwaysApply: false
+---
+# Ollama Production Deployment Patterns
+
+This rule provides comprehensive patterns for deploying Ollama in production environments, covering monitoring, logging, security, scaling, and maintenance strategies.
+
+## Production Infrastructure Setup
+
+### High-Availability Docker Compose Configuration
+
+```yaml
+# docker-compose.prod.yml
+version: '3.8'
+
+services:
+  ollama:
+    container_name: "prod-ollama"
+    image: ollama/ollama:${OLLAMA_VERSION:-0.5.1}  # Pin specific version
+    volumes:
+      - ollama_data:/root/.ollama
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - ollama-network
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+      - OLLAMA_MAX_LOADED_MODELS=${OLLAMA_MAX_LOADED_MODELS:-3}
+      - OLLAMA_NUM_PARALLEL=${OLLAMA_NUM_PARALLEL:-2}
+      - OLLAMA_MAX_QUEUE=${OLLAMA_MAX_QUEUE:-1024}
+      - OLLAMA_KEEP_ALIVE=${OLLAMA_KEEP_ALIVE:-5m}
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: ${OLLAMA_MEMORY_LIMIT:-16G}
+          cpus: '${OLLAMA_CPU_LIMIT:-8.0}'
+        reservations:
+          memory: ${OLLAMA_MEMORY_RESERVATION:-8G}
+          cpus: '${OLLAMA_CPU_RESERVATION:-4.0}'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+        compress: "true"
+    labels:
+      - "traefik.enable=false"  # Internal service only
+
+  ollama-proxy:
+    image: nginx:alpine
+    container_name: "ollama-proxy"
+    volumes:
+      - ./nginx/ollama.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "${OLLAMA_PUBLIC_PORT:-11434}:80"
+    networks:
+      - ollama-network
+    depends_on:
+      ollama:
+        condition: service_healthy
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ollama.rule=Host(`ollama.${DOMAIN}`)"
+      - "traefik.http.services.ollama.loadbalancer.server.port=80"
+
+  ollama-monitor:
+    image: prom/prometheus:latest
+    container_name: "ollama-monitor"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+    networks:
+      - ollama-network
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${OLLAMA_DATA_PATH:-/opt/ollama/data}
+  prometheus_data:
+
+networks:
+  ollama-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+```
+
+### NGINX Reverse Proxy Configuration
+
+```nginx
+# nginx/ollama.conf
+upstream ollama_backend {
+    server ollama:11434;
+    keepalive 32;
+}
+
+server {
+    listen 80;
+    server_name _;
+
+    # Security headers
+    add_header X-Content-Type-Options nosniff;
+    add_header X-Frame-Options DENY;
+    add_header X-XSS-Protection "1; mode=block";
+
+    # Rate limiting
+    limit_req_zone $binary_remote_addr zone=ollama_api:10m rate=10r/s;
+    limit_req zone=ollama_api burst=20 nodelay;
+
+    # Request size limits
+    client_max_body_size 10M;
+    client_body_timeout 60s;
+    client_header_timeout 60s;
+
+    # Proxy configuration
+    location / {
+        proxy_pass http://ollama_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+
+        # Timeouts
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 300s;
+        proxy_read_timeout 300s;
+
+        # Buffering
+        proxy_buffering on;
+        proxy_buffer_size 4k;
+        proxy_buffers 8 4k;
+    }
+
+    # Health check endpoint
+    location /health {
+        access_log off;
+        proxy_pass http://ollama_backend/api/version;
+        proxy_set_header Host $host;
+    }
+
+    # Metrics endpoint (internal only)
+    location /metrics {
+        allow 172.20.0.0/16;  # Docker network only
+        deny all;
+        proxy_pass http://ollama_backend/metrics;
+    }
+}
+```
+
+## Monitoring and Observability
+
+### Comprehensive Monitoring Setup
+
+```python
+import asyncio
+import aiohttp
+import logging
+import time
+from dataclasses import dataclass
+from typing import Optional, Dict, Any
+import psutil
+
+@dataclass
+class OllamaMetrics:
+    """Ollama service metrics."""
+    is_healthy: bool
+    response_time_ms: float
+    loaded_models: int
+    memory_usage_mb: float
+    cpu_usage_percent: float
+    active_requests: int
+    queue_size: int
+
+class OllamaMonitor:
+    """Production monitoring for Ollama services."""
+
+    def __init__(self, ollama_url: str = "http://localhost:11434"):
+        self.ollama_url = ollama_url.rstrip("/")
+        self.logger = logging.getLogger("ollama.monitor")
+        self.metrics_history: list[OllamaMetrics] = []
+        self.alert_thresholds = {
+            "response_time_ms": 5000,
+            "memory_usage_mb": 14000,  # 14GB
+            "cpu_usage_percent": 90,
+            "queue_size": 50,
+        }
+
+    async def collect_metrics(self) -> Optional[OllamaMetrics]:
+        """Collect comprehensive metrics from Ollama service."""
+        try:
+            start_time = time.time()
+
+            # Health check
+            async with aiohttp.ClientSession() as session:
+                async with session.get(
+                    f"{self.ollama_url}/api/version",
+                    timeout=aiohttp.ClientTimeout(total=10)
+                ) as response:
+                    is_healthy = response.status == 200
+                    response_time_ms = (time.time() - start_time) * 1000
+
+                # Get loaded models
+                async with session.get(f"{self.ollama_url}/api/tags") as models_response:
+                    if models_response.status == 200:
+                        models_data = await models_response.json()
+                        loaded_models = len(models_data.get("models", []))
+                    else:
+                        loaded_models = 0
+
+            # System metrics
+            memory_usage_mb = psutil.virtual_memory().used / (1024 * 1024)
+            cpu_usage_percent = psutil.cpu_percent(interval=1)
+
+            # Create metrics object
+            metrics = OllamaMetrics(
+                is_healthy=is_healthy,
+                response_time_ms=response_time_ms,
+                loaded_models=loaded_models,
+                memory_usage_mb=memory_usage_mb,
+                cpu_usage_percent=cpu_usage_percent,
+                active_requests=0,  # Would need Ollama API extension
+                queue_size=0,       # Would need Ollama API extension
+            )
+
+            # Store metrics
+            self.metrics_history.append(metrics)
+            if len(self.metrics_history) > 1000:  # Keep last 1000 measurements
+                self.metrics_history.pop(0)
+
+            # Check for alerts
+            await self._check_alerts(metrics)
+
+            return metrics
+
+        except Exception as e:
+            self.logger.error(f"Failed to collect metrics: {e}")
+            return None
+
+    async def _check_alerts(self, metrics: OllamaMetrics):
+        """Check metrics against alert thresholds."""
+        alerts = []
+
+        if not metrics.is_healthy:
+            alerts.append("Ollama service is unhealthy")
+
+        if metrics.response_time_ms > self.alert_thresholds["response_time_ms"]:
+            alerts.append(f"High response time: {metrics.response_time_ms:.0f}ms")
+
+        if metrics.memory_usage_mb > self.alert_thresholds["memory_usage_mb"]:
+            alerts.append(f"High memory usage: {metrics.memory_usage_mb:.0f}MB")
+
+        if metrics.cpu_usage_percent > self.alert_thresholds["cpu_usage_percent"]:
+            alerts.append(f"High CPU usage: {metrics.cpu_usage_percent:.1f}%")
+
+        if alerts:
+            await self._send_alerts(alerts, metrics)
+
+    async def _send_alerts(self, alerts: list[str], metrics: OllamaMetrics):
+        """Send alerts to configured channels."""
+        alert_message = f"Ollama Alert: {', '.join(alerts)}"
+        self.logger.critical(alert_message)
+
+        # Here you would integrate with your alerting system:
+        # - Slack webhook
+        # - PagerDuty
+        # - Email notifications
+        # - Custom monitoring systems
+
+    async def start_monitoring(self, interval_seconds: int = 30):
+        """Start continuous monitoring loop."""
+        self.logger.info(f"Starting Ollama monitoring (interval: {interval_seconds}s)")
+
+        while True:
+            try:
+                metrics = await self.collect_metrics()
+                if metrics:
+                    self.logger.info(
+                        f"Metrics - Health: {metrics.is_healthy}, "
+                        f"Response: {metrics.response_time_ms:.0f}ms, "
+                        f"Memory: {metrics.memory_usage_mb:.0f}MB, "
+                        f"CPU: {metrics.cpu_usage_percent:.1f}%"
+                    )
+
+                await asyncio.sleep(interval_seconds)
+
+            except KeyboardInterrupt:
+                self.logger.info("Monitoring stopped by user")
+                break
+            except Exception as e:
+                self.logger.error(f"Monitoring error: {e}")
+                await asyncio.sleep(interval_seconds)
+```
+
+### Prometheus Metrics Export
+
+```python
+from prometheus_client import Counter, Histogram, Gauge, start_http_server
+import time
+
+class PrometheusOllamaExporter:
+    """Export Ollama metrics to Prometheus."""
+
+    def __init__(self, metrics_port: int = 8000):
+        self.metrics_port = metrics_port
+
+        # Define metrics
+        self.request_count = Counter(
+            'ollama_requests_total',
+            'Total number of requests to Ollama',
+            ['model', 'status']
+        )
+
+        self.request_duration = Histogram(
+            'ollama_request_duration_seconds',
+            'Time spent processing Ollama requests',
+            ['model']
+        )
+
+        self.model_memory_usage = Gauge(
+            'ollama_model_memory_bytes',
+            'Memory usage by loaded models',
+            ['model']
+        )
+
+        self.service_health = Gauge(
+            'ollama_service_healthy',
+            'Ollama service health status (1=healthy, 0=unhealthy)'
+        )
+
+        self.loaded_models = Gauge(
+            'ollama_loaded_models_count',
+            'Number of currently loaded models'
+        )
+
+    def start_metrics_server(self):
+        """Start Prometheus metrics HTTP server."""
+        start_http_server(self.metrics_port)
+        logging.getLogger("ollama.prometheus").info(
+            f"Prometheus metrics server started on port {self.metrics_port}"
+        )
+
+    def record_request(self, model: str, duration: float, success: bool):
+        """Record a request to Ollama."""
+        status = "success" if success else "error"
+        self.request_count.labels(model=model, status=status).inc()
+        self.request_duration.labels(model=model).observe(duration)
+
+    def update_service_metrics(self, metrics: OllamaMetrics):
+        """Update service-level metrics."""
+        self.service_health.set(1 if metrics.is_healthy else 0)
+        self.loaded_models.set(metrics.loaded_models)
+
+    def record_model_memory(self, model: str, memory_bytes: int):
+        """Record memory usage for a specific model."""
+        self.model_memory_usage.labels(model=model).set(memory_bytes)
+
+# Integration with existing monitoring
+class MonitoredOllamaService:
+    """Ollama service with integrated Prometheus monitoring."""
+
+    def __init__(self, ollama_client, prometheus_exporter: PrometheusOllamaExporter):
+        self.ollama_client = ollama_client
+        self.exporter = prometheus_exporter
+
+    async def generate_with_monitoring(self, model: str, prompt: str) -> str:
+        """Generate response with automatic metrics collection."""
+        start_time = time.time()
+        success = False
+
+        try:
+            response = await self.ollama_client.generate(model, prompt)
+            success = True
+            return response
+        except Exception as e:
+            logging.error(f"Generation failed: {e}")
+            raise
+        finally:
+            duration = time.time() - start_time
+            self.exporter.record_request(model, duration, success)
+```
+
+## Security and Access Control
+
+### Production Security Configuration
+
+```python
+import hashlib
+import hmac
+import time
+from typing import Optional
+import jwt
+
+class OllamaSecurityManager:
+    """Security manager for production Ollama deployments."""
+
+    def __init__(self, api_key: str, jwt_secret: str):
+        self.api_key = api_key
+        self.jwt_secret = jwt_secret
+        self.rate_limits: dict[str, list[float]] = {}
+
+    def verify_api_key(self, provided_key: str) -> bool:
+        """Verify API key using constant-time comparison."""
+        return hmac.compare_digest(self.api_key, provided_key)
+
+    def generate_access_token(self, client_id: str, ttl_hours: int = 24) -> str:
+        """Generate JWT access token for client."""
+        payload = {
+            "client_id": client_id,
+            "iat": time.time(),
+            "exp": time.time() + (ttl_hours * 3600),
+            "scope": ["ollama:generate", "ollama:models"]
+        }
+        return jwt.encode(payload, self.jwt_secret, algorithm="HS256")
+
+    def verify_token(self, token: str) -> Optional[dict]:
+        """Verify and decode JWT token."""
+        try:
+            payload = jwt.decode(token, self.jwt_secret, algorithms=["HS256"])
+            return payload
+        except jwt.InvalidTokenError:
+            return None
+
+    def check_rate_limit(
+        self,
+        client_id: str,
+        requests_per_minute: int = 60
+    ) -> bool:
+        """Check if client is within rate limits."""
+        now = time.time()
+        minute_ago = now - 60
+
+        # Initialize client if not exists
+        if client_id not in self.rate_limits:
+            self.rate_limits[client_id] = []
+
+        # Remove old requests
+        self.rate_limits[client_id] = [
+            req_time for req_time in self.rate_limits[client_id]
+            if req_time > minute_ago
+        ]
+
+        # Check if under limit
+        if len(self.rate_limits[client_id]) >= requests_per_minute:
+            return False
+
+        # Record this request
+        self.rate_limits[client_id].append(now)
+        return True
+
+    def log_access(self, client_id: str, endpoint: str, success: bool):
+        """Log access attempts for security auditing."""
+        logging.getLogger("ollama.security").info(
+            f"Access - Client: {client_id}, Endpoint: {endpoint}, Success: {success}"
+        )
+
+# FastAPI middleware integration example
+from fastapi import FastAPI, HTTPException, Depends, Header
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+app = FastAPI()
+security = HTTPBearer()
+security_manager = OllamaSecurityManager("your-api-key", "your-jwt-secret")
+
+async def verify_access(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """Verify access token and rate limits."""
+    token_payload = security_manager.verify_token(credentials.credentials)
+    if not token_payload:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    client_id = token_payload["client_id"]
+    if not security_manager.check_rate_limit(client_id):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+
+    return token_payload
+
+@app.post("/api/generate")
+async def generate_endpoint(
+    request: dict,
+    token_payload: dict = Depends(verify_access)
+):
+    """Secured Ollama generation endpoint."""
+    client_id = token_payload["client_id"]
+
+    try:
+        # Forward to Ollama service
+        # ... (implementation depends on your setup)
+        security_manager.log_access(client_id, "/api/generate", True)
+        return {"response": "generated text"}
+    except Exception as e:
+        security_manager.log_access(client_id, "/api/generate", False)
+        raise HTTPException(status_code=500, detail=str(e))
+```
+
+## Scaling and Load Balancing
+
+### Multi-Instance Ollama Setup
+
+```yaml
+# docker-compose.scale.yml
+version: '3.8'
+
+services:
+  ollama-01:
+    <<: *ollama-service-template
+    container_name: "ollama-01"
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_MODELS=qwen3:0.6b,qwen:7b  # Lightweight models
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+
+  ollama-02:
+    <<: *ollama-service-template
+    container_name: "ollama-02"
+    ports:
+      - "11435:11434"
+    environment:
+      - OLLAMA_MODELS=qwen:14b,llama3.1:8b  # Heavy models
+    deploy:
+      resources:
+        limits:
+          memory: 24G
+
+  ollama-lb:
+    image: haproxy:alpine
+    container_name: "ollama-loadbalancer"
+    volumes:
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    ports:
+      - "11433:80"
+    depends_on:
+      - ollama-01
+      - ollama-02
+    restart: unless-stopped
+
+x-ollama-service-template: &ollama-service-template
+  image: ollama/ollama:0.5.1
+  volumes:
+    - ollama_shared_data:/root/.ollama
+  networks:
+    - ollama-cluster
+  healthcheck:
+    test: ["CMD", "ollama", "list"]
+    interval: 30s
+    timeout: 10s
+    retries: 3
+  restart: unless-stopped
+```
+
+### Intelligent Load Balancing
+
+```python
+import asyncio
+import random
+from typing import List, Optional
+from dataclasses import dataclass
+
+@dataclass
+class OllamaInstance:
+    url: str
+    models: List[str]
+    current_load: int = 0
+    is_healthy: bool = True
+    last_health_check: float = 0
+
+class OllamaLoadBalancer:
+    """Intelligent load balancer for multiple Ollama instances."""
+
+    def __init__(self, instances: List[OllamaInstance]):
+        self.instances = instances
+        self.health_check_interval = 30
+        self._health_check_task = None
+
+    async def start_health_monitoring(self):
+        """Start background health checking."""
+        self._health_check_task = asyncio.create_task(self._health_check_loop())
+
+    async def stop_health_monitoring(self):
+        """Stop health monitoring."""
+        if self._health_check_task:
+            self._health_check_task.cancel()
+
+    async def _health_check_loop(self):
+        """Continuous health checking of instances."""
+        while True:
+            try:
+                await asyncio.gather(*[
+                    self._check_instance_health(instance)
+                    for instance in self.instances
+                ])
+                await asyncio.sleep(self.health_check_interval)
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                logging.error(f"Health check error: {e}")
+
+    async def _check_instance_health(self, instance: OllamaInstance):
+        """Check health of a single instance."""
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(
+                    f"{instance.url}/api/version",
+                    timeout=aiohttp.ClientTimeout(total=5)
+                ) as response:
+                    instance.is_healthy = response.status == 200
+                    instance.last_health_check = time.time()
+        except Exception:
+            instance.is_healthy = False
+            instance.last_health_check = time.time()
+
+    def select_instance_for_model(self, model: str) -> Optional[OllamaInstance]:
+        """Select best instance for a specific model."""
+        # Filter instances that have the model and are healthy
+        suitable_instances = [
+            instance for instance in self.instances
+            if model in instance.models and instance.is_healthy
+        ]
+
+        if not suitable_instances:
+            return None
+
+        # Select instance with lowest current load
+        return min(suitable_instances, key=lambda x: x.current_load)
+
+    async def generate_balanced(self, model: str, prompt: str) -> str:
+        """Generate response using load balancing."""
+        instance = self.select_instance_for_model(model)
+        if not instance:
+            raise Exception(f"No healthy instances available for model: {model}")
+
+        # Track load
+        instance.current_load += 1
+
+        try:
+            # Make request to selected instance
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    f"{instance.url}/api/generate",
+                    json={"model": model, "prompt": prompt, "stream": False}
+                ) as response:
+                    result = await response.json()
+                    return result["response"]
+        finally:
+            # Decrease load counter
+            instance.current_load -= 1
+```
+
+## Backup and Disaster Recovery
+
+### Model and Configuration Backup
+
+```python
+import shutil
+import tarfile
+import boto3
+from datetime import datetime
+import logging
+
+class OllamaBackupManager:
+    """Manage backups of Ollama models and configurations."""
+
+    def __init__(self, ollama_data_path: str, backup_path: str):
+        self.ollama_data_path = ollama_data_path
+        self.backup_path = backup_path
+        self.logger = logging.getLogger("ollama.backup")
+
+    def create_local_backup(self) -> str:
+        """Create a local backup of Ollama data."""
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_filename = f"ollama_backup_{timestamp}.tar.gz"
+        backup_filepath = f"{self.backup_path}/{backup_filename}"
+
+        try:
+            with tarfile.open(backup_filepath, "w:gz") as tar:
+                tar.add(self.ollama_data_path, arcname="ollama_data")
+
+            self.logger.info(f"Local backup created: {backup_filepath}")
+            return backup_filepath
+        except Exception as e:
+            self.logger.error(f"Local backup failed: {e}")
+            raise
+
+    def upload_to_s3(self, backup_filepath: str, bucket: str, key: str):
+        """Upload backup to S3."""
+        try:
+            s3_client = boto3.client('s3')
+            s3_client.upload_file(backup_filepath, bucket, key)
+            self.logger.info(f"Backup uploaded to S3: s3://{bucket}/{key}")
+        except Exception as e:
+            self.logger.error(f"S3 upload failed: {e}")
+            raise
+
+    def restore_from_backup(self, backup_filepath: str):
+        """Restore Ollama data from backup."""
+        try:
+            # Stop Ollama service first
+            # ... (implementation depends on your deployment)
+
+            # Extract backup
+            with tarfile.open(backup_filepath, "r:gz") as tar:
+                tar.extractall(path="/")
+
+            self.logger.info(f"Restored from backup: {backup_filepath}")
+
+            # Restart Ollama service
+            # ... (implementation depends on your deployment)
+
+        except Exception as e:
+            self.logger.error(f"Restore failed: {e}")
+            raise
+
+# Automated backup script
+async def automated_backup_job():
+    """Automated backup job for production."""
+    backup_manager = OllamaBackupManager(
+        ollama_data_path="/opt/ollama/data",
+        backup_path="/opt/backups"
+    )
+
+    try:
+        # Create local backup
+        backup_file = backup_manager.create_local_backup()
+
+        # Upload to S3
+        timestamp = datetime.now().strftime("%Y/%m/%d")
+        s3_key = f"ollama-backups/{timestamp}/ollama_backup.tar.gz"
+        backup_manager.upload_to_s3(backup_file, "your-backup-bucket", s3_key)
+
+        # Clean up old local backups (keep last 7 days)
+        # ... (implementation for cleanup)
+
+    except Exception as e:
+        logging.error(f"Automated backup failed: {e}")
+        # Send alert to monitoring system
+```
+
+## Best Practices Summary
+
+1. **Pin Docker image versions** in production
+2. **Implement comprehensive monitoring** with Prometheus and custom metrics
+3. **Use reverse proxy** with rate limiting and security headers
+4. **Set up proper logging** with rotation and compression
+5. **Implement security layers** with API keys and JWT tokens
+6. **Configure resource limits** to prevent system overload
+7. **Use health checks** for service reliability
+8. **Implement load balancing** for scalability
+9. **Set up automated backups** for disaster recovery
+10. **Monitor and alert** on key performance metrics
+11. **Use dedicated networks** for service isolation
+12. **Implement graceful degradation** for service failures
+
+These patterns ensure robust, secure, and scalable Ollama deployments suitable for production environments.
+description:
+globs:
+alwaysApply: false
+---

@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Release v1.3.1 - Rules & Guidelines Expansion
+
+### ✨ Features
+
+-   **Diagram & Build Rules:** Added Mermaid best practices for error-free diagrams and Makefile guidelines for reliable build automation.
+-   **C++ Development Suite:** Introduced comprehensive 5-rule set covering architecture, resource management, modern idioms, and code style for new C++ features.  
+-   **Ollama LLM Integration:** Added 4 specialized rules for Ollama setup, Docker containerization, smolagents integration, and production deployment.
+-   **Docker Compose Expansion:** Enhanced Docker guidelines with security best practices and AWS local development patterns.
+
+### 🔧 Maintenance
+
+-   **Project Setup:** Updated .gitignore and improved overall project organization.
+
+[v1.3.1]: https://github.com/biokraft/my-cursor-framework/compare/v1.3.0...v1.3.1
+
 ## Release v1.3.0 - Documentation Enhancements
 
 ### 📚 Documentation

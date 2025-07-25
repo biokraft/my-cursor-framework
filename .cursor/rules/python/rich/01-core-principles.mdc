@@ -1,0 +1,115 @@
+---
+description: Rich CLI core principles: Apply when working with rich library for CLI development
+globs: **/*.py
+alwaysApply: false
+---
+# Rich CLI Core Principles
+
+## Overview
+
+When building CLI tools with the `rich` library, follow these core principles to create professional, user-friendly command-line applications.
+
+## The Console Object Foundation
+
+### Single Console Instance Pattern
+
+Always create a centralized `Console` object for your application:
+
+```python
+from rich.console import Console
+
+# Create application-wide console instances
+console = Console()
+err_console = Console(stderr=True)  # For status/progress updates
+```
+
+### Console vs Built-in Print
+
+**DO:**
+```python
+from rich.console import Console
+
+console = Console()
+console.print("Hello [bold cyan]World[/bold cyan]!")
+console.log("Debug information with timestamp")
+```
+
+**DON'T:**
+```python
+print("Plain text output")  # Loses rich formatting capabilities
+```
+
+## Output Separation Strategy
+
+### stdout vs stderr Usage
+
+- **stdout**: Primary application output (results, data)
+- **stderr**: Status updates, progress bars, debug information
+
+```python
+from rich.console import Console
+
+# Main output console
+console = Console()
+
+# Status/progress console  
+status_console = Console(stderr=True)
+
+# Usage
+with status_console.status("Processing..."):
+    result = do_work()
+    console.print(result)  # Main output to stdout
+```
+
+## Basic Styling Guidelines
+
+### Console Markup Syntax
+
+Use rich's markup for inline styling:
+
+```python
+console.print("[bold red]Error:[/bold red] Something went wrong")
+console.print("[dim]Debug info[/dim]")
+console.print("[link=https://example.com]Click here[/link]")
+```
+
+### Style Consistency
+
+- Use semantic styling (e.g., `[bold red]` for errors, `[green]` for success)
+- Avoid hard-coded colors that may clash with terminal themes
+- Prefer rich's built-in styles over custom color definitions
+
+## Error Handling Integration
+
+### Rich Tracebacks
+
+Enable rich tracebacks for better debugging experience:
+
+```python
+from rich.traceback import install
+
+# Enable rich tracebacks globally
+install(show_locals=True)
+```
+
+### Object Inspection
+
+Use rich's inspect for debugging complex objects:
+
+```python
+from rich import inspect
+
+# Instead of print(complex_object)
+inspect(complex_object, methods=True)
+```
+
+## Performance Considerations
+
+- Create Console instances once and reuse them
+- Avoid rendering extremely large content blocks
+- Use `console.is_terminal` to conditionally enable rich features
+- Consider disabling rich features in non-interactive environments
+description:
+globs:
+alwaysApply: false
+---

@@ -1,0 +1,221 @@
+---
+description: Rich progress and feedback patterns: Apply when implementing progress bars and status indicators
+globs: **/*.py
+alwaysApply: false
+---
+# Rich Progress and User Feedback
+
+## Overview
+
+Proper feedback during long-running operations is crucial for good CLI UX. Rich provides powerful tools for both determinate and indeterminate progress indication.
+
+## Status Indicators for Indeterminate Progress
+
+### When to Use Status
+
+Use `console.status()` for operations where progress cannot be measured:
+- Network requests (authentication, API calls)
+- File system operations with unknown duration
+- Initialization processes
+
+```python
+from rich.console import Console
+
+console = Console(stderr=True)  # Always use stderr for status
+
+def authenticate_user():
+    with console.status("[bold green]Authenticating with server..."):
+        # Simulate authentication
+        response = make_api_request()
+        return response
+
+# Alternative: Manual control
+status = console.status("Loading configuration...")
+status.start()
+try:
+    config = load_config()
+finally:
+    status.stop()
+```
+
+### Status Best Practices
+
+- Always use descriptive messages that tell users what's happening
+- Use stderr to avoid interfering with main output
+- Keep status messages concise but informative
+- Use semantic colors (`[green]` for normal operations, `[yellow]` for warnings)
+
+## Progress Bars for Determinate Tasks
+
+### Simple Progress with track()
+
+For basic iteration with known length:
+
+```python
+from rich.progress import track
+import time
+
+def process_files(file_list):
+    for file_path in track(file_list, description="Processing files..."):
+        process_single_file(file_path)
+        time.sleep(0.1)  # Simulate work
+```
+
+### Advanced Progress with Progress Class
+
+For complex scenarios requiring multiple progress bars or custom columns:
+
+```python
+from rich.progress import (
+    Progress,
+    TextColumn,
+    BarColumn,
+    MofNCompleteColumn,
+    TimeRemainingColumn,
+)
+
+def advanced_processing():
+    with Progress(
+        TextColumn("{task.description}"),
+        BarColumn(),
+        MofNCompleteColumn(),
+        TimeRemainingColumn(),
+        console=Console(stderr=True),  # Use stderr
+        disable=not Console().is_terminal,  # Disable in non-interactive mode
+        transient=True,  # Remove after completion
+    ) as progress:
+        
+        # Multiple tasks
+        download_task = progress.add_task("Downloading...", total=100)
+        process_task = progress.add_task("Processing...", total=50)
+        
+        # Update progress
+        for i in range(100):
+            progress.update(download_task, advance=1)
+            if i % 2 == 0:  # Process every other item
+                progress.update(process_task, advance=1)
+```
+
+## Environment-Aware Progress
+
+### Terminal Detection
+
+Always check if output is going to a terminal:
+
+```python
+from rich.console import Console
+from rich.progress import Progress
+
+def smart_progress():
+    console = Console()
+    
+    # Disable progress in non-interactive environments
+    show_progress = console.is_terminal and not os.getenv("CI")
+    
+    with Progress(
+        disable=not show_progress,
+        console=Console(stderr=True),
+    ) as progress:
+        task = progress.add_task("Working...", total=100)
+        # ... work happens here
+```
+
+### CI/CD Environment Handling
+
+```python
+import os
+from rich.progress import Progress
+
+def ci_aware_progress():
+    # Common CI environment variables
+    is_ci = any([
+        os.getenv("CI"),
+        os.getenv("GITHUB_ACTIONS"),
+        os.getenv("TRAVIS"),
+        os.getenv("JENKINS_URL"),
+    ])
+    
+    with Progress(
+        disable=is_ci,  # Disable animations in CI
+        console=Console(stderr=True),
+    ) as progress:
+        # ... progress logic
+```
+
+## Partial Results Display
+
+### Show Results as They Arrive
+
+Display partial results immediately rather than waiting for completion:
+
+```python
+def process_with_partial_results():
+    console = Console()
+    status_console = Console(stderr=True)
+    
+    with status_console.status("Processing files..."):
+        for file_path in file_list:
+            try:
+                result = process_file(file_path)
+                # Show result immediately
+                console.print(f"✅ {file_path}: {result}")
+            except Exception as e:
+                console.print(f"❌ {file_path}: [red]{e}[/red]")
+```
+
+## Progress Bar Customization
+
+### Custom Columns
+
+```python
+from rich.progress import Progress, TextColumn, BarColumn, TaskProgressColumn
+
+def custom_progress_columns():
+    with Progress(
+        TextColumn("[bold blue]{task.description}"),
+        BarColumn(bar_width=None),  # Auto-width
+        TaskProgressColumn(),
+        TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
+        console=Console(stderr=True),
+    ) as progress:
+        # ... use progress
+```
+
+### Multiple Concurrent Tasks
+
+```python
+def concurrent_tasks_progress():
+    with Progress(console=Console(stderr=True)) as progress:
+        # Add multiple tasks
+        download_id = progress.add_task("Downloading", total=1000)
+        extract_id = progress.add_task("Extracting", total=500)
+        install_id = progress.add_task("Installing", total=200)
+        
+        # Update tasks independently
+        while not progress.finished:
+            progress.update(download_id, advance=10)
+            progress.update(extract_id, advance=5)
+            progress.update(install_id, advance=2)
+```
+
+## Error Handling with Progress
+
+```python
+def robust_progress_handling():
+    console = Console()
+    
+    with Progress(console=Console(stderr=True)) as progress:
+        task = progress.add_task("Processing", total=len(items))
+        
+        for item in items:
+            try:
+                result = process_item(item)
+                progress.update(task, advance=1, description=f"Processed {item}")
+            except Exception as e:
+                console.print(f"[red]Error processing {item}: {e}[/red]")
+                progress.update(task, advance=1)  # Still advance progress
+```
+description:
+globs:
+alwaysApply: false
+---

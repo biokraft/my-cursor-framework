@@ -1,0 +1,348 @@
+---
+description: Rich output structuring: Apply when organizing CLI output with tables, panels, and layout components
+globs: **/*.py
+alwaysApply: false
+---
+# Rich Output Structure and Layout
+
+## Overview
+
+Well-structured output is essential for professional CLI tools. Rich provides powerful layout components to organize information clearly and improve readability.
+
+## Tables for Structured Data
+
+### Basic Table Creation
+
+Use tables to display structured data with automatic column sizing:
+
+```python
+from rich.console import Console
+from rich.table import Table
+
+console = Console()
+
+def display_file_info(files):
+    table = Table(title="File Information")
+    
+    # Add columns with styling
+    table.add_column("Name", style="cyan", no_wrap=True)
+    table.add_column("Size", justify="right", style="magenta")
+    table.add_column("Modified", style="green")
+    table.add_column("Type", style="yellow")
+    
+    # Add rows
+    for file_info in files:
+        table.add_row(
+            file_info.name,
+            format_size(file_info.size),
+            file_info.modified.strftime("%Y-%m-%d %H:%M"),
+            file_info.type
+        )
+    
+    console.print(table)
+```
+
+### Advanced Table Features
+
+```python
+def advanced_table_example():
+    table = Table(
+        title="Project Status",
+        title_style="bold magenta",
+        show_header=True,
+        header_style="bold blue",
+        show_lines=True,  # Show lines between rows
+        expand=True,      # Expand to full width
+    )
+    
+    # Column with custom width and overflow handling
+    table.add_column("Task", min_width=20, max_width=40, overflow="ellipsis")
+    table.add_column("Status", justify="center", style="bold")
+    table.add_column("Progress", justify="right")
+    
+    # Rich markup in cells
+    table.add_row(
+        "Database Migration",
+        "[green]Complete[/green]",
+        "[bold green]100%[/bold green]"
+    )
+    table.add_row(
+        "API Documentation Update",
+        "[yellow]In Progress[/yellow]",
+        "[yellow]75%[/yellow]"
+    )
+    table.add_row(
+        "Security Audit",
+        "[red]Pending[/red]",
+        "[red]0%[/red]"
+    )
+    
+    console.print(table)
+```
+
+## Panels for Grouping Content
+
+### Basic Panel Usage
+
+Use panels to group related information and create visual separation:
+
+```python
+from rich.panel import Panel
+
+def show_configuration(config):
+    # Simple panel
+    console.print(
+        Panel(
+            f"Database: {config.db_url}\nCache: {config.cache_url}",
+            title="Configuration",
+            title_align="left"
+        )
+    )
+    
+    # Panel with rich content
+    console.print(
+        Panel(
+            "[bold green]✓[/bold green] All systems operational\n"
+            "[yellow]![/yellow] 2 warnings found\n"
+            "[red]✗[/red] 1 critical issue",
+            title="System Status",
+            border_style="blue"
+        )
+    )
+```
+
+### Styled Panels for Different Message Types
+
+```python
+def show_message_panels():
+    # Success panel
+    console.print(
+        Panel(
+            "Operation completed successfully!",
+            title="Success",
+            style="green",
+            title_align="center"
+        )
+    )
+    
+    # Warning panel
+    console.print(
+        Panel(
+            "Configuration file not found. Using defaults.",
+            title="Warning",
+            style="yellow",
+            title_align="center"
+        )
+    )
+    
+    # Error panel
+    console.print(
+        Panel(
+            "Failed to connect to database. Check your connection settings.",
+            title="Error",
+            style="red",
+            title_align="center"
+        )
+    )
+```
+
+## Rules for Section Separation
+
+### Creating Visual Sections
+
+Use rules to create clear separations between different parts of output:
+
+```python
+from rich.rule import Rule
+
+def structured_output():
+    console.print("Starting application...")
+    
+    # Section separator
+    console.print(Rule("Initialization"))
+    
+    # Initialization output
+    console.print("Loading configuration...")
+    console.print("Connecting to database...")
+    
+    # Another section
+    console.print(Rule("Processing", style="green"))
+    
+    # Processing output
+    process_data()
+    
+    # Final section
+    console.print(Rule("Summary", style="blue"))
+    
+    # Summary output
+    show_summary()
+```
+
+### Styled Rules
+
+```python
+def styled_rules():
+    # Different rule styles
+    console.print(Rule("Main Section", style="bold blue"))
+    console.print(Rule("Subsection", style="dim", characters="-"))
+    console.print(Rule(style="red"))  # Just a line, no title
+```
+
+## Columns for Multi-Column Layout
+
+### File Listing Example
+
+```python
+from rich.columns import Columns
+
+def list_files_in_columns(file_list):
+    # Simple column layout
+    console.print(Columns(file_list))
+    
+    # With custom column count and expand
+    console.print(
+        Columns(
+            file_list,
+            equal=True,     # Equal width columns
+            expand=True,    # Expand to full width
+            padding=(0, 2)  # Padding between columns
+        )
+    )
+```
+
+### Rich Content in Columns
+
+```python
+def rich_columns_example():
+    # Create panels for each column
+    panels = [
+        Panel(f"Content {i}\nLine 2\nLine 3", title=f"Panel {i}")
+        for i in range(1, 4)
+    ]
+    
+    console.print(Columns(panels))
+```
+
+## Markdown for Rich Text
+
+### Documentation and Help Text
+
+```python
+from rich.markdown import Markdown
+
+def show_help():
+    help_text = """
+    # CLI Tool Help
+    
+    ## Commands
+    
+    - **init**: Initialize a new project
+    - **build**: Build the project
+    - **deploy**: Deploy to production
+    
+    ## Examples
+    
+    ```bash
+    tool init my-project
+    tool build --verbose
+    tool deploy --env production
+    ```
+    
+    For more information, visit our [documentation](https://example.com/docs).
+    """
+    
+    console.print(Markdown(help_text))
+```
+
+## Combining Layout Elements
+
+### Complex Layout Example
+
+```python
+def complex_layout_example():
+    console.print(Rule("Application Status", style="bold blue"))
+    
+    # Status table
+    status_table = Table(show_header=False, box=None)
+    status_table.add_column("Component", style="cyan")
+    status_table.add_column("Status")
+    status_table.add_row("Database", "[green]Online[/green]")
+    status_table.add_row("Cache", "[green]Online[/green]")
+    status_table.add_row("Queue", "[yellow]Degraded[/yellow]")
+    
+    # Wrap table in panel
+    console.print(
+        Panel(
+            status_table,
+            title="System Health",
+            title_align="left"
+        )
+    )
+    
+    console.print(Rule("Recent Activity"))
+    
+    # Activity log
+    activities = [
+        "[dim]2023-01-01 10:00[/dim] User login: john@example.com",
+        "[dim]2023-01-01 10:05[/dim] File uploaded: document.pdf",
+        "[dim]2023-01-01 10:10[/dim] [red]Error:[/red] Failed to process image",
+    ]
+    
+    for activity in activities:
+        console.print(f"  {activity}")
+    
+    console.print(Rule())
+```
+
+## Layout Best Practices
+
+### Consistency Guidelines
+
+- Use consistent styling across similar components
+- Maintain consistent spacing between sections
+- Use semantic colors (green for success, red for errors, yellow for warnings)
+- Keep table column widths reasonable for terminal viewing
+
+### Responsive Design
+
+```python
+def responsive_output():
+    console = Console()
+    
+    # Adjust layout based on terminal width
+    if console.size.width < 80:
+        # Narrow terminal - use vertical layout
+        console.print("Narrow layout")
+        for item in items:
+            console.print(f"• {item}")
+    else:
+        # Wide terminal - use columns
+        console.print("Wide layout")
+        console.print(Columns(items))
+```
+
+### Error-Resistant Layouts
+
+```python
+def safe_table_creation(data):
+    table = Table()
+    
+    if not data:
+        console.print("[dim]No data to display[/dim]")
+        return
+    
+    # Safely add columns
+    if data and len(data[0]) > 0:
+        for i, header in enumerate(data[0].keys()):
+            table.add_column(str(header))
+    
+    # Safely add rows
+    for row in data:
+        table.add_row(*[str(value) for value in row.values()])
+    
+    console.print(table)
+```
+description:
+globs:
+alwaysApply: false
+---

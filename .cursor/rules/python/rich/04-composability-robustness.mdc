@@ -1,0 +1,384 @@
+---
+description: Rich CLI composability and robustness: Apply when ensuring CLI tools work well with pipes, redirects, and automation
+globs: **/*.py
+alwaysApply: false
+---
+# Rich CLI Composability and Robustness
+
+## Overview
+
+Professional CLI tools must work seamlessly in both interactive and automated environments. This includes proper handling of pipes, redirects, CI/CD systems, and integration with other command-line utilities.
+
+## Terminal Detection and Environment Awareness
+
+### Detecting Interactive vs Non-Interactive Environments
+
+Always check the execution environment before enabling rich features:
+
+```python
+import os
+from rich.console import Console
+
+def setup_console():
+    console = Console()
+    
+    # Comprehensive environment detection
+    is_interactive = (
+        console.is_terminal and           # Output goes to terminal
+        not os.getenv("CI") and          # Not in CI environment
+        not os.getenv("PYTEST_CURRENT_TEST") and  # Not in pytest
+        os.isatty(0)                     # stdin is a terminal
+    )
+    
+    return Console(
+        force_terminal=is_interactive,
+        no_color=not is_interactive
+    )
+```
+
+### CI/CD Environment Detection
+
+```python
+def detect_ci_environment():
+    """Detect various CI/CD environments."""
+    ci_indicators = [
+        "CI",                    # Generic CI flag
+        "CONTINUOUS_INTEGRATION", # Generic CI flag
+        "GITHUB_ACTIONS",        # GitHub Actions
+        "TRAVIS",                # Travis CI
+        "CIRCLECI",              # Circle CI
+        "JENKINS_URL",           # Jenkins
+        "GITLAB_CI",             # GitLab CI
+        "BUILDKITE",             # Buildkite
+        "TF_BUILD",              # Azure DevOps
+    ]
+    
+    return any(os.getenv(var) for var in ci_indicators)
+
+def setup_ci_aware_console():
+    is_ci = detect_ci_environment()
+    
+    return Console(
+        force_terminal=not is_ci,
+        no_color=is_ci,
+        stderr=True  # Use stderr for status in CI
+    )
+```
+
+## Proper Stream Handling
+
+### Separating Output Streams
+
+Always separate primary output from status/progress information:
+
+```python
+class CLIApp:
+    def __init__(self):
+        # Primary output (results, data)
+        self.output_console = Console()
+        
+        # Status, progress, debug info
+        self.status_console = Console(stderr=True)
+        
+        # Determine if we should show rich features
+        self.show_rich = (
+            self.status_console.is_terminal and 
+            not detect_ci_environment()
+        )
+    
+    def process_files(self, files):
+        # Progress goes to stderr
+        progress_console = self.status_console if self.show_rich else None
+        
+        if progress_console:
+            with progress_console.status("Processing files..."):
+                results = self._do_processing(files)
+        else:
+            results = self._do_processing(files)
+        
+        # Results go to stdout
+        for result in results:
+            self.output_console.print(result)
+```
+
+### Machine-Readable Output Modes
+
+Provide explicit machine-readable output options:
+
+```python
+import json
+from rich.table import Table
+
+class DataProcessor:
+    def __init__(self, output_format="rich"):
+        self.output_format = output_format
+        self.console = Console()
+    
+    def display_results(self, data):
+        if self.output_format == "json":
+            # Machine-readable JSON output
+            print(json.dumps(data, indent=2))
+        elif self.output_format == "csv":
+            # CSV output with proper escaping
+            import csv
+            import sys
+            writer = csv.writer(sys.stdout)
+            writer.writerow(data[0].keys())  # Headers
+            for row in data:
+                writer.writerow(row.values())
+        elif self.output_format == "plain":
+            # Plain text, no rich formatting
+            for item in data:
+                print(f"{item['name']}: {item['value']}")
+        else:
+            # Rich formatted output for humans
+            self._display_rich_table(data)
+    
+    def _display_rich_table(self, data):
+        table = Table()
+        if data:
+            for key in data[0].keys():
+                table.add_column(key.title())
+            for row in data:
+                table.add_row(*[str(v) for v in row.values()])
+        self.console.print(table)
+```
+
+## Handling Redirected Output
+
+### Soft Wrapping for Machine Processing
+
+Ensure output doesn't introduce unexpected line breaks:
+
+```python
+def output_for_processing(items):
+    console = Console()
+    
+    for item in items:
+        # Use soft_wrap=True to prevent rich from breaking lines
+        console.print(
+            f"{item.id},{item.name},{item.status}",
+            soft_wrap=True,
+            highlight=False  # Disable syntax highlighting
+        )
+```
+
+### Conditional Rich Features
+
+```python
+def smart_output(data):
+    console = Console()
+    
+    if console.is_terminal:
+        # Rich output for interactive use
+        table = Table(title="Results")
+        table.add_column("ID", style="cyan")
+        table.add_column("Status", style="green")
+        
+        for item in data:
+            table.add_row(str(item.id), item.status)
+        
+        console.print(table)
+    else:
+        # Simple output for pipes/redirects
+        for item in data:
+            print(f"{item.id}\t{item.status}")
+```
+
+## Progress Handling in Non-Interactive Environments
+
+### Adaptive Progress Reporting
+
+```python
+from rich.progress import Progress
+
+def adaptive_progress_processing(items):
+    console = Console()
+    is_interactive = console.is_terminal and not detect_ci_environment()
+    
+    if is_interactive:
+        # Rich progress bar for interactive use
+        with Progress(console=Console(stderr=True)) as progress:
+            task = progress.add_task("Processing...", total=len(items))
+            for item in items:
+                process_item(item)
+                progress.update(task, advance=1)
+    else:
+        # Simple logging for non-interactive use
+        total = len(items)
+        for i, item in enumerate(items, 1):
+            process_item(item)
+            if i % 10 == 0 or i == total:  # Log every 10 items
+                print(f"Processed {i}/{total} items", file=sys.stderr)
+```
+
+### Milestone-Based Progress
+
+For very long-running operations in CI:
+
+```python
+def ci_friendly_progress(items):
+    total = len(items)
+    milestones = [int(total * p / 100) for p in [10, 25, 50, 75, 90, 100]]
+    
+    for i, item in enumerate(items, 1):
+        process_item(item)
+        
+        if i in milestones:
+            percentage = (i / total) * 100
+            print(f"Progress: {percentage:.0f}% ({i}/{total})", file=sys.stderr)
+```
+
+## Error Handling and Robustness
+
+### Graceful Degradation
+
+```python
+def robust_rich_output(data):
+    console = Console()
+    
+    try:
+        # Attempt rich output
+        if console.is_terminal:
+            table = Table()
+            # ... rich table creation
+            console.print(table)
+        else:
+            # Fallback to plain output
+            for item in data:
+                print(f"{item.name}: {item.value}")
+    except Exception as e:
+        # Ultimate fallback - always works
+        print("Error displaying formatted output:", e, file=sys.stderr)
+        for item in data:
+            print(f"{item.name}: {item.value}")
+```
+
+### Input Validation for Rich Components
+
+```python
+def safe_table_creation(data):
+    """Create table with proper error handling."""
+    if not data:
+        return None
+    
+    try:
+        table = Table()
+        
+        # Safely determine columns
+        if isinstance(data[0], dict):
+            columns = list(data[0].keys())
+        else:
+            columns = [f"Column {i}" for i in range(len(data[0]))]
+        
+        # Add columns safely
+        for col in columns:
+            table.add_column(str(col))
+        
+        # Add rows safely
+        for row in data:
+            if isinstance(row, dict):
+                values = [str(row.get(col, "")) for col in columns]
+            else:
+                values = [str(v) for v in row]
+            table.add_row(*values)
+        
+        return table
+    
+    except Exception as e:
+        print(f"Error creating table: {e}", file=sys.stderr)
+        return None
+```
+
+## Testing Rich CLI Applications
+
+### Test Fixtures for Different Environments
+
+```python
+import pytest
+from rich.console import Console
+from io import StringIO
+
+@pytest.fixture
+def mock_interactive_console():
+    """Mock an interactive terminal console."""
+    output = StringIO()
+    console = Console(file=output, force_terminal=True, width=80)
+    return console, output
+
+@pytest.fixture  
+def mock_non_interactive_console():
+    """Mock a non-interactive console (pipe/redirect)."""
+    output = StringIO()
+    console = Console(file=output, force_terminal=False)
+    return console, output
+
+def test_interactive_output(mock_interactive_console):
+    console, output = mock_interactive_console
+    
+    # Test rich output
+    console.print("[bold]Test[/bold]")
+    result = output.getvalue()
+    
+    # Should contain ANSI codes
+    assert "\x1b[" in result
+
+def test_non_interactive_output(mock_non_interactive_console):
+    console, output = mock_non_interactive_console
+    
+    # Test plain output
+    console.print("[bold]Test[/bold]")
+    result = output.getvalue()
+    
+    # Should not contain ANSI codes
+    assert "\x1b[" not in result
+```
+
+## Command-Line Argument Integration
+
+### Output Format Options
+
+```python
+import argparse
+
+def setup_cli_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--output-format",
+        choices=["rich", "plain", "json", "csv"],
+        default="rich",
+        help="Output format"
+    )
+    parser.add_argument(
+        "--no-color",
+        action="store_true",
+        help="Disable colored output"
+    )
+    parser.add_argument(
+        "--quiet",
+        action="store_true", 
+        help="Suppress progress indicators"
+    )
+    return parser
+
+def main():
+    args = setup_cli_args().parse_args()
+    
+    # Configure console based on arguments
+    console = Console(
+        no_color=args.no_color or not sys.stdout.isatty(),
+        stderr=True if args.quiet else False
+    )
+    
+    # Process with appropriate output format
+    if args.output_format == "rich" and console.is_terminal:
+        display_rich_output(data)
+    elif args.output_format == "json":
+        print(json.dumps(data))
+    else:
+        display_plain_output(data)
+```
+description:
+globs:
+alwaysApply: false
+---

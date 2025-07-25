@@ -1,0 +1,539 @@
+---
+description: Rich advanced features: Apply when using syntax highlighting, custom renderables, logging integration, and performance optimization
+globs: **/*.py
+alwaysApply: false
+---
+# Rich Advanced Features and Optimization
+
+## Overview
+
+Rich offers powerful advanced features for sophisticated CLI applications. This guide covers syntax highlighting, custom renderables, logging integration, and performance optimization techniques.
+
+## Syntax Highlighting and Code Display
+
+### Basic Syntax Highlighting
+
+Use the `Syntax` class to display code with proper highlighting:
+
+```python
+from rich.console import Console
+from rich.syntax import Syntax
+
+console = Console()
+
+def display_code(code_content, language="python", theme="monokai"):
+    syntax = Syntax(
+        code_content,
+        language,
+        theme=theme,
+        line_numbers=True,
+        word_wrap=True,
+        background_color="default"  # Use terminal background
+    )
+    console.print(syntax)
+
+# Example usage
+python_code = '''
+def greet(name: str) -> str:
+    """Greet someone with their name."""
+    return f"Hello, {name}!"
+
+if __name__ == "__main__":
+    print(greet("World"))
+'''
+
+display_code(python_code, "python")
+```
+
+### Advanced Syntax Features
+
+```python
+import os
+from rich.console import Console, ConsoleOptions, RenderResult
+from rich.syntax import Syntax
+
+console = Console()
+
+def advanced_syntax_display(file_path, start_line=None, end_line=None):
+    """Display code file with advanced options."""
+    try:
+        with open(file_path, 'r') as f:
+            content = f.read()
+        
+        # Extract specific lines if requested
+        if start_line or end_line:
+            lines = content.split('\n')
+            start_idx = (start_line - 1) if start_line else 0
+            end_idx = end_line if end_line else len(lines)
+            content = '\n'.join(lines[start_idx:end_idx])
+        
+        # Detect language from file extension
+        language = detect_language(file_path)
+        
+        syntax = Syntax(
+            content,
+            language,
+            theme="github-dark",
+            line_numbers=True,
+            start_line=start_line or 1,
+            highlight_lines={5, 10},  # Highlight specific lines
+            code_width=None,  # Auto-width
+            tab_size=4,
+            word_wrap=False
+        )
+        
+        console.print(syntax)
+        
+    except FileNotFoundError:
+        console.print(f"[red]Error: File '{file_path}' not found[/red]")
+    except Exception as e:
+        console.print(f"[red]Error reading file: {e}[/red]")
+
+def detect_language(file_path):
+    """Simple language detection based on file extension."""
+    extension_map = {
+        '.py': 'python',
+        '.js': 'javascript',
+        '.ts': 'typescript',
+        '.html': 'html',
+        '.css': 'css',
+        '.json': 'json',
+        '.yaml': 'yaml',
+        '.yml': 'yaml',
+        '.md': 'markdown',
+        '.sh': 'bash',
+        '.sql': 'sql',
+    }
+    
+    ext = os.path.splitext(file_path)[1].lower()
+    return extension_map.get(ext, 'text')
+```
+
+## Custom Renderables
+
+### Creating Custom Rich Components
+
+```python
+from rich.console import Console, ConsoleOptions, RenderResult
+from rich.text import Text
+from rich.panel import Panel
+from rich.align import Align
+
+class StatusBadge:
+    """Custom renderable for status badges."""
+    
+    def __init__(self, status: str, message: str):
+        self.status = status.upper()
+        self.message = message
+        
+        # Define status colors
+        self.colors = {
+            'SUCCESS': 'green',
+            'WARNING': 'yellow', 
+            'ERROR': 'red',
+            'INFO': 'blue',
+            'PENDING': 'dim'
+        }
+    
+    def __rich_console__(self, console: Console, options: ConsoleOptions) -> RenderResult:
+        color = self.colors.get(self.status, 'white')
+        
+        # Create badge text
+        badge_text = Text(f"[{self.status}]", style=f"bold {color}")
+        message_text = Text(f" {self.message}")
+        
+        # Combine texts
+        full_text = badge_text + message_text
+        yield full_text
+
+# Usage
+console = Console()
+console.print(StatusBadge("SUCCESS", "All tests passed"))
+console.print(StatusBadge("ERROR", "Connection failed"))
+```
+
+### Complex Custom Renderables
+
+```python
+from rich.table import Table
+from rich.progress import BarColumn
+from datetime import datetime
+
+class SystemDashboard:
+    """Custom dashboard renderable."""
+    
+    def __init__(self, services, metrics):
+        self.services = services
+        self.metrics = metrics
+        self.timestamp = datetime.now()
+    
+    def __rich_console__(self, console: Console, options: ConsoleOptions) -> RenderResult:
+        # Title
+        title = Text("System Dashboard", style="bold blue")
+        yield Align.center(title)
+        yield ""
+        
+        # Services table
+        services_table = Table(title="Services Status", box=None)
+        services_table.add_column("Service", style="cyan")
+        services_table.add_column("Status", justify="center")
+        services_table.add_column("Uptime", justify="right")
+        
+        for service in self.services:
+            status_color = "green" if service['status'] == 'UP' else "red"
+            services_table.add_row(
+                service['name'],
+                f"[{status_color}]{service['status']}[/{status_color}]",
+                service['uptime']
+            )
+        
+        yield services_table
+        yield ""
+        
+        # Metrics
+        metrics_table = Table(title="System Metrics", box=None)
+        metrics_table.add_column("Metric", style="yellow")
+        metrics_table.add_column("Value", justify="right")
+        
+        for metric, value in self.metrics.items():
+            metrics_table.add_row(metric.title(), str(value))
+        
+        yield metrics_table
+        yield ""
+        
+        # Timestamp
+        timestamp_text = Text(
+            f"Last updated: {self.timestamp.strftime('%Y-%m-%d %H:%M:%S')}",
+            style="dim"
+        )
+        yield Align.center(timestamp_text)
+
+# Usage
+services = [
+    {'name': 'Web Server', 'status': 'UP', 'uptime': '5d 12h'},
+    {'name': 'Database', 'status': 'UP', 'uptime': '10d 3h'},
+    {'name': 'Cache', 'status': 'DOWN', 'uptime': '0h'},
+]
+
+metrics = {
+    'cpu_usage': '45%',
+    'memory_usage': '67%',
+    'disk_usage': '23%',
+    'active_connections': 142
+}
+
+dashboard = SystemDashboard(services, metrics)
+console.print(Panel(dashboard, title="Server Status", border_style="blue"))
+```
+
+## Rich Logging Integration
+
+### Setting Up Rich Logging Handler
+
+```python
+import logging
+from rich.logging import RichHandler
+
+def setup_rich_logging(level=logging.INFO):
+    """Configure logging with rich handler."""
+    
+    # Create rich handler
+    rich_handler = RichHandler(
+        console=Console(stderr=True),
+        show_time=True,
+        show_level=True,
+        show_path=True,
+        markup=True,
+        rich_tracebacks=True,
+        tracebacks_show_locals=True
+    )
+    
+    # Configure logging
+    logging.basicConfig(
+        level=level,
+        format="%(message)s",
+        datefmt="[%X]",
+        handlers=[rich_handler]
+    )
+    
+    return logging.getLogger(__name__)
+
+# Usage
+logger = setup_rich_logging()
+
+logger.info("Application started")
+logger.warning("Configuration file not found, using defaults")
+logger.error("Failed to connect to database")
+logger.debug("Processing user data: %s", user_data)
+```
+
+### Custom Log Formatting
+
+```python
+import logging
+from rich.console import Console
+from rich.logging import RichHandler
+from rich.text import Text
+
+def advanced_logging_setup():
+    """Setup advanced logging with custom formatting."""
+    
+    custom_handler = RichHandler(
+        console=Console(stderr=True),
+        markup=True,
+        rich_tracebacks=True
+    )
+    
+    # Custom formatter
+    formatter = logging.Formatter(
+        fmt="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S"
+    )
+    custom_handler.setFormatter(formatter)
+    
+    logger = logging.getLogger(__name__)
+    logger.addHandler(custom_handler)
+    logger.setLevel(logging.DEBUG)
+    
+    return logger
+```
+
+## Performance Optimization
+
+### Efficient Console Usage
+
+```python
+import sys
+from rich.console import Console
+
+class OptimizedConsole:
+    """Wrapper for optimized console usage."""
+    
+    def __init__(self):
+        self._console = Console()
+        self._buffer = []
+        self._buffer_size = 100
+    
+    def print(self, *args, **kwargs):
+        """Buffer output for batch printing."""
+        self._buffer.append((args, kwargs))
+        
+        if len(self._buffer) >= self._buffer_size:
+            self.flush()
+    
+    def flush(self):
+        """Flush buffered output."""
+        for args, kwargs in self._buffer:
+            self._console.print(*args, **kwargs)
+        self._buffer.clear()
+    
+    def __enter__(self):
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.flush()
+
+# Usage
+with OptimizedConsole() as console:
+    for i in range(1000):
+        console.print(f"Processing item {i}")
+    # Automatic flush on exit
+```
+
+### Large Data Handling
+
+```python
+import os
+from rich.console import Console
+from rich.table import Table
+
+console = Console()
+
+def display_large_dataset(data, page_size=20):
+    """Display large datasets with pagination."""
+    total_items = len(data)
+    total_pages = (total_items + page_size - 1) // page_size
+    
+    for page in range(total_pages):
+        start_idx = page * page_size
+        end_idx = min(start_idx + page_size, total_items)
+        page_data = data[start_idx:end_idx]
+        
+        # Create table for current page
+        table = Table(title=f"Data (Page {page + 1}/{total_pages})")
+        
+        if page_data:
+            # Add columns based on first item
+            for key in page_data[0].keys():
+                table.add_column(key.title())
+            
+            # Add rows for current page
+            for item in page_data:
+                table.add_row(*[str(v) for v in item.values()])
+        
+        console.print(table)
+        
+        # Pagination control
+        if page < total_pages - 1:
+            try:
+                input("\nPress Enter for next page (Ctrl+C to quit)...")
+                console.clear()
+            except KeyboardInterrupt:
+                console.print("\n[yellow]Display interrupted by user[/yellow]")
+                break
+```
+
+### Memory-Efficient Streaming
+
+```python
+import os
+from rich.console import Console
+from rich.syntax import Syntax
+
+console = Console()
+
+def stream_large_file_with_syntax(file_path, chunk_size=1000):
+    """Stream large files with syntax highlighting in chunks."""
+    
+    try:
+        with open(file_path, 'r') as f:
+            line_number = 1
+            chunk = []
+            
+            for line in f:
+                chunk.append(line.rstrip())
+                
+                if len(chunk) >= chunk_size:
+                    # Process chunk
+                    content = '\n'.join(chunk)
+                    syntax = Syntax(
+                        content,
+                        detect_language(file_path),
+                        line_numbers=True,
+                        start_line=line_number
+                    )
+                    console.print(syntax)
+                    
+                    # Reset for next chunk
+                    line_number += len(chunk)
+                    chunk = []
+                    
+                    # Pause between chunks
+                    input("Press Enter to continue...")
+            
+            # Process remaining lines
+            if chunk:
+                content = '\n'.join(chunk)
+                syntax = Syntax(
+                    content,
+                    detect_language(file_path),
+                    line_numbers=True,
+                    start_line=line_number
+                )
+                console.print(syntax)
+                
+    except FileNotFoundError:
+        console.print(f"[red]File not found: {file_path}[/red]")
+    except Exception as e:
+        console.print(f"[red]Error: {e}[/red]")
+```
+
+## Rich Debugging and Inspection
+
+### Enhanced Object Inspection
+
+```python
+import sys
+from rich import inspect
+
+def debug_object(obj, title=None):
+    """Enhanced object debugging with rich inspect."""
+    
+    if title:
+        print(f"\n[bold blue]Debugging: {title}[/bold blue]")
+        print("=" * 50)
+    
+    # Basic inspection
+    inspect(obj, methods=True, help=True, private=False)
+    
+    # Additional type information
+    print(f"\n[yellow]Type:[/yellow] {type(obj).__name__}")
+    print(f"[yellow]Module:[/yellow] {type(obj).__module__}")
+    
+    # Memory usage (if available)
+    try:
+        size = sys.getsizeof(obj)
+        print(f"[yellow]Size:[/yellow] {size} bytes")
+    except:
+        pass
+
+# Usage
+debug_object(my_complex_object, "User Configuration")
+```
+
+### Performance Profiling with Rich
+
+```python
+import time
+from contextlib import contextmanager
+from rich.table import Table
+
+class PerformanceProfiler:
+    """Simple performance profiler with rich output."""
+    
+    def __init__(self):
+        self.timings = {}
+        self.console = Console()
+    
+    @contextmanager
+    def profile(self, operation_name):
+        """Context manager for timing operations."""
+        start_time = time.perf_counter()
+        try:
+            yield
+        finally:
+            end_time = time.perf_counter()
+            duration = end_time - start_time
+            self.timings[operation_name] = duration
+    
+    def display_results(self):
+        """Display profiling results in a table."""
+        if not self.timings:
+            self.console.print("[yellow]No profiling data available[/yellow]")
+            return
+        
+        table = Table(title="Performance Profile")
+        table.add_column("Operation", style="cyan")
+        table.add_column("Duration (s)", justify="right", style="green")
+        table.add_column("Percentage", justify="right", style="yellow")
+        
+        total_time = sum(self.timings.values())
+        
+        for operation, duration in sorted(self.timings.items(), key=lambda x: x[1], reverse=True):
+            percentage = (duration / total_time) * 100
+            table.add_row(
+                operation,
+                f"{duration:.4f}",
+                f"{percentage:.1f}%"
+            )
+        
+        table.add_row("", "", "", style="dim")
+        table.add_row("Total", f"{total_time:.4f}", "100.0%", style="bold")
+        
+        self.console.print(table)
+
+# Usage
+profiler = PerformanceProfiler()
+
+with profiler.profile("Database Query"):
+    time.sleep(0.1)  # Simulate work
+
+with profiler.profile("Data Processing"):
+    time.sleep(0.05)  # Simulate work
+
+profiler.display_results()
+```
+description:
+globs:
+alwaysApply: false
+---

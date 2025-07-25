@@ -1,0 +1,163 @@
+---
+description: "Bitbucket Markdown best practices: Guidelines for writing Markdown on Bitbucket, especially for README.md files."
+globs: "**/README.md"
+alwaysApply: false
+---
+
+# Bitbucket Markdown Best Practices
+
+## Introduction
+
+This rule provides best practices and guidelines for writing Markdown on Bitbucket, specifically addressing differences from GitHub Flavored Markdown (GFM). Bitbucket uses the CommonMark standard with some extensions but has notable limitations compared to GitHub.
+
+## Key Differences from GitHub
+
+Bitbucket's Markdown rendering is based on **CommonMark** with a few extensions, but has significant limitations:
+
+- **No inline HTML support** - All HTML tags are escaped
+- **No task lists** - Checkbox syntax `- [ ]` and `- [x]` is not supported
+- **No Mermaid.js support** - Diagrams must be added as images
+- **File extension matters** - Renderer is determined by file extension
+
+## Best Practices
+
+### Use Standard CommonMark Syntax
+
+For maximum reliability, stick to pure CommonMark specification. This ensures consistent and predictable rendering across all Bitbucket features.
+
+### Enable Syntax Highlighting in Code Blocks
+
+Add language identifiers after opening backticks to enable syntax highlighting:
+
+```javascript
+function greet() {
+    console.log("Hello, Bitbucket!");
+}
+```
+
+### Leverage Bitbucket-Specific Features
+
+#### JIRA Integration
+When your project is integrated with JIRA, automatically link to issues by referencing the issue key:
+
+```markdown
+Fixed issue PROJ-123
+```
+
+#### Pull Request References
+Reference pull requests using these formats:
+
+```markdown
+# Same repository
+#123
+
+# Same project, different repository  
+example-repo#123
+
+# Different project and repository
+PROJ/example-repo#123
+```
+
+### Image Sizing Control
+
+Bitbucket allows specifying image dimensions using key-value pairs in curly braces:
+
+```markdown
+![Screenshot](image.png){width=640 height=480}
+```
+
+### Use Preview Before Committing
+
+Always preview your Markdown using the keyboard shortcut:
+- **Windows/Linux**: `Control+Shift+P`
+- **macOS**: `Command+Shift+P`
+
+## Limitations to Avoid
+
+### No HTML Tags
+HTML tags are escaped and will not render. Avoid these patterns:
+
+```markdown
+<!-- This will NOT work in Bitbucket -->
+<div style="color: red;">Red text</div>
+<table><tr><td>Cell</td></tr></table>
+```
+
+### No Task Lists
+GitHub-style task lists are not supported:
+
+```markdown
+<!-- This will NOT render as checkboxes in Bitbucket -->
+- [ ] Incomplete task
+- [x] Completed task
+```
+
+**Alternative**: Use regular lists with status indicators:
+
+```markdown
+- ❌ Incomplete task
+- ✅ Completed task
+```
+
+### No Mermaid Diagrams
+Unlike GitHub, Bitbucket does not support Mermaid.js syntax for diagrams. Instead:
+
+- Create diagrams using external tools
+- Export as images
+- Include using standard image syntax
+
+## Supported File Extensions
+
+Bitbucket determines the renderer based on file extension:
+
+| Extension | Language |
+|-----------|----------|
+| `.md`, `.mkd`, `.markdown`, `.text` | Markdown |
+| `.rst` | reStructuredText |
+| `.textile` | Textile |
+
+## Examples
+
+### Good Bitbucket Markdown
+
+```markdown
+# Project Title
+
+## Overview
+This project integrates with JIRA-123 and includes the following features:
+
+1. Authentication system
+2. Data processing pipeline
+3. Reporting dashboard
+
+## Installation
+
+```bash
+npm install
+npm start
+```
+
+![Architecture diagram](docs/architecture.png){width=800}
+
+See pull request #45 for implementation details.
+```
+
+### Avoid These Patterns
+
+```markdown
+<!-- Don't use HTML -->
+<details><summary>Details</summary>Content</details>
+
+<!-- Don't use task lists -->
+- [ ] Setup environment
+- [x] Install dependencies
+
+<!-- Don't use Mermaid -->
+```mermaid
+graph TD
+    A[Start] --> B[End]
+```
+```
+
+
+*   **No Mermaid.js Support**: Unlike Github, Bitbucket does not support Mermaid.js to render diagrams and charts from markdown.

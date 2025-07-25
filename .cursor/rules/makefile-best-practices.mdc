@@ -1,0 +1,315 @@
+---
+description: Makefile best practices for developer workflows: Apply when working with Makefiles or build automation
+globs: **/Makefile, **/*.mk, **/makefile
+alwaysApply: false
+---
+# Makefile Best Practices for Developer Workflows
+
+## Overview
+
+When working with Makefiles, follow these best practices to create maintainable, reliable, and developer-friendly build automation. Makefiles should be structured for clarity, correctness, and ease of use.
+
+## Core Principles
+
+1. **Embrace the Filesystem**: `make` is fundamentally a tool for building files. Rules should correspond to actual files on the filesystem to leverage dependency tracking.
+2. **Be Explicit and Predictable**: Configure Makefiles to have consistent behavior and avoid built-in rules that can cause surprises.
+3. **Prioritize Clarity**: Use namespacing, includes, and self-documenting targets.
+4. **Write Small, Focused Recipes**: Delegate complex logic to external scripts.
+
+## Required Preamble
+
+Every Makefile MUST start with this preamble for consistent and strict execution:
+
+```makefile
+# Use bash as the shell with strict mode
+SHELL := bash
+.SHELLFLAGS := -eu -o pipefail -c
+
+# Run all recipe lines in a single shell instance
+.ONESHELL:
+
+# If a rule fails, delete its target file
+.DELETE_ON_ERROR:
+
+# Disable make's built-in rules and suffix rules
+MAKEFLAGS += --no-builtin-rules
+.SUFFIXES:
+
+# Set custom recipe prefix (avoids tab issues)
+ifeq ($(origin .RECIPEPREFIX), undefined)
+  $(error This Make does not support .RECIPEPREFIX. Please use GNU Make 4.0 or later)
+endif
+.RECIPEPREFIX = >
+```
+
+## Structure and Organization
+
+### Target Namespacing
+
+- Use `/` as namespace delimiter for clarity
+- Organize related targets under common namespaces
+
+```makefile
+# Good: Namespaced structure
+lint/python:
+format/python:
+docker/build:
+docker/run:
+test/unit:
+test/integration:
+```
+
+### File Organization
+
+For larger projects, split Makefiles using includes:
+
+```makefile
+# In root Makefile
+-include make/*.mk
+```
+
+Create separate files like:
+- `make/lint.mk` - Linting and formatting targets
+- `make/docker.mk` - Container-related targets
+- `make/test.mk` - Testing targets
+
+### Standard Target Names
+
+Always provide these conventional targets:
+- `all`: Default target that builds main artifacts
+- `install`: Install the application
+- `test`: Run all tests
+- `clean`: Remove build artifacts and temporary files
+- `help`: Display available targets and descriptions
+
+## Rule Writing Guidelines
+
+### Use .PHONY Correctly
+
+- Mark targets as `.PHONY` if they don't create a file with the target name
+- Place `.PHONY` declarations immediately after the target definition
+
+```makefile
+clean:
+> rm -rf build/ tmp/
+.PHONY: clean
+
+test:
+> pytest
+.PHONY: test
+```
+
+### File Targets Must Create Exact Files
+
+When a rule creates a file, the target name must be the exact file path:
+
+```makefile
+build/app: main.c utils.c
+> mkdir -p $(@D)
+> gcc -o $@ $^
+```
+
+### Use Sentinel Files for Abstract Outputs
+
+For tasks that don't produce a single obvious file, use sentinel files:
+
+```makefile
+# Track when tests last passed
+SRC_FILES := $(shell find src -type f -name "*.py")
+
+tmp/.tests-passed: $(SRC_FILES)
+> mkdir -p $(@D)
+> pytest
+> touch $@
+
+test: tmp/.tests-passed
+.PHONY: test
+```
+
+### Delegate Complex Logic to Scripts
+
+Keep Makefile recipes simple. Move complex logic to external scripts:
+
+```makefile
+# Bad: Complex inline script
+deploy/staging:
+> echo "Starting deployment..."
+> for server in $$(cat .staging_servers); do \
+>   scp -r ./app $$server:/opt/app; \
+>   ssh $$server "sudo systemctl restart my-app"; \
+> done
+
+# Good: Delegate to script
+deploy/staging:
+> ./scripts/deploy.sh staging
+.PHONY: deploy/staging
+```
+
+## Required Self-Documenting Help Target
+
+Every Makefile MUST include this help target as the default:
+
+```makefile
+.DEFAULT_GOAL := help
+
+## help: Show this help message.
+help:
+> @awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z0-9_-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+.PHONY: help
+```
+
+### Document Targets with Comments
+
+Use `##` comments to document targets:
+
+```makefile
+##@ Development
+
+## run: Run the application locally.
+run:
+> echo "Running application..."
+
+##@ Quality & Testing
+
+## lint: Run all linters and formatters.
+lint:
+> echo "Running linters..."
+
+.PHONY: run lint
+```
+
+## Variable Best Practices
+
+### Set Sensible Defaults
+
+Use `?=` for variables that can be overridden:
+
+```makefile
+PREFIX ?= /usr/local
+DESTDIR ?= 
+BUILD_DIR ?= build
+```
+
+### Make Variables Configurable
+
+Allow command-line overrides:
+
+```bash
+make docker/build DOCKER_TAG=dev
+make install PREFIX=/opt/myapp DESTDIR=/tmp/package
+```
+
+### Use Automatic Variables
+
+Leverage automatic variables for maintainable rules:
+- `$@`: The target name
+- `$<`: The first prerequisite
+- `$^`: All prerequisites
+- `$(@D)`: Directory part of the target
+
+```makefile
+$(BUILD_DIR)/%.o: src/%.c
+> mkdir -p $(@D)
+> gcc -o $@ -c $<
+```
+
+## Directory and File Management
+
+### Create Directories as Needed
+
+Always ensure output directories exist:
+
+```makefile
+build/app: main.c
+> mkdir -p $(@D)
+> gcc -o $@ $<
+```
+
+### Clean Up Properly
+
+The `clean` target should remove all generated files:
+
+```makefile
+clean:
+> rm -rf $(BUILD_DIR)/
+> rm -rf tmp/
+> find . -name "*.pyc" -delete
+.PHONY: clean
+```
+
+## Performance Considerations
+
+### Avoid Unnecessary Work
+
+- Use file dependencies correctly so make only rebuilds what's needed
+- Use sentinel files for tasks that don't produce obvious output files
+- Consider using `$(shell find ...)` for dynamic file lists
+
+### Enable Parallel Execution
+
+Structure targets to allow parallel execution with `make -j`:
+
+```makefile
+# These can run in parallel
+test: test/unit test/integration
+.PHONY: test
+
+test/unit: tmp/.unit-tests-passed
+test/integration: tmp/.integration-tests-passed
+.PHONY: test/unit test/integration
+```
+
+## Common Patterns
+
+### Python Projects
+
+```makefile
+## install: Install dependencies.
+install: requirements.txt
+> pip install -r requirements.txt
+
+## test: Run all tests.
+test: tmp/.tests-passed
+tmp/.tests-passed: $(shell find src tests -name "*.py")
+> mkdir -p $(@D)
+> pytest
+> touch $@
+
+.PHONY: install test
+```
+
+### Docker Projects
+
+```makefile
+## docker/build: Build Docker image.
+docker/build: build/.docker-image
+build/.docker-image: Dockerfile $(shell find src -type f)
+> mkdir -p $(@D)
+> docker build -t $(IMAGE_NAME) .
+> touch $@
+
+.PHONY: docker/build
+```
+
+### Multi-language Projects
+
+```makefile
+## build: Build all components.
+build: build/frontend build/backend
+.PHONY: build
+
+build/frontend: $(shell find frontend/src -type f)
+> mkdir -p $(@D)
+> cd frontend && npm run build
+> touch $@
+
+build/backend: $(shell find backend/src -name "*.go")
+> mkdir -p $(@D)
+> cd backend && go build -o ../build/backend
+```
+
+For detailed background and rationale, see: [Makefile Research](mdc:docs/research/makefiles.md)
+description:
+globs:
+alwaysApply: false
+---

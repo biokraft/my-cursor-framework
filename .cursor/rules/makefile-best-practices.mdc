@@ -15,10 +15,38 @@ When working with Makefiles, follow these best practices to create maintainable,
 2. **Be Explicit and Predictable**: Configure Makefiles to have consistent behavior and avoid built-in rules that can cause surprises.
 3. **Prioritize Clarity**: Use namespacing, includes, and self-documenting targets.
 4. **Write Small, Focused Recipes**: Delegate complex logic to external scripts.
+5. **Ensure Compatibility**: Write Makefiles that work across different Make versions and platforms.
+6. **Test Thoroughly**: Always test your Makefile targets on the actual target platforms.
+
+## Compatibility Considerations
+
+### Make Version Compatibility
+
+**CRITICAL**: Always ensure your Makefile works with commonly available Make versions:
+
+- **macOS**: Ships with GNU Make 3.81 (from 2006) by default
+- **Linux**: Usually has GNU Make 4.0+ 
+- **Windows**: Varies widely depending on installation
+
+### Checking Make Version
+
+Before using advanced features, check the Make version:
+
+```bash
+make --version
+```
+
+For GNU Make 4.0+ features, consider providing fallbacks or clear error messages.
+
+### Common Compatibility Issues
+
+1. **`.RECIPEPREFIX` Support**: Only available in GNU Make 4.0+
+2. **Some built-in functions**: Newer versions have more features
+3. **Shell behavior**: Different platforms may have different default shells
 
 ## Required Preamble
 
-Every Makefile MUST start with this preamble for consistent and strict execution:
+Every Makefile MUST start with this compatibility-focused preamble:
 
 ```makefile
 # Use bash as the shell with strict mode
@@ -34,12 +62,52 @@ SHELL := bash
 # Disable make's built-in rules and suffix rules
 MAKEFLAGS += --no-builtin-rules
 .SUFFIXES:
+```
 
-# Set custom recipe prefix (avoids tab issues)
-ifeq ($(origin .RECIPEPREFIX), undefined)
-  $(error This Make does not support .RECIPEPREFIX. Please use GNU Make 4.0 or later)
+### Advanced Features (Optional)
+
+For teams using modern Make versions, you can optionally add:
+
+```makefile
+# Optional: Set custom recipe prefix (requires GNU Make 4.0+)
+# Only use if your team standardizes on modern Make versions
+ifeq ($(shell make --version 2>/dev/null | head -1 | cut -d' ' -f3 | cut -d'.' -f1),4)
+  .RECIPEPREFIX = >
 endif
+```
+
+**Recommendation**: Use traditional tabs for maximum compatibility unless you have specific requirements for alternative prefixes.
+
+## Recipe Formatting Guidelines
+
+### Use Traditional Tabs (Recommended)
+
+For maximum compatibility, use traditional tab characters for recipe indentation:
+
+```makefile
+clean:
+	@echo "🧹 Cleaning up..."
+	rm -rf build/ tmp/
+.PHONY: clean
+
+test:
+	@echo "🧪 Running tests..."
+	pytest
+.PHONY: test
+```
+
+### Alternative: Custom Recipe Prefix (Advanced)
+
+Only use custom recipe prefixes if you're certain all team members use GNU Make 4.0+:
+
+```makefile
+# Only if you've verified Make 4.0+ usage across your team
 .RECIPEPREFIX = >
+
+clean:
+> @echo "🧹 Cleaning up..."
+> rm -rf build/ tmp/
+.PHONY: clean
 ```
 
 ## Structure and Organization
@@ -52,11 +120,24 @@ endif
 ```makefile
 # Good: Namespaced structure
 lint/python:
+	@echo "Linting Python code..."
+	ruff check .
+
 format/python:
+	@echo "Formatting Python code..."
+	ruff format .
+
 docker/build:
+	docker build -t myapp .
+
 docker/run:
+	docker run -p 8080:8080 myapp
+
 test/unit:
+	pytest tests/unit/
+
 test/integration:
+	pytest tests/integration/
 ```
 
 ### File Organization
@@ -91,11 +172,11 @@ Always provide these conventional targets:
 
 ```makefile
 clean:
-> rm -rf build/ tmp/
+	rm -rf build/ tmp/
 .PHONY: clean
 
 test:
-> pytest
+	pytest
 .PHONY: test
 ```
 
@@ -105,8 +186,8 @@ When a rule creates a file, the target name must be the exact file path:
 
 ```makefile
 build/app: main.c utils.c
-> mkdir -p $(@D)
-> gcc -o $@ $^
+	mkdir -p $(@D)
+	gcc -o $@ $^
 ```
 
 ### Use Sentinel Files for Abstract Outputs
@@ -118,9 +199,9 @@ For tasks that don't produce a single obvious file, use sentinel files:
 SRC_FILES := $(shell find src -type f -name "*.py")
 
 tmp/.tests-passed: $(SRC_FILES)
-> mkdir -p $(@D)
-> pytest
-> touch $@
+	mkdir -p $(@D)
+	pytest
+	touch $@
 
 test: tmp/.tests-passed
 .PHONY: test
@@ -133,47 +214,47 @@ Keep Makefile recipes simple. Move complex logic to external scripts:
 ```makefile
 # Bad: Complex inline script
 deploy/staging:
-> echo "Starting deployment..."
-> for server in $$(cat .staging_servers); do \
->   scp -r ./app $$server:/opt/app; \
->   ssh $$server "sudo systemctl restart my-app"; \
-> done
+	echo "Starting deployment..."
+	for server in $$(cat .staging_servers); do \
+	  scp -r ./app $$server:/opt/app; \
+	  ssh $$server "sudo systemctl restart my-app"; \
+	done
 
 # Good: Delegate to script
 deploy/staging:
-> ./scripts/deploy.sh staging
+	./scripts/deploy.sh staging
 .PHONY: deploy/staging
 ```
 
 ## Required Self-Documenting Help Target
 
-Every Makefile MUST include this help target as the default:
+Every Makefile MUST include this help target as the default. **CRITICAL**: Test this target to ensure it properly displays all your documented targets.
 
 ```makefile
 .DEFAULT_GOAL := help
 
 ## help: Show this help message.
 help:
-> @awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z0-9_-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+	@awk '/^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } /^## / { desc = substr($$0, 4); getline; if (match($$0, /^[a-zA-Z0-9_\/\-]+:/)) { target = substr($$0, 1, RLENGTH-1); printf "  \033[36m%-20s\033[0m %s\n", target, desc } } BEGIN { printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n" }' $(MAKEFILE_LIST)
 .PHONY: help
 ```
 
 ### Document Targets with Comments
 
-Use `##` comments to document targets:
+Use `##` comments to document targets. **Important**: Place the comment on the line immediately before the target:
 
 ```makefile
 ##@ Development
 
 ## run: Run the application locally.
 run:
-> echo "Running application..."
+	echo "Running application..."
 
 ##@ Quality & Testing
 
 ## lint: Run all linters and formatters.
 lint:
-> echo "Running linters..."
+	echo "Running linters..."
 
 .PHONY: run lint
 ```
@@ -209,8 +290,8 @@ Leverage automatic variables for maintainable rules:
 
 ```makefile
 $(BUILD_DIR)/%.o: src/%.c
-> mkdir -p $(@D)
-> gcc -o $@ -c $<
+	mkdir -p $(@D)
+	gcc -o $@ -c $<
 ```
 
 ## Directory and File Management
@@ -221,8 +302,8 @@ Always ensure output directories exist:
 
 ```makefile
 build/app: main.c
-> mkdir -p $(@D)
-> gcc -o $@ $<
+	mkdir -p $(@D)
+	gcc -o $@ $<
 ```
 
 ### Clean Up Properly
@@ -231,9 +312,9 @@ The `clean` target should remove all generated files:
 
 ```makefile
 clean:
-> rm -rf $(BUILD_DIR)/
-> rm -rf tmp/
-> find . -name "*.pyc" -delete
+	rm -rf $(BUILD_DIR)/
+	rm -rf tmp/
+	find . -name "*.pyc" -delete
 .PHONY: clean
 ```
 
@@ -259,6 +340,83 @@ test/integration: tmp/.integration-tests-passed
 .PHONY: test/unit test/integration
 ```
 
+## Cross-Platform Considerations
+
+### Shell Commands
+
+- Use POSIX-compliant commands when possible
+- Test on target platforms (macOS, Linux, Windows with WSL)
+- Provide platform-specific alternatives when needed:
+
+```makefile
+# Cross-platform file removal
+ifeq ($(OS),Windows_NT)
+    RM = del /Q
+    RMDIR = rmdir /S /Q
+else
+    RM = rm -f
+    RMDIR = rm -rf
+endif
+
+clean:
+	$(RMDIR) build/
+.PHONY: clean
+```
+
+### Path Handling
+
+Use Make's built-in functions for path manipulation:
+
+```makefile
+# Good: Use Make functions
+OUTPUT_DIR := $(dir $(TARGET))
+BASENAME := $(notdir $(TARGET))
+
+# Avoid: Shell-specific path operations
+```
+
+## Error Handling Best Practices
+
+### Handle Missing Dependencies Gracefully
+
+For optional tools or when no tests exist, handle errors appropriately:
+
+```makefile
+## test: Run all tests.
+test:
+	@echo "🧪 Running tests..."
+	# Exit code 5 from pytest means "no tests collected" - treat as success
+	cd example-app && (uv run pytest -q --disable-warnings --tb=short --no-cov --junitxml=report.xml || [ $$? -eq 5 ])
+	@echo "✅ Tests complete!"
+.PHONY: test
+```
+
+### Verify Tool Availability
+
+Check for required tools before using them:
+
+```makefile
+## lint: Run linting on the code.
+lint:
+	@command -v ruff >/dev/null 2>&1 || { echo >&2 "ruff not found. Run 'make dev/setup' first."; exit 1; }
+	@echo "🔍 Running linting..."
+	ruff check .
+.PHONY: lint
+```
+
+### Dependencies and Environment Setup
+
+For package managers like uv, ensure dev dependencies are properly synchronized:
+
+```makefile
+## dev/setup: Set up local development environment.
+dev/setup:
+	@echo "🛠️  Setting up development environment..."
+	uv sync --dev --all-extras
+	@echo "✅ Development environment ready!"
+.PHONY: dev/setup
+```
+
 ## Common Patterns
 
 ### Python Projects
@@ -266,14 +424,14 @@ test/integration: tmp/.integration-tests-passed
 ```makefile
 ## install: Install dependencies.
 install: requirements.txt
-> pip install -r requirements.txt
+	pip install -r requirements.txt
 
 ## test: Run all tests.
 test: tmp/.tests-passed
 tmp/.tests-passed: $(shell find src tests -name "*.py")
-> mkdir -p $(@D)
-> pytest
-> touch $@
+	mkdir -p $(@D)
+	pytest
+	touch $@
 
 .PHONY: install test
 ```
@@ -284,9 +442,9 @@ tmp/.tests-passed: $(shell find src tests -name "*.py")
 ## docker/build: Build Docker image.
 docker/build: build/.docker-image
 build/.docker-image: Dockerfile $(shell find src -type f)
-> mkdir -p $(@D)
-> docker build -t $(IMAGE_NAME) .
-> touch $@
+	mkdir -p $(@D)
+	docker build -t $(IMAGE_NAME) .
+	touch $@
 
 .PHONY: docker/build
 ```
@@ -299,16 +457,96 @@ build: build/frontend build/backend
 .PHONY: build
 
 build/frontend: $(shell find frontend/src -type f)
-> mkdir -p $(@D)
-> cd frontend && npm run build
-> touch $@
+	mkdir -p $(@D)
+	cd frontend && npm run build
+	touch $@
 
 build/backend: $(shell find backend/src -name "*.go")
-> mkdir -p $(@D)
-> cd backend && go build -o ../build/backend
+	mkdir -p $(@D)
+	cd backend && go build -o ../build/backend
 ```
 
+## Testing Your Makefile
+
+### Essential Tests to Perform
+
+1. **Compatibility Test**: Run `make --version` and test on the actual target Make version
+2. **Help Display Test**: Run `make help` and verify all targets are properly documented
+3. **Dependency Test**: Run each target on a fresh environment to ensure dependencies are handled
+4. **Error Handling Test**: Test failure scenarios (missing files, no tests, etc.)
+5. **Clean Test**: Verify `make clean` removes all generated files
+6. **Parallel Test**: Test with `make -j4` to ensure targets can run in parallel when appropriate
+
+### Testing Checklist
+
+```bash
+# Basic functionality
+make help                    # Should show all documented targets
+make clean                   # Should clean up without errors
+make all                     # Should complete full build
+
+# Error scenarios
+make test                    # Should handle "no tests" gracefully
+make lint                    # Should provide clear error if tools missing
+
+# Platform testing
+make --version               # Verify Make version compatibility
+```
+
+## Troubleshooting Common Issues
+
+### Make Version Problems
+
+If you encounter "This Make does not support .RECIPEPREFIX" errors:
+
+1. Check Make version: `make --version`
+2. Remove `.RECIPEPREFIX` configuration
+3. Convert recipes to use traditional tabs
+4. Consider installing GNU Make 4.0+ if needed
+
+### Tab vs Space Issues
+
+- **Always use tabs for recipe indentation** (traditional approach)
+- Configure your editor to show whitespace characters
+- Use `.editorconfig` to enforce tab usage in Makefiles:
+
+```ini
+[Makefile]
+indent_style = tab
+indent_size = 4
+```
+
+### Help Target Not Showing Targets
+
+If `make help` doesn't show your targets:
+
+1. Verify comment format: `## target: Description` on line before target
+2. Check regex pattern handles your target naming convention
+3. Test with: `awk 'regex_pattern' Makefile` to debug
+
+### Tool Availability Issues
+
+If commands like `ruff`, `pytest`, etc. are not found:
+
+1. Verify tools are in your dependency management file
+2. Ensure development environment is set up: `make dev/setup`
+3. Add tool availability checks to targets
+4. Provide clear error messages pointing to setup instructions
+
+### Platform-Specific Commands
+
+Test your Makefile on all target platforms. Common issues:
+- Different `find` command syntax
+- Path separator differences (`/` vs `\`)
+- Available shell commands
+
 For detailed background and rationale, see: [Makefile Research](mdc:docs/research/makefiles.md)
+
+description:
+globs:
+alwaysApply: false
+---
+
 description:
 globs:
 alwaysApply: false

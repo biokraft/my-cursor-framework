@@ -5,8 +5,9 @@
 > **🔑 Key Takeaways:**
 >
 > - **🎯 For Everyone:** Start with [Part 1](./01-Cursor-for-Everyone/) to master core concepts like Rules, Custom Modes, and the Model Context Protocol (MCP).
-> - **💻 For Developers:** Dive into [Part 2](./02-Cursor-for-Developers/) for advanced workflows, including tech-specific rules and the `SpecsForge` framework for spec-driven development, followed by the `TDV` mode for test-driven implementation.
+> - **💻 For Developers:** Dive into [Part 2](./02-Cursor-for-Developers/) for advanced workflows, including tech-specific rules and the `SpecsForge` framework for spec-driven development, followed by smart implementation choices.
 > - **🚀 Core Philosophy:** This guide emphasizes that providing clear, relevant context is the "golden rule" for getting the most out of Cursor.
+> - **⚡ Smart Workflow Decisions:** Learn when to use **TDV mode** for complex features vs **Stock Agent + "Make a todo list"** for rapid scaffolding and setup tasks.
 > - **🛠️ Actionable Resources:** The repository includes a rich set of [reusable rules](./.cursor/rules/) and practical examples to accelerate your learning.
 
 Welcome to this personal collection of best practices, rules, and workflows designed to maximize your productivity with Cursor. This framework aims to help everyone, from Product Managers to Developers, harness the full potential of AI-assisted coding and documentation.
@@ -46,7 +47,7 @@ This section delves into advanced techniques and workflows tailored for develope
 -   📚 [Mastering the @Docs Feature](./02-Cursor-for-Developers/01-Mastering-the-Docs-Feature.md)
 -   🛠️ [Crafting Rules for Your Tech Stack](./02-Cursor-for-Developers/02-Crafting-Rules-for-Your-Tech-Stack/README.md)
 -   ⚡ [The SpecsForge Framework](./02-Cursor-for-Developers/03-The-SpecsForge-Framework.md) & [🧪 The TDV Mode](./02-Cursor-for-Developers/03a-Mode-Spotlight-TDV.md)
-    > 🧑‍💻 **Listen up devs:** this is where the secret sauce is at!
+    > 🧑‍💻 **Listen up devs:** this is where the secret sauce is at! Plus learn when to use the simple "Make a todo list" technique with stock Agent mode.
 -   ⚙️ [Leveraging Terminal Integration for Debugging](./02-Cursor-for-Developers/04-Leveraging-Terminal-Integration.md)
 -   ⇄ [Working Across Repositories](./02-Cursor-for-Developers/05-Working-Across-Repositories.md)
 

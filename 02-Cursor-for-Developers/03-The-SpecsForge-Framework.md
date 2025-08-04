@@ -5,13 +5,25 @@
 > - **A Framework for AI-Driven Development:** SpecsForge is a systematic workflow, powered by a custom Cursor Mode, for turning a high-level idea into a detailed, AI-readable project specification.
 > - **From Vision to Plan:** It guides you through a discovery process to define business goals, features, and architecture *before* writing implementation code.
 > - **Creates a "Specification Library":** The output is a `specs/` directory and a root `SPECS.md` file, which serve as the single source of truth for the project.
-> - **Powers Subsequent Coding:** Once the spec is complete, it becomes the primary context for the **[TDV (Test-Driven Vibing) Mode](./03a-Mode-Spotlight-TDV.md)** to generate well-tested application code, phase by phase.
+> - **Smart Implementation Choices:** After specs are complete, choose your implementation approach: **TDV Mode** for complex features requiring extensive testing, or **Stock Agent + "Make a todo list"** for scaffolding and simple utilities.
+> - **The "Make a Todo List" Technique:** A game-changing phrase that transforms scattered AI output into organized, actionable steps - perfect for rapid prototyping and project setup tasks.
 
 ---
 
 The `SpecsForge` framework is a workflow for transforming high-level product ideas into a precise, living specification library that powers efficient, AI-assisted development. It's built around a custom Cursor Mode that acts as an expert software architect, guiding you through a discovery process to build a comprehensive set of specifications before any code is written.
 
 Once the specification is complete, `SpecsForge` hands off the implementation to the [TDV (Test-Driven Vibing) Mode](./03a-Mode-Spotlight-TDV.md), which uses the specs to execute a rigorous, test-first development cycle.
+
+## Quick Reference: Choose Your Implementation Path
+
+| Task Type | Recommended Approach | Key Indicator | Magic Phrase |
+|-----------|---------------------|---------------|--------------|
+| 🏗️ **Setup & Scaffolding** | Stock Agent Mode | "Just needs to work quickly" | "Make a todo list" |
+| 🧪 **Core Features** | TDV Mode | "Needs extensive testing" | "Using @SPECS.md, implement..." |
+| ⚡ **Utilities & Scripts** | Stock Agent Mode | "One-off or simple logic" | "Make a todo list" |
+| 🎯 **Business Logic** | TDV Mode | "Complex rules and edge cases" | "Using @SPECS.md, implement..." |
+
+---
 
 ## The Standard Workflow
 
@@ -24,7 +36,27 @@ Here is the step-by-step process for using the SpecsForge framework:
 3.  **Define Specs:** Engage in a conversation with the `SpecsForge` persona. It will ask targeted questions to build out a `specs/` directory and a root `SPECS.md` file.
 4.  **Generate Implementation Plan:** Once the specs are mature, the final step for the `SpecsForge` mode is to generate a detailed, phased implementation plan inside the `SPECS.md` file.
 
-### Phase 2: Implementation (TDV Mode)
+### Phase 2: Implementation - Choosing Your Approach
+
+**🎯 Workflow Decision Point:** Before jumping into implementation, consider which approach fits your task:
+
+#### When to Use TDV Mode (Test-Driven Development)
+✅ **Best for:**
+- Complex business logic that requires thorough testing
+- Core application features with multiple edge cases
+- APIs and data processing workflows
+- Long-term, maintainable code
+
+#### When to Use Stock Agent Mode
+✅ **Best for:**
+- Initial project scaffolding and setup
+- Simple utility scripts and one-off tools
+- Configuration files and basic structure
+- Quick prototypes and proof-of-concepts
+
+**💡 Pro Tip:** For stock Agent mode tasks, end your prompt with: **"Make a todo list"** - this simple addition transforms the AI's output from scattered implementation into organized, actionable steps.
+
+#### TDV Mode Implementation (For Complex Features)
 
 5.  **Switch to TDV Mode:** Activate the `TDV` custom mode in Cursor.
 6.  **Implement Phase by Phase:** Work through the implementation plan using the **[TDV (Test-Driven Vibing) Mode](./03a-Mode-Spotlight-TDV.md)** with prompts like:
@@ -34,6 +66,17 @@ Here is the step-by-step process for using the SpecsForge framework:
     - Create a detailed `plan.md` for the specific phase
     - Follow strict Test-Driven Development cycles
     - Implement features incrementally with tests leading the way
+
+#### Stock Agent Implementation (For Setup Tasks)
+
+5.  **Use Default Agent:** Keep Cursor in its default agent mode.
+6.  **Describe the Task:** Clearly explain what you want to accomplish, then add:
+    > Make a todo list
+    
+    This approach will:
+    - Generate organized, step-by-step implementation
+    - Create scaffolding and boilerplate efficiently
+    - Provide clear next steps for further development
     
 7.  **Verify and Update:** After each phase, you can check the work against the original spec and update the status in `SPECS.md`:
     > @SPECS.md check if Phase 1 was implemented properly. If so, update its status to "Complete". Otherwise, list what's missing.

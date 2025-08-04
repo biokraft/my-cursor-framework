@@ -17,7 +17,7 @@ We will walk through these demos to illustrate how you can go from a vague idea 
 ### 2. **[Rapidly Scaffolding a CLI Tool](./02-uc-cli-tool/README.md)**
    - **Scenario:** A Data Scientist needs a quick utility to extract text from PDFs.
    - **Problem:** Writing boilerplate for "simple" scripts is a tedious distraction.
-   - **Solution:** Use the **stock agent** to generate a complete, working tool from a single prompt, perfect for rapid prototyping.
+   - **Solution:** Use the **stock agent** with the "Make a todo list" technique to generate organized, working tools from a single prompt - perfect for rapid prototyping and setup tasks.
 
 ### 3. **[Crafting Your First Cursor Rule: Taming Jira Tickets](./03-uc-creating-rules/README.md)**
    - **Scenario:** A team wants to standardize how they write Jira tickets to improve clarity and consistency.

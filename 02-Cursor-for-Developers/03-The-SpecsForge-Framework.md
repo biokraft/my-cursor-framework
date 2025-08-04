@@ -236,7 +236,6 @@ The "Status" column should initially be set to "TBD" or a similar placeholder.
 ## Risks & Mitigations
 ## Future Considerations
 ```
-```
 
 ---
 

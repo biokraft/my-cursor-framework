@@ -9,13 +9,37 @@
 > - **Cross-Platform Compatibility:** Your SpecsForge specifications work seamlessly across different AI coding environments - try `/init` in [Claude Code](https://www.anthropic.com/claude-code) then `read SPECS.md and implement phase X`.
 > - **The "Make a Todo List" Technique:** A game-changing phrase that transforms scattered AI output into organized, actionable steps - perfect for rapid prototyping and project setup tasks.
 
+> **📋 Table of Contents**
+> 
+> 1. [What is SpecsForge?](#what-is-specsforge)
+> 2. [Quick Implementation Guide](#quick-implementation-guide)
+> 3. [Complete Workflow](#complete-workflow)
+> 4. [Setting Up the Custom Mode](#setting-up-the-custom-mode)
+> 5. [Legacy & Alternative Approaches](#legacy--alternative-approaches)
+
 ---
 
-The `SpecsForge` framework is a workflow for transforming high-level product ideas into a precise, living specification library that powers efficient, AI-assisted development. It's built around a custom Cursor Mode that acts as an expert software architect, guiding you through a discovery process to build a comprehensive set of specifications before any code is written.
+## What is SpecsForge?
 
-Once the specification is complete, `SpecsForge` hands off the implementation to the [TDV (Test-Driven Vibing) Mode](./03a-Mode-Spotlight-TDV.md), which uses the specs to execute a rigorous, test-first development cycle.
+The `SpecsForge` framework is a systematic workflow for transforming high-level product ideas into a precise, living specification library that powers efficient, AI-assisted development. It's built around a custom Cursor Mode that acts as an expert software architect, guiding you through a discovery process to build comprehensive specifications before any code is written.
 
-## Quick Reference: Choose Your Implementation Path
+### 🔑 Key Benefits
+
+- **📐 Structured Planning:** Transforms scattered ideas into organized, AI-readable specifications
+- **🎯 Multiple Implementation Paths:** Choose the right approach for each task type
+- **🔗 Cross-Platform Compatible:** Works seamlessly across different AI coding environments
+- **📚 Living Documentation:** Creates a `specs/` directory and root `SPECS.md` as single source of truth
+- **⚡ Smart Handoffs:** Seamlessly transitions from planning to implementation with specialized modes
+
+### 🎭 The Magic Phrase: "Make a Todo List"
+
+A game-changing technique that transforms scattered AI output into organized, actionable steps. Perfect for rapid prototyping and project setup tasks.
+
+---
+
+## Quick Implementation Guide
+
+### 🚀 Implementation Path Decision Matrix
 
 | Task Type | Recommended Approach | Key Indicator | Magic Phrase |
 |-----------|---------------------|---------------|--------------|
@@ -25,107 +49,114 @@ Once the specification is complete, `SpecsForge` hands off the implementation to
 | 🎯 **Business Logic** | TDV Mode | "Complex rules and edge cases" | "Using @SPECS.md, implement..." |
 | 🚀 **Cross-Platform Dev** | [Claude Code](https://www.anthropic.com/claude-code) | "Want different AI perspective" | "/init → read SPECS.md → implement phase X" |
 
----
+### 🎯 When to Use Each Approach
 
-## The Standard Workflow
-
-Here is the step-by-step process for using the SpecsForge framework:
-
-### Phase 1: Specification Generation (SpecsForge Mode)
-
-1.  **Project Setup:** Copy your standard set of `.cursor/rules/` into the new project.
-2.  **Activate Mode:** Activate the `SpecsForge` custom mode in Cursor.
-3.  **Define Specs:** Engage in a conversation with the `SpecsForge` persona. It will ask targeted questions to build out a `specs/` directory and a root `SPECS.md` file.
-4.  **Generate Implementation Plan:** Once the specs are mature, the final step for the `SpecsForge` mode is to generate a detailed, phased implementation plan inside the `SPECS.md` file.
-
-### Phase 2: Implementation - Choosing Your Approach
-
-**🎯 Workflow Decision Point:** Before jumping into implementation, consider which approach fits your task:
-
-#### When to Use TDV Mode (Test-Driven Development)
-✅ **Best for:**
-- Complex business logic that requires thorough testing
-- Core application features with multiple edge cases
+#### ✅ TDV Mode (Test-Driven Development)
+**Best for:**
+- Complex business logic requiring thorough testing
+- Core application features with multiple edge cases  
 - APIs and data processing workflows
 - Long-term, maintainable code
 
-#### When to Use Stock Agent Mode
-✅ **Best for:**
+#### ✅ Stock Agent Mode
+**Best for:**
 - Initial project scaffolding and setup
 - Simple utility scripts and one-off tools
 - Configuration files and basic structure
 - Quick prototypes and proof-of-concepts
 
-#### When to Use [Claude Code](https://www.anthropic.com/claude-code) (Cross-Platform Alternative)
-✅ **Best for:**
-- Getting a different AI perspective on implementation
-- Cross-platform development workflow
-- When you want to leverage Claude's specific strengths
+**💡 Pro Tip:** Always end Stock Agent prompts with **"Make a todo list"** to get organized, actionable steps.
+
+#### ✅ [Claude Code](https://www.anthropic.com/claude-code) (Cross-Platform)
+**Best for:**
+- Getting different AI perspective on implementation
+- Cross-platform development workflows
+- Leveraging Claude's specific strengths
 - Teams using multiple AI coding environments
 
-**💡 Pro Tip:** For stock Agent mode tasks, end your prompt with: **"Make a todo list"** - this simple addition transforms the AI's output from scattered implementation into organized, actionable steps.
+---
 
-#### TDV Mode Implementation (For Complex Features)
+## Complete Workflow
 
-5.  **Switch to TDV Mode:** Activate the `TDV` custom mode in Cursor.
-6.  **Implement Phase by Phase:** Work through the implementation plan using the **[TDV (Test-Driven Vibing) Mode](./03a-Mode-Spotlight-TDV.md)** with prompts like:
-    > Using @SPECS.md, let's implement Phase 1: User Authentication.
-    
-    The TDV mode will:
-    - Create a detailed `plan.md` for the specific phase
-    - Follow strict Test-Driven Development cycles
-    - Implement features incrementally with tests leading the way
+### 📋 Phase 1: Specification Generation (SpecsForge Mode)
 
-#### Stock Agent Implementation (For Setup Tasks)
+1. **🛠️ Project Setup:** Copy your standard set of `.cursor/rules/` into the new project
+2. **🎯 Activate Mode:** Activate the `SpecsForge` custom mode in Cursor  
+3. **💬 Define Specs:** Engage with the SpecsForge persona through targeted questions to build:
+   - A comprehensive `specs/` directory
+   - A root `SPECS.md` file as the project's single source of truth
+4. **📊 Generate Implementation Plan:** Create a detailed, phased implementation plan within `SPECS.md`
 
-5.  **Use Default Agent:** Keep Cursor in its default agent mode.
-6.  **Describe the Task:** Clearly explain what you want to accomplish, then add:
-    > Make a todo list
-    
-    This approach will:
-    - Generate organized, step-by-step implementation
-    - Create scaffolding and boilerplate efficiently
-    - Provide clear next steps for further development
+### ⚙️ Phase 2: Implementation Execution
 
-#### [Claude Code](https://www.anthropic.com/claude-code) Implementation (Cross-Platform Alternative)
+Choose your implementation approach based on the task type:
 
-5.  **Open Claude Code:** Launch Claude Code in your project directory.
-6.  **Initialize Project:** Run the initialization command:
-    > /init
-7.  **Load Specifications:** Tell Claude to read your specs:
-    > Read SPECS.md and implement Phase 1: User Authentication
-    
-    This approach will:
-    - Leverage Claude's specific AI capabilities and perspective
-    - Work seamlessly with your SpecsForge-generated specifications
-    - Provide an alternative implementation style for comparison
-    - Enable cross-platform AI development workflows
-    
-7.  **Verify and Update:** After each phase, you can check the work against the original spec and update the status in `SPECS.md`:
-    > @SPECS.md check if Phase 1 was implemented properly. If so, update its status to "Complete". Otherwise, list what's missing.
+#### 🧪 Option A: TDV Mode (For Complex Features)
 
-## Alternative Implementation Approaches (Legacy Support)
+1. **Switch to TDV Mode:** Activate the `TDV` custom mode in Cursor
+2. **Implement Phase by Phase:** Work through the implementation plan using **[TDV (Test-Driven Vibing) Mode](./03a-Mode-Spotlight-TDV.md)**
 
-For reference, here are alternative ways to handle implementation if you're not using the TDV Mode:
-
-### Direct Implementation Approach
 ```
-Study @SPECS.md for functional specifications.  
-Study @.cursor for technical requirements  
-
-Implement Phase 1  
-Create tests  
-Run and evaluate tests
+Using @SPECS.md, let's implement Phase 1: User Authentication.
 ```
 
-### Manual Verification
+**TDV Mode Benefits:**
+- Creates detailed `plan.md` for each phase
+- Follows strict Test-Driven Development cycles  
+- Implements features incrementally with tests leading
+
+#### ⚡ Option B: Stock Agent (For Setup & Scaffolding)
+
+1. **Use Default Agent:** Keep Cursor in its default agent mode
+2. **Describe + Magic Phrase:** Explain your task, then add the magic phrase:
+
+```
+[Describe your task clearly]
+
+Make a todo list
+```
+
+**Stock Agent Benefits:**
+- Generates organized, step-by-step implementation
+- Creates scaffolding and boilerplate efficiently
+- Provides clear next steps for development
+
+#### 🚀 Option C: Claude Code (Cross-Platform Alternative)
+
+1. **Open Claude Code:** Launch Claude Code in your project directory
+2. **Initialize:** Run the initialization command: `/init`
+3. **Load Specifications:** Tell Claude to read your specs:
+
+```
+Read SPECS.md and implement Phase 1: User Authentication
+```
+
+**Claude Code Benefits:**
+- Leverages Claude's specific AI capabilities
+- Works seamlessly with SpecsForge specifications
+- Enables cross-platform AI development workflows
+
+### 🔍 Verification & Progress Tracking
+
+After each implementation phase, verify progress against your specifications:
+
 ```
 @SPECS.md check if Phase 1 was implemented properly. If so, update its status to "Complete". Otherwise, list what's missing.
 ```
 
-## The `SpecsForge` Custom Mode Prompt
+---
 
-This is the system prompt that powers the framework. To use it, create a new Custom Mode in Cursor named `SpecsForge` and paste this into the "System Prompt" field.
+## Setting Up the Custom Mode
+
+### 🛠️ Creating the SpecsForge Mode
+
+To create the SpecsForge custom mode in Cursor:
+
+1. **Open Cursor Settings** → Navigate to Custom Modes
+2. **Create New Mode** → Name it `SpecsForge`  
+3. **Copy the System Prompt** → Paste the prompt below into the "System Prompt" field
+
+### 📝 The SpecsForge System Prompt
 
 ```
 SYSTEM
@@ -183,7 +214,7 @@ Each time the user says **"continue"**:
 ────────────────────────────────────────
 6 · Implementation Plan Generation
 ────────────────────────────────────────
-After the specification files in `specs/` are defined and the root `SPECS.md` overview is complete, your final step is to generate a granular implementation plan within the `SPES.md` file.
+After the specification files in `specs/` are defined and the root `SPECS.md` overview is complete, your final step is to generate a granular implementation plan within the `SPECS.md` file.
 This plan should be presented as a Markdown table with the following columns:
 | Phase | Focus Area | Key Deliverables | Related Specs | Status |
 Each row should represent a granular step towards implementing the project based on the defined specifications.
@@ -192,7 +223,7 @@ The "Status" column should initially be set to "TBD" or a similar placeholder.
 ────────────────────────────────────────
 7 · Recommended SPEC template
 ────────────────────────────────────────
-` ` `markdown
+```markdown
 # <Domain Topic> Specification
 ## Purpose
 ## Functional Requirements
@@ -204,7 +235,30 @@ The "Status" column should initially be set to "TBD" or a similar placeholder.
 ## Out of Scope
 ## Risks & Mitigations
 ## Future Considerations
-` ` `
+```
+```
+
+---
+
+## Legacy & Alternative Approaches
+
+### 🔄 Direct Implementation (Manual Approach)
+
+For projects not using the TDV Mode, you can implement directly:
+
+```
+Study @SPECS.md for functional specifications.  
+Study @.cursor for technical requirements  
+
+Implement Phase 1  
+Create tests  
+Run and evaluate tests
+```
+
+### ✅ Manual Verification
+
+```
+@SPECS.md check if Phase 1 was implemented properly. If so, update its status to "Complete". Otherwise, list what's missing.
 ```
 
 ---

@@ -5,7 +5,8 @@
 > - **A Framework for AI-Driven Development:** SpecsForge is a systematic workflow, powered by a custom Cursor Mode, for turning a high-level idea into a detailed, AI-readable project specification.
 > - **From Vision to Plan:** It guides you through a discovery process to define business goals, features, and architecture *before* writing implementation code.
 > - **Creates a "Specification Library":** The output is a `specs/` directory and a root `SPECS.md` file, which serve as the single source of truth for the project.
-> - **Smart Implementation Choices:** After specs are complete, choose your implementation approach: **TDV Mode** for complex features requiring extensive testing, or **Stock Agent + "Make a todo list"** for scaffolding and simple utilities.
+> - **Multiple Implementation Paths:** Choose from **TDV Mode** (rigorous testing), **Stock Agent + "Make a todo list"** (rapid scaffolding), or **[Claude Code](https://www.anthropic.com/claude-code)** (cross-platform alternative) based on your needs.
+> - **Cross-Platform Compatibility:** Your SpecsForge specifications work seamlessly across different AI coding environments - try `/init` in [Claude Code](https://www.anthropic.com/claude-code) then `read SPECS.md and implement phase X`.
 > - **The "Make a Todo List" Technique:** A game-changing phrase that transforms scattered AI output into organized, actionable steps - perfect for rapid prototyping and project setup tasks.
 
 ---
@@ -22,6 +23,7 @@ Once the specification is complete, `SpecsForge` hands off the implementation to
 | 🧪 **Core Features** | TDV Mode | "Needs extensive testing" | "Using @SPECS.md, implement..." |
 | ⚡ **Utilities & Scripts** | Stock Agent Mode | "One-off or simple logic" | "Make a todo list" |
 | 🎯 **Business Logic** | TDV Mode | "Complex rules and edge cases" | "Using @SPECS.md, implement..." |
+| 🚀 **Cross-Platform Dev** | [Claude Code](https://www.anthropic.com/claude-code) | "Want different AI perspective" | "/init → read SPECS.md → implement phase X" |
 
 ---
 
@@ -54,6 +56,13 @@ Here is the step-by-step process for using the SpecsForge framework:
 - Configuration files and basic structure
 - Quick prototypes and proof-of-concepts
 
+#### When to Use [Claude Code](https://www.anthropic.com/claude-code) (Cross-Platform Alternative)
+✅ **Best for:**
+- Getting a different AI perspective on implementation
+- Cross-platform development workflow
+- When you want to leverage Claude's specific strengths
+- Teams using multiple AI coding environments
+
 **💡 Pro Tip:** For stock Agent mode tasks, end your prompt with: **"Make a todo list"** - this simple addition transforms the AI's output from scattered implementation into organized, actionable steps.
 
 #### TDV Mode Implementation (For Complex Features)
@@ -77,6 +86,20 @@ Here is the step-by-step process for using the SpecsForge framework:
     - Generate organized, step-by-step implementation
     - Create scaffolding and boilerplate efficiently
     - Provide clear next steps for further development
+
+#### [Claude Code](https://www.anthropic.com/claude-code) Implementation (Cross-Platform Alternative)
+
+5.  **Open Claude Code:** Launch Claude Code in your project directory.
+6.  **Initialize Project:** Run the initialization command:
+    > /init
+7.  **Load Specifications:** Tell Claude to read your specs:
+    > Read SPECS.md and implement Phase 1: User Authentication
+    
+    This approach will:
+    - Leverage Claude's specific AI capabilities and perspective
+    - Work seamlessly with your SpecsForge-generated specifications
+    - Provide an alternative implementation style for comparison
+    - Enable cross-platform AI development workflows
     
 7.  **Verify and Update:** After each phase, you can check the work against the original spec and update the status in `SPECS.md`:
     > @SPECS.md check if Phase 1 was implemented properly. If so, update its status to "Complete". Otherwise, list what's missing.

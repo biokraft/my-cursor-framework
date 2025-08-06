@@ -1,0 +1,250 @@
+---
+description: Ansible best practices: Apply when working with Ansible playbooks, roles, or automation tasks
+globs: ansible/**/*.yml, ansible/**/*.yaml, ansible/ansible.cfg, ansible/inventory/*, ansible/group_vars/*, ansible/host_vars/*, ansible/roles/*, ansible/playbooks/*
+alwaysApply: false
+---
+
+# Ansible Best Practices
+
+This rule provides comprehensive best practices for using Ansible, based on official documentation, community guides, and expert recommendations.
+
+## Project Structure
+
+A well-organized project structure is crucial for maintainability and scalability.
+
+### Directory Layout
+
+Use a standard directory layout for all Ansible projects:
+
+```
+inventory/
+    production
+    staging
+group_vars/
+    all/
+    webservers.yml
+host_vars/
+    hostname1.yml
+roles/
+    common/
+    webserver/
+playbooks/
+    site.yml
+    webservers.yml
+```
+
+### Environment Separation
+
+- **Separate Inventories by Environment:** Use different inventory files for production, staging, and development to avoid accidental changes to the wrong environment
+- **Dynamic Inventories:** For cloud environments, use dynamic inventories to automatically discover and manage hosts
+- **Use `group_vars` and `host_vars`:** Define variables in `group_vars` for groups of hosts and `host_vars` for specific hosts, rather than directly in the inventory file
+
+## Playbooks
+
+Playbooks are the core of Ansible, defining the automation tasks.
+
+### Core Principles
+
+- **Keep Playbooks Simple:** Each playbook should have a clear and specific purpose
+- **Name Plays and Tasks:** Always give descriptive names to your plays and tasks. This makes debugging and understanding the playbook easier
+- **Idempotence:** Ensure your playbooks are idempotent, meaning they can be run multiple times without causing unintended changes
+
+### Task Organization
+
+- **Use Handlers for Service Restarts:** Trigger service restarts using handlers to ensure they only run when a change has occurred
+- **Use Blocks:** Group related tasks together using `block` for better organization and error handling
+
+Example of proper task organization:
+
+```yaml
+- name: Install, configure, and start Nginx
+  block:
+    - name: Install Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+    
+    - name: Copy configuration
+      template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+      notify: restart nginx
+  
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+```
+
+## Roles
+
+Roles provide a way to create reusable and structured automation content.
+
+### Role Design
+
+- **Create Reusable Roles:** Encapsulate functionality into roles that can be shared across projects. A role should have a single, well-defined purpose
+- **Follow the Standard Role Structure:** Use `ansible-galaxy init` to create a new role with the standard directory structure (`tasks`, `handlers`, `templates`, `files`, `vars`, `defaults`, `meta`)
+- **Use `defaults/main.yml`:** Define default variables for your role in `defaults/main.yml`. These have the lowest precedence and can be easily overridden
+
+### Variable Naming
+
+- **Prefix Role Variables:** Prefix variables within a role with the role name to avoid naming conflicts (e.g., `nginx_port` instead of `port`)
+- **Internal Variables:** Use double underscore prefix for internal variables (e.g., `__nginx_temp_file`)
+
+## Variables
+
+Proper variable management is key to creating flexible and maintainable playbooks.
+
+### Variable Management
+
+- **Variable Precedence:** Understand Ansible's variable precedence to avoid unexpected behavior
+- **Use `vars/main.yml` in Roles:** For variables that should not be overridden by the user, place them in `roles/<role_name>/vars/main.yml`
+- **Avoid Hardcoding Values:** Use variables instead of hardcoding values in playbooks and templates
+- **Use Ansible Vault for Secrets:** Encrypt sensitive data like passwords and API keys using Ansible Vault
+
+### Variable Definition
+
+Always provide sane defaults:
+
+```yaml
+# roles/nginx/defaults/main.yml
+nginx_port: 80
+nginx_user: www-data
+nginx_worker_processes: auto
+```
+
+## YAML Best Practices
+
+### Formatting
+
+- **Use Consistent Formatting:** Maintain consistent indentation and spacing
+- **Use Block Quotes for Multiline Strings:** Use `|` to preserve newlines and `>` to fold newlines into spaces for long strings
+- **Add Comments:** Use comments (`#`) to explain complex tasks or non-obvious logic
+
+### Task Format
+
+Place each task argument on its own line for better readability:
+
+```yaml
+# Good
+- name: Install package
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+# Avoid
+- name: Install package
+  ansible.builtin.apt: name=nginx state=present update_cache=yes
+```
+
+## Modules
+
+### Module Selection
+
+- **Use Specific Modules:** Prefer specific modules (e.g., `apt`, `copy`, `template`) over generic ones like `command` or `shell`. Specific modules are generally idempotent and provide better error handling
+- **Avoid `command` and `shell`:** Only use `command` and `shell` as a last resort when no other module can perform the required action
+
+### Module Usage
+
+When using `command` or `shell` modules:
+
+```yaml
+- name: Run command only if file doesn't exist
+  command: /usr/bin/make_database.sh
+  args:
+    creates: /path/to/database
+  changed_when: false
+```
+
+## Security
+
+### Access Control
+
+- **Ansible Vault:** Use Ansible Vault for all sensitive data
+- **Limit Privilege Escalation:** Use `become: true` only when necessary and at the task level rather than the play level if possible
+
+### Testing and Validation
+
+- **Check Mode:** Use `--check` to run playbooks in a dry-run mode to see what changes would be made
+- **Linting:** Use `ansible-lint` to check playbooks for best practices and potential errors
+
+Example of proper privilege escalation:
+
+```yaml
+- name: Install system package
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+  become: true
+
+- name: Copy user file
+  copy:
+    src: user_config.txt
+    dest: /home/user/config.txt
+  # No become needed for user files
+```
+
+## Testing and Deployment
+
+### Execution Control
+
+- **Test in Staging First:** Always test changes in a staging or testing environment before production
+- **Use Tags:** Leverage tags for selective execution of specific tasks
+- **Limit Execution:** Use `--limit` flag to run playbooks against specific hosts
+
+### Validation
+
+- **List Tasks:** Use `--list-tasks` flag to confirm which tasks would run without executing them
+- **List Hosts:** Use `--list-hosts` flag to confirm which hosts will be affected
+- **Diff Mode:** Combine `--check` with `--diff` to show what changes would be made
+
+## Version Control and Community
+
+### Project Management
+
+- **Use Version Control:** Store your Ansible project in Git
+- **Semantic Versioning:** Use semantic versioning for role releases
+- **Documentation:** Document all roles, variables, and complex playbooks
+
+### Community Resources
+
+- **Leverage Ansible Galaxy:** Use Ansible Galaxy to find and share reusable roles with the community, but vet them carefully
+- **Collections:** Package related roles into collections for better distribution and namespace management
+
+## Error Handling
+
+### Proper Error Management
+
+- **Don't Use `ignore_errors`:** Use `failed_when` instead to define specific failure conditions
+- **Use `assert` for Validation:** Validate inputs and prerequisites early in playbooks
+
+```yaml
+- name: Validate required variables
+  assert:
+    that:
+      - mysql_root_password is defined
+      - mysql_root_password | length > 0
+    fail_msg: "mysql_root_password must be defined and non-empty"
+```
+
+## Performance Optimization
+
+### Execution Efficiency
+
+- **Use Parallel Execution:** Configure `forks` in ansible.cfg for parallel execution
+- **Rolling Updates:** Use `serial` keyword to control the number of hosts updated simultaneously
+- **Fact Gathering:** Disable fact gathering when not needed with `gather_facts: false`
+
+Example of rolling updates:
+
+```yaml
+- hosts: webservers
+  serial: 2
+  tasks:
+    - name: Update application
+      # tasks here
+```
+
+Following these best practices will help you create maintainable, secure, and efficient Ansible automation that scales with your infrastructure needs.

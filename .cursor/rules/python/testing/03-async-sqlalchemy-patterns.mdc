@@ -1,0 +1,227 @@
+---
+description: Async SQLAlchemy Testing Patterns: Prevent MissingGreenlet errors and ensure proper async database testing patterns
+globs: tests/**/*.py
+alwaysApply: false
+---
+# Async SQLAlchemy Testing Patterns
+
+## Introduction
+
+This guide defines the correct patterns for testing async SQLAlchemy operations to prevent `MissingGreenlet` errors and ensure reliable async database testing. The `MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here` error is a common issue when SQLAlchemy's async operations cannot establish proper greenlet context.
+
+## Root Cause of MissingGreenlet Errors
+
+The `MissingGreenlet` error occurs when:
+
+1. **Class-based tests** use `@pytest_asyncio.fixture` within classes
+2. **Improper async context** setup in test configuration
+3. **Mixed async patterns** between different test frameworks
+4. **Incorrect SQLAlchemy async operation usage** patterns
+
+## Correct Testing Patterns
+
+### 1. Use Standalone Functions with @pytest.mark.anyio
+
+**✅ CORRECT - Use standalone async functions:**
+
+```python
+import pytest
+from sqlalchemy import func, select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+@pytest.mark.anyio
+async def test_database_operations(db_session: AsyncSession):
+    """Test database operations correctly."""
+    # Use await db_session.scalar() for count operations
+    count = await db_session.scalar(
+        select(func.count(MyModel.id)).where(MyModel.status == "active")
+    )
+    assert count >= 0
+    
+    # Use await db_session.execute() followed by result methods
+    result = await db_session.execute(select(MyModel).where(MyModel.id == 1))
+    models = result.scalars().all()
+    assert isinstance(models, list)
+```
+
+**❌ INCORRECT - Avoid class-based tests with async fixtures:**
+
+```python
+# This pattern can cause MissingGreenlet errors
+class TestMyModel:
+    @pytest_asyncio.fixture
+    async def setup_data(self, db_session: AsyncSession):
+        # This fixture setup can cause greenlet issues
+        pass
+    
+    @pytest.mark.asyncio  # Even with this decorator
+    async def test_something(self, db_session: AsyncSession, setup_data):
+        # This may fail with MissingGreenlet error
+        pass
+```
+
+### 2. Correct SQLAlchemy Async Patterns
+
+**✅ CORRECT patterns for different operations:**
+
+```python
+import pytest
+from sqlalchemy import func, select, delete, update
+from sqlalchemy.ext.asyncio import AsyncSession
+from myapp.models import User, Project
+
+@pytest.mark.anyio
+async def test_counting_records(db_session: AsyncSession):
+    """Use db_session.scalar() for count operations."""
+    user_count = await db_session.scalar(
+        select(func.count(User.id)).where(User.is_active == True)
+    )
+    assert user_count >= 0
+
+@pytest.mark.anyio
+async def test_selecting_records(db_session: AsyncSession):
+    """Use db_session.execute() for select operations."""
+    result = await db_session.execute(
+        select(User).where(User.email.like("%@example.com"))
+    )
+    users = result.scalars().all()
+    assert isinstance(users, list)
+    
+    # For single record
+    result = await db_session.execute(select(User).where(User.id == 1))
+    user = result.scalar_one_or_none()
+    assert user is None or isinstance(user, User)
+
+@pytest.mark.anyio
+async def test_get_by_id(db_session: AsyncSession):
+    """Use db_session.get() for retrieving by primary key."""
+    user = await db_session.get(User, 123)
+    assert user is None or isinstance(user, User)
+
+@pytest.mark.anyio
+async def test_creating_records(db_session: AsyncSession):
+    """Proper pattern for creating and saving records."""
+    new_user = User(email="test@example.com", name="Test User")
+    db_session.add(new_user)
+    await db_session.commit()
+    await db_session.refresh(new_user)
+    
+    assert new_user.id is not None
+    assert new_user.email == "test@example.com"
+
+@pytest.mark.anyio
+async def test_updating_records(db_session: AsyncSession):
+    """Proper pattern for bulk updates."""
+    await db_session.execute(
+        update(User)
+        .where(User.is_active == False)
+        .values(last_login=None)
+    )
+    await db_session.commit()
+
+@pytest.mark.anyio
+async def test_deleting_records(db_session: AsyncSession):
+    """Proper pattern for deletions."""
+    await db_session.execute(
+        delete(User).where(User.email == "temp@example.com")
+    )
+    await db_session.commit()
+```
+
+**❌ INCORRECT patterns that cause MissingGreenlet:**
+
+```python
+# DON'T do this - causes MissingGreenlet error
+async def test_wrong_pattern(db_session: AsyncSession):
+    result = await db_session.execute(select(func.count(User.id)))
+    count = result.scalar()  # This line causes the error
+```
+
+### 3. Test Fixture Patterns
+
+**✅ CORRECT fixture pattern:**
+
+```python
+@pytest_asyncio.fixture
+async def test_user(db_session: AsyncSession) -> User:
+    """Create a test user for testing."""
+    user = User(email="test@example.com", name="Test User")
+    db_session.add(user)
+    await db_session.commit()
+    await db_session.refresh(user)
+    return user
+
+@pytest.mark.anyio
+async def test_with_fixture(db_session: AsyncSession, test_user: User):
+    """Test using async fixture correctly."""
+    assert test_user.id is not None
+    
+    # Verify user exists in database
+    found_user = await db_session.get(User, test_user.id)
+    assert found_user is not None
+    assert found_user.email == test_user.email
+```
+
+### 4. Migration from Class-Based to Function-Based Tests
+
+If you have existing class-based tests that need conversion:
+
+**❌ BEFORE (class-based causing issues):**
+
+```python
+class TestSubmissionPerformance:
+    @pytest_asyncio.fixture
+    async def setup_data(self, db_session: AsyncSession):
+        # Setup code here
+        pass
+    
+    @pytest.mark.asyncio
+    async def test_database_operations(self, db_session: AsyncSession):
+        # Test code here
+        pass
+```
+
+**✅ AFTER (function-based working correctly):**
+
+```python
+@pytest_asyncio.fixture
+async def setup_submission_data(db_session: AsyncSession):
+    """Setup data for submission performance tests."""
+    # Setup code here - now works correctly
+    pass
+
+@pytest.mark.anyio
+async def test_submission_database_operations(
+    db_session: AsyncSession, 
+    setup_submission_data
+):
+    """Test submission database operations."""
+    # Test code here - no more MissingGreenlet errors
+    pass
+```
+
+## Debugging MissingGreenlet Errors
+
+If you encounter `MissingGreenlet` errors:
+
+1. **Check test structure**: Ensure you're using standalone functions with `@pytest.mark.anyio`
+2. **Review SQLAlchemy patterns**: Use `await db_session.scalar()` for counts, not `result.scalar()`
+3. **Verify async context**: Ensure proper async fixture setup
+4. **Check imports**: Ensure all necessary async imports are present
+
+## Quick Reference
+
+| Operation | Correct Pattern |
+|-----------|----------------|
+| Count records | `await db_session.scalar(select(func.count(...)))` |
+| Select multiple | `result = await db_session.execute(select(...)); items = result.scalars().all()` |
+| Select single | `result = await db_session.execute(select(...)); item = result.scalar_one_or_none()` |
+| Get by ID | `await db_session.get(Model, id)` |
+| Create & save | `db_session.add(obj); await db_session.commit(); await db_session.refresh(obj)` |
+| Update | `await db_session.execute(update(...).values(...)); await db_session.commit()` |
+| Delete | `await db_session.execute(delete(...)); await db_session.commit()` |
+
+## Related Rules
+
+- [Python Testing Best Practices](mdc:.cursor/rules/python/testing/01-best-practices.mdc)
+- [FastAPI Testing Practices](mdc:.cursor/rules/python/testing/02-fastapi-testing.mdc)

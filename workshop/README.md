@@ -39,4 +39,11 @@ We will walk through these demos to illustrate how you can go from a vague idea 
 ### 🚀 **[Grand Finale: Building "Pomo-Go" From Scratch](./06-uc-final-project-pomo-go/README.md)**
    - **Scenario:** A full, end-to-end project build.
    - **Problem:** How to combine research, planning, TDD, and implementation into one seamless workflow.
-   - **Solution:** A live-coded demonstration building a Terminal Pomodoro Timer, showcasing the entire framework in action. mcp.json
+    - **Solution:** A live-coded demonstration building a Terminal Pomodoro Timer, showcasing the entire framework in action.
+
+---
+
+### Sources
+
+- Concepts (context, @Docs, indexing): https://docs.cursor.com/get-started/concepts
+- MCP Inspector (for MCP demos): https://modelcontextprotocol.io/docs/tools/inspector

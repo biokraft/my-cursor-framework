@@ -205,6 +205,7 @@ Keep this guide in lockstep with official Cursor docs and changelogs. Check each
 ## Workshops & Assets
 
 - [ ] Skim workshop README files for old labels/screenshots; queue refresh if needed.
+  - [x] Skimmed and added sources; fixed stray text in workshop overview.
 - [ ] Update/recapture assets:
   - [ ] `include_project_structure.png`
   - [ ] `web_search_tool.png`

@@ -21,7 +21,7 @@ Keep this guide in lockstep with official Cursor docs and changelogs. Check each
     - Source: Changelog — `https://cursor.com/changelog`
   - [x] Dashboard usage analytics; export/duplicate chats
     - Source: Changelog — `https://cursor.com/changelog`
-- [ ] **Models**: Refresh availability, naming, long-context support, and guidance on “Max mode”.
+- [x] **Models**: Refresh availability, naming, long-context support, and guidance on “Max mode”.
   - Source: Changelog (models/Max mode updates) — `https://cursor.com/changelog`
 - [ ] **Links**: Prefer official `docs.cursor.com`/Cursor changelog pages; annotate any community resources as such.
 - [x] **Indexing**: Document automatic indexing behavior and configuration; include `.cursorignore` examples.
@@ -42,11 +42,11 @@ Keep this guide in lockstep with official Cursor docs and changelogs. Check each
   - [x] Add sources section with official links (Concepts, Changelog, 1.0).
     - Done in root README.
 
-- [ ] `CHANGELOG.md`
-  - [ ] Add entry for this docs-sync pass (highlights, impacted sections).
+- [x] `CHANGELOG.md`
+  - [x] Add entry for this docs-sync pass (highlights, impacted sections).
 
-- [ ] `Yolo-README.md`
-  - [ ] Keep disclaimer; no maintenance needed.
+- [x] `Yolo-README.md`
+  - [x] Keep disclaimer; no maintenance needed.
 
 ## 01-Cursor-for-Everyone
 
@@ -82,9 +82,9 @@ Keep this guide in lockstep with official Cursor docs and changelogs. Check each
     - Source: Concepts — `https://docs.cursor.com/get-started/concepts`
 
 - [x] `03-Choosing-Your-AI-Model.md`
-  - [ ] Refresh recommended models and names (Anthropic, OpenAI, Google) and availability inside Cursor.
-  - [ ] Reassess “Avoid MAX” guidance to reflect current “Max mode” behavior/costs.
-  - [ ] Confirm “Auto” model selection naming/behavior.
+  - [x] Refresh recommended models and names (Anthropic, OpenAI, Google) and availability inside Cursor.
+  - [x] Reassess “Avoid MAX” guidance to reflect current “Max mode” behavior/costs.
+  - [x] Confirm “Auto” model selection naming/behavior.
     - Source: Changelog (models/Max mode) — `https://cursor.com/changelog`
 
 - [x] `04-Custom-Modes-Tailoring-Cursor-to-You/README.md`

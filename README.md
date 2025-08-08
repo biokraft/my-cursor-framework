@@ -16,6 +16,10 @@ Welcome to this personal collection of best practices, rules, and workflows desi
 
 This repository is structured to guide you through understanding core Cursor concepts and then diving into advanced development workflows.
 
+> Note: Cursor evolves quickly. Recent platform capabilities include **Background Agent** (with a dedicated panel and Slack launch), **BugBot** for PR reviews, **Memories**, **richer chat rendering** (Mermaid, tables), and improvements across settings, indexing, and dashboards. See the official changelog for details.
+
+Sources: `https://cursor.com/en/changelog/1-0`, `https://cursor.com/changelog`
+
 ---
 
 ## 🎯 How This Guide is Structured
@@ -105,6 +109,9 @@ If you've found this framework helpful, I'd be incredibly grateful if you could 
 -   [From Design doc to code: the Groundhog AI coding assistant (and new Cursor vibecoding meta)](https://ghuntley.com/specs/)
 -   [Cursor Rules Documentation](https://docs.cursor.com/context/rules)
 -   [Cursor Custom Modes Documentation](https://docs.cursor.com/chat/custom-modes)
+-   [Cursor Concepts (context, indexing, @Docs, etc.)](https://docs.cursor.com/get-started/concepts)
+-   [Cursor Changelog (latest updates)](https://cursor.com/changelog)
+-   [Cursor 1.0 Feature Highlights](https://cursor.com/en/changelog/1-0)
 
 ---
 

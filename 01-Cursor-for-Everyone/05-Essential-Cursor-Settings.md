@@ -50,12 +50,13 @@ However, this feature can cause issues with very large files.
 
 This prevents the AI from deleting files automatically. It can still *suggest* `rm` commands, but you will have to approve them explicitly. This small change adds a crucial safety net, making Cursor much more stable for projects with large assets, without disrupting your workflow.
 
-### 6. Exclude Noisy Files with `.cursorignore` and Global Ignores
+### 6. Exclude Noisy Files with `.cursorignore`, `.gitignore`, and Global Ignores
 
 Keep large or irrelevant files out of prompts and indexing to improve accuracy and performance.
 
-- Use a project-level `.cursorignore` to exclude folders like `node_modules/`, `dist/`, build artifacts, and large assets.
-- Configure user-level global ignore patterns in settings to apply across projects.
+- **By default, anything listed in your `.gitignore` is also ignored by Cursor.** This means common folders like `node_modules/`, `dist/`, and build artifacts are already excluded if they're in `.gitignore`.
+- Use a project-level `.cursorignore` to further exclude files or folders that you don't want Cursor to index or consider, such as large assets or custom build outputs.
+- Configure user-level global ignore patterns in settings to apply exclusions across all your projects.
 
 ### 7. Background Agent Panel & Dashboard
 

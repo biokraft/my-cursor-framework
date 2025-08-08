@@ -104,4 +104,8 @@ This mode is ideal when you need to:
 
 ---
 
+### Sources
+
+- Changelog (export/duplicate chat): https://cursor.com/changelog
+
 [⬅️ Back to Learn Mode](./04b-Mode-Spotlight-Learn.md) | [Up: Custom Modes](./README.md) | [Next: Mode Spotlight: Research ➡️](./04d-Mode-Spotlight-Research.md) 

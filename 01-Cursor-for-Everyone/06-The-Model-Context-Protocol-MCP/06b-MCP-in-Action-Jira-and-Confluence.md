@@ -107,4 +107,9 @@ Here's a simplified guide to get you started. This assumes you are running the `
 
 ---
 
+### Sources
+
+- Atlassian MCP (community): https://github.com/sooperset/mcp-atlassian
+- Cursor 1.0 (MCP one-click/OAuth): https://cursor.com/en/changelog/1-0
+
 [⬅️ Back to MCP Overview](./06a-MCP-The-Big-Picture.md) | [Up: Cursor for Everyone](../README.md) | [Next: MCP Spotlight: DBHub ➡️](./06c-MCP-Spotlight-DBHub.md) 

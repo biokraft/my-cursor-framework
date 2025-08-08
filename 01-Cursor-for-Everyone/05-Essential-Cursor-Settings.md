@@ -9,16 +9,16 @@
 
 ---
 
-To get the most out of Cursor, you should enable a few key settings. These options, especially the BETA features, will significantly enhance your productivity.
+To get the most out of Cursor, you should enable a few key settings. These options significantly enhance your productivity.
 
-### 1. Include project structure (BETA)
+### 1. Include project structure
 
 **This is a game-changer. Enable it.** It gives the AI a simplified directory tree of your project, so it always understands your codebase layout.
 
 -   **Why it's crucial:** Improves contextual awareness and accuracy, reducing the need for you to manually reference files.  
     ![Include Project Structure Setting](../assets/include_project_structure.png)
 
-### 2. Web Search Tool (BETA)
+### 2. Web Search Tool
 
 **Enable this for a smarter AI.** It allows the agent to search the web for real-time information.
 
@@ -32,7 +32,7 @@ For users who want to work at maximum speed and are comfortable with the AI taki
 -   **Why it's powerful:** The AI can execute terminal commands and apply file edits without pausing for your approval, creating a much smoother workflow. Use with confidence!  
     ![Enable Auto-run Mode Setting](../assets/auto_run_mode.png)
 
-### 4. Play sound on finish (BETA)
+### 4. Play sound on finish
 
 A small but satisfying feature for positive reinforcement.
 
@@ -55,5 +55,10 @@ This prevents the AI from deleting files automatically. It can still *suggest* `
 By thoughtfully configuring these settings, you can create a highly efficient and context-aware working environment in Cursor.
 
 ---
+
+### Sources
+
+- Concepts (settings, context, indexing): https://docs.cursor.com/get-started/concepts
+- Changelog (features status & UI changes): https://cursor.com/changelog
 
 [⬅️ Back to Custom Modes](./04-Custom-Modes-Tailoring-Cursor-to-You/README.md) | [Up: Cursor for Everyone](../README.md) | [Next: The MCP ➡️](./06-The-Model-Context-Protocol-MCP/README.md) 

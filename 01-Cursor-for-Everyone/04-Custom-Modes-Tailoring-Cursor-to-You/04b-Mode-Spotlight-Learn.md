@@ -63,4 +63,8 @@ Tool Usage:
 
 ---
 
+### Sources
+
+- Concepts (tools & permissions): https://docs.cursor.com/get-started/concepts
+
 [⬅️ Back to Intro to Custom Modes](./04a-Introduction-to-Custom-Modes.md) | [Up: Custom Modes](./README.md) | [Next: Mode Spotlight: MDP ➡️](./04c-Mode-Spotlight-MDP.md) 

@@ -43,4 +43,8 @@ In the following sections, we'll explore concrete examples of useful custom mode
 
 ---
 
+### Sources
+
+- Custom Modes: https://docs.cursor.com/chat/custom-modes
+
 [⬅️ Back to Custom Modes Overview](./README.md) | [Up: Custom Modes](../README.md) | [Next: Mode Spotlight: Learn ➡️](./04b-Mode-Spotlight-Learn.md)

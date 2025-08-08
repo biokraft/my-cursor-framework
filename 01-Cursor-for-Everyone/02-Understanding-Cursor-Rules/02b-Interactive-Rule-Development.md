@@ -47,4 +47,8 @@ To ensure your rules themselves are consistent, always reference your "master ru
 
 ---
 
+### Sources
+
+- Cursor Rules: https://docs.cursor.com/context/rules
+
 [⬅️ Back to What/Why/How](./02a-What-Why-How.md) | [Up: Understanding Rules](./README.md) | [Next: Rules for Documentation ➡️](./02c-Rules-for-Stellar-Documentation.md) 

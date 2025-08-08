@@ -23,4 +23,8 @@ Welcome! Rules are one of the most powerful features in Cursor. They allow you t
 
 ---
 
+### Sources
+
+- Cursor Rules: https://docs.cursor.com/context/rules
+
 [⬅️ Back to Welcome](../01-Welcome-to-Cursor.md) | [Up: Cursor for Everyone](../README.md) | [Next: What, Why, How? ➡️](./02a-What-Why-How.md) 

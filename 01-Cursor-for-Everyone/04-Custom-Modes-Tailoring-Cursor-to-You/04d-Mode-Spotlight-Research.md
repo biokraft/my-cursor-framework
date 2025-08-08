@@ -63,4 +63,8 @@ Tool Usage:
 
 ---
 
+### Sources
+
+- Changelog (Web search & richer chat): https://cursor.com/changelog
+
 [⬅️ Back to MDP Mode](./04c-Mode-Spotlight-MDP.md) | [Up: Custom Modes](./README.md) | [Next: Mode Spotlight: Yolo ➡️](./04e-Mode-Spotlight-Yolo.md) 

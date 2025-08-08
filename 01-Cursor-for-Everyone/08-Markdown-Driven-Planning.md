@@ -32,4 +32,8 @@ This entire guide was built using this exact workflow, demonstrating its power a
 
 ---
 
+### Sources
+
+- Changelog (export/duplicate chats): https://cursor.com/changelog
+
 [⬅️ Back to @Docs Quick Look](./07-Quick-Look-The-Docs-Feature.md) | [Up: Cursor for Everyone](../README.md) | [Next: Cursor for Developers ➡️](../02-Cursor-for-Developers/README.md) 

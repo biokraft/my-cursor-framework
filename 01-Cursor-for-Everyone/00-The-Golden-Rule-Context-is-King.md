@@ -46,4 +46,9 @@ Here are the primary ways to provide context, which we will explore throughout t
 
 ---
 
+### Sources
+
+- Cursor Concepts (context, @Docs, indexing): https://docs.cursor.com/get-started/concepts
+- Cursor 1.0 features (Background Agent): https://cursor.com/en/changelog/1-0
+
 [⬅️ Back to main README](../README.md) | [Up: Cursor for Everyone](../README.md) | [Next: Welcome to Cursor ➡️](./01-Welcome-to-Cursor.md) 

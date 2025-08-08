@@ -26,16 +26,16 @@ Here are the top recommendations based on common use cases.
 
 Use these models for tasks requiring deep understanding, creativity, and detailed output.
 
--   **🥇 Top Choice: `claude-4-sonnet` (Anthropic)**: The latest and most advanced for deep problem-solving.
--   **`gemini-2.5-pro` (Google):** A powerful alternative with strong reasoning capabilities.
--   **`claude-3.7-sonnet` (Anthropic):** A highly capable model with a great balance of intelligence and efficiency.
+-   **Anthropic Sonnet/Opus (latest):** Strong for deep problem-solving.
+-   **Google Gemini 2.5 Pro:** Powerful reasoning capabilities.
+-   **OpenAI (latest GPT-5):** Solid all-rounders.
 
 ### ⚡ For Quick Assistance & Iteration ("Fast Models")
 
 Use these models when you need rapid responses for less complex tasks.
 
--   **🥇 Top Choice: `claude-4-opus` (Anthropic):** Optimized for speed while maintaining high quality. Excellent for day-to-day development.
--   **`gpt-4.1` (OpenAI):** A great all-rounder for the majority of daily tasks.
+-   **Anthropic Sonnet/Haiku (current fast tier):** Balanced quality/speed.
+-   **OpenAI GPT-4.1 or successor fast models:** All-rounder for daily tasks.
 
 ## 💡 How Cursor Uses Different Models
 
@@ -45,5 +45,9 @@ It's helpful to know that Cursor may use different models for different internal
 -   **Applying Edits & Other Tasks:** Cursor often uses smaller, faster models for "non-thinking" tasks like applying a diff or formatting code. This provides a smoother experience without wasting the power of a "thinking" model.
 
 ---
+
+### Sources
+
+- Cursor Changelog (models & Max mode): https://cursor.com/changelog
 
 [⬅️ Back to Rules](./02-Understanding-Cursor-Rules/README.md) | [Up: Cursor for Everyone](../README.md) | [Next: Custom Modes ➡️](./04-Custom-Modes-Tailoring-Cursor-to-You/README.md) 

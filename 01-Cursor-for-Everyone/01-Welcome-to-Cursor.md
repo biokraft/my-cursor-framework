@@ -21,6 +21,10 @@ Cursor provides a familiar editing experience but supercharges it with AI. Here 
 -   **Documentation & Research:** Summarize information, draft documentation, and connect to knowledge bases like Confluence.
 -   **Project Management:** Integrate with tools like Jira to bring project context directly into your IDE.
 
+> Newer capabilities include **Background Agent** (for longer-running tasks), **BugBot** for PR reviews, **Memories**, and **richer chat rendering** (Mermaid, tables). See the official changelog for details.
+
+Sources: `https://cursor.com/en/changelog/1-0`, `https://cursor.com/changelog`
+
 ## 👥 Who is This Guide For?
 
 This guide is designed for a wide audience:

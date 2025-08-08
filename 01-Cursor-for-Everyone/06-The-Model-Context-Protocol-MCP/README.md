@@ -32,4 +32,9 @@ Welcome to the section on the Model Context Protocol (MCP)! This system is key t
 
 ---
 
+### Sources
+
+- Changelog (MCP one-click install & OAuth): https://cursor.com/en/changelog/1-0
+- MCP Inspector: https://modelcontextprotocol.io/docs/tools/inspector
+
 [⬅️ Back to Essential Settings](../05-Essential-Cursor-Settings.md) | [Up: Cursor for Everyone](../README.md) | [Next: MCP: The Big Picture ➡️](./06a-MCP-The-Big-Picture.md) 

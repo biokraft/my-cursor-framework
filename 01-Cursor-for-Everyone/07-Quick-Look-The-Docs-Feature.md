@@ -32,4 +32,9 @@ This feature is a game-changer for developers. We will dive much deeper into thi
 
 ---
 
+### Sources
+
+- Concepts (@Docs, context): https://docs.cursor.com/get-started/concepts
+- Changelog (PDF parsing/@link & chat rendering): https://cursor.com/changelog
+
 [⬅️ Back to MCP](./06-The-Model-Context-Protocol-MCP/README.md) | [Up: Cursor for Everyone](../README.md) | [Next: Markdown-Driven Planning ➡️](./08-Markdown-Driven-Planning.md) 

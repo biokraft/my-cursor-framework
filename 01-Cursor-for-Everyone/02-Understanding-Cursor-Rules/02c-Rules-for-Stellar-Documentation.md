@@ -89,4 +89,8 @@ By implementing documentation-specific rules, you empower Cursor to be a more ef
 
 ---
 
+### Sources
+
+- Cursor Concepts (context, globs, indexing): https://docs.cursor.com/get-started/concepts
+
 [⬅️ Back to Interactive Development](./02b-Interactive-Rule-Development.md) | [Up: Understanding Rules](./README.md) | [Next: Choosing Your AI Model ➡️](../03-Choosing-Your-AI-Model.md) 

@@ -37,4 +37,8 @@ Welcome! Custom Modes are a powerful feature that lets you define specific perso
 
 ---
 
+### Sources
+
+- Custom Modes: https://docs.cursor.com/chat/custom-modes
+
 [⬅️ Back to AI Models](../03-Choosing-Your-AI-Model.md) | [Up: Cursor for Everyone](../README.md) | [Next: Intro to Custom Modes ➡️](./04a-Introduction-to-Custom-Modes.md) 

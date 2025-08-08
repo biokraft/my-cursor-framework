@@ -38,4 +38,8 @@ In the next sections, we'll see practical examples with popular tools.
 
 ---
 
+### Sources
+
+- MCP Inspector: https://modelcontextprotocol.io/docs/tools/inspector
+
 [⬅️ Back to MCP Overview](./README.md) | [Up: Cursor for Everyone](../README.md) | [Next: MCP in Action ➡️](./06b-MCP-in-Action-Jira-and-Confluence.md) 

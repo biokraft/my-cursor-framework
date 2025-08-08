@@ -81,4 +81,9 @@ This powerful combination allows the AI to understand your application's data la
 
 ---
 
+### Sources
+
+- DBHub: https://github.com/bytebase/dbhub
+- MCP Inspector: https://modelcontextprotocol.io/docs/tools/inspector
+
 [⬅️ Back to Jira/Confluence](./06b-MCP-in-Action-Jira-and-Confluence.md) | [Up: Cursor for Everyone](../README.md) | [Next: MCP Ecosystem ➡️](./06d-Exploring-the-MCP-Ecosystem.md) 

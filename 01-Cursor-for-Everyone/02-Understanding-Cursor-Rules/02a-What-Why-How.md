@@ -82,4 +82,8 @@ You can configure them by navigating to `File` > `Settings` > `Rules` in the Cur
 
 ---
 
+### Sources
+
+- Cursor Rules: https://docs.cursor.com/context/rules
+
 [⬅️ Back to Rules Overview](./README.md) | [Up: Understanding Rules](../README.md) | [Next: Interactive Development ➡️](./02b-Interactive-Rule-Development.md) 

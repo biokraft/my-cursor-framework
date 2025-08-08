@@ -60,4 +60,8 @@ Let's get this bread! 🍞💅 It's time to absolutely ~manifest~ some epic resu
 
 ---
 
+### Sources
+
+- Concepts (tools): https://docs.cursor.com/get-started/concepts
+
 [⬅️ Back to Research Mode](./04d-Mode-Spotlight-Research.md) | [Up: Custom Modes](./README.md) | [Next: Essential Settings ➡️](../05-Essential-Cursor-Settings.md) 

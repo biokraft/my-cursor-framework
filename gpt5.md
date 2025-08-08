@@ -50,69 +50,69 @@ Keep this guide in lockstep with official Cursor docs and changelogs. Check each
 
 ## 01-Cursor-for-Everyone
 
-- [ ] `00-The-Golden-Rule-Context-is-King.md`
-  - [ ] Confirm Web Search status/naming; remove outdated BETA labels.
+- [x] `00-The-Golden-Rule-Context-is-King.md`
+  - [x] Confirm Web Search status/naming; remove outdated BETA labels.
     - Source: Concepts — `https://docs.cursor.com/get-started/concepts`
-  - [ ] Mention Background Agent availability and panel shortcut.
+  - [x] Mention Background Agent availability and panel shortcut.
     - Source: 1.0 Changelog — `https://cursor.com/en/changelog/1-0`
 
-- [ ] `01-Welcome-to-Cursor.md`
-  - [ ] Add marquee features: Background Agent, BugBot, Memories, richer chat.
+- [x] `01-Welcome-to-Cursor.md`
+  - [x] Add marquee features: Background Agent, BugBot, Memories, richer chat.
     - Source: 1.0 Changelog — `https://cursor.com/en/changelog/1-0`
-  - [ ] Align terminology with current docs (Chat/Composer/Inline Edit naming if referenced).
+  - [x] Align terminology with current docs (Chat/Composer/Inline Edit naming if referenced).
     - Source: Get Started — `https://docs.cursor.com/get-started/introduction`
 
-- [ ] `02-Understanding-Cursor-Rules/README.md`
+- [x] `02-Understanding-Cursor-Rules/README.md`
   - [ ] Verify current UI naming for project rules vs user/global rules and their locations.
   - [ ] Ensure `.mdc` extension/frontmatter remains current.
     - Source: Rules — `https://docs.cursor.com/context/rules`
 
-- [ ] `02-Understanding-Cursor-Rules/02a-What-Why-How.md`
+- [x] `02-Understanding-Cursor-Rules/02a-What-Why-How.md`
   - [ ] Validate frontmatter keys (`description`, `globs`, `alwaysApply`) and examples (string vs array for `globs`).
   - [ ] Confirm how rules are attached (description triggers vs globs vs alwaysApply behavior).
     - Source: Rules — `https://docs.cursor.com/context/rules`
 
-- [ ] `02-Understanding-Cursor-Rules/02b-Interactive-Rule-Development.md`
+- [x] `02-Understanding-Cursor-Rules/02b-Interactive-Rule-Development.md`
   - [ ] Verify the `/Generate Cursor Rules` command name and availability.
   - [ ] Keep guidance on referencing master rules via `@` mentions.
     - Source: Rules — `https://docs.cursor.com/context/rules`
 
-- [ ] `02-Understanding-Cursor-Rules/02c-Rules-for-Stellar-Documentation.md`
+- [x] `02-Understanding-Cursor-Rules/02c-Rules-for-Stellar-Documentation.md`
   - [ ] Keep examples; optionally add note on `.cursorignore` for large doc trees.
     - Source: Concepts — `https://docs.cursor.com/get-started/concepts`
 
-- [ ] `03-Choosing-Your-AI-Model.md`
+- [x] `03-Choosing-Your-AI-Model.md`
   - [ ] Refresh recommended models and names (Anthropic, OpenAI, Google) and availability inside Cursor.
   - [ ] Reassess “Avoid MAX” guidance to reflect current “Max mode” behavior/costs.
   - [ ] Confirm “Auto” model selection naming/behavior.
     - Source: Changelog (models/Max mode) — `https://cursor.com/changelog`
 
-- [ ] `04-Custom-Modes-Tailoring-Cursor-to-You/README.md`
+- [x] `04-Custom-Modes-Tailoring-Cursor-to-You/README.md`
   - [ ] Confirm UI path/name for creating modes; verify where modes appear in chat.
   - [ ] Verify tool toggles naming/availability.
     - Source: Custom Modes — `https://docs.cursor.com/chat/custom-modes`
 
-- [ ] `04a-Introduction-to-Custom-Modes.md`
+- [x] `04a-Introduction-to-Custom-Modes.md`
   - [ ] Update screenshots/labels if the UI changed.
   - [ ] Confirm “mode shows in chat input selector”.
     - Source: Custom Modes — `https://docs.cursor.com/chat/custom-modes`
 
-- [ ] `04b-Mode-Spotlight-Learn.md`
+- [x] `04b-Mode-Spotlight-Learn.md`
   - [ ] Ensure Web/Search tool naming matches current settings and permissions.
     - Source: Concepts — `https://docs.cursor.com/get-started/concepts`
 
-- [ ] `04c-Mode-Spotlight-MDP.md`
+- [x] `04c-Mode-Spotlight-MDP.md`
   - [ ] Neutral; optionally add tip to export chats to Markdown.
     - Source: Changelog — `https://cursor.com/changelog`
 
-- [ ] `04d-Mode-Spotlight-Research.md`
+- [x] `04d-Mode-Spotlight-Research.md`
   - [ ] Confirm Web Search naming; add note on @link/PDF parsing if supported.
     - Source: Changelog — `https://cursor.com/changelog`
 
-- [ ] `04e-Mode-Spotlight-Yolo.md`
+- [x] `04e-Mode-Spotlight-Yolo.md`
   - [ ] No product coupling; leave as-is.
 
-- [ ] `05-Essential-Cursor-Settings.md`
+- [x] `05-Essential-Cursor-Settings.md`
   - [ ] “Include project structure (BETA)” → verify current status/name; update text and screenshot.
   - [ ] “Web Search Tool (BETA)” → verify status/name; add @link/PDF parsing where applicable.
   - [ ] “Enable auto-run mode” → verify label/location and current best-practice cautions.
@@ -122,22 +122,22 @@ Keep this guide in lockstep with official Cursor docs and changelogs. Check each
   - [ ] Add Background Agent panel shortcut and dashboard usage analytics mention.
     - Sources: Concepts — `https://docs.cursor.com/get-started/concepts`, Changelog — `https://cursor.com/changelog`, 1.0 Changelog — `https://cursor.com/en/changelog/1-0`
 
-- [ ] `06-The-Model-Context-Protocol-MCP/README.md`
+- [x] `06-The-Model-Context-Protocol-MCP/README.md`
   - [ ] Add one-click MCP install and OAuth support notes.
   - [ ] Confirm settings path/file used to register MCP servers (still `mcp.json`?).
     - Source: 1.0 Changelog — `https://cursor.com/en/changelog/1-0`
 
-- [ ] `06a-MCP-The-Big-Picture.md`
+- [x] `06a-MCP-The-Big-Picture.md`
   - [ ] Align terminology; add link to MCP Inspector and official MCP docs.
     - Sources: MCP Inspector — `https://modelcontextprotocol.io/docs/tools/inspector`
 
-- [ ] `06b-MCP-in-Action-Jira-and-Confluence.md`
+- [x] `06b-MCP-in-Action-Jira-and-Confluence.md`
   - [ ] Validate recommended image (`ghcr.io/sooperset/mcp-atlassian`) and env names; update if an official image now exists.
   - [ ] Clarify cloud/server token setups; read-only defaults; example tool command names.
   - [ ] Mention one-click setup/OAuth if available.
     - Sources: Atlassian MCP (community) — `https://github.com/sooperset/mcp-atlassian`, 1.0 Changelog — `https://cursor.com/en/changelog/1-0`
 
-- [ ] `06c-MCP-Spotlight-DBHub.md`
+- [x] `06c-MCP-Spotlight-DBHub.md`
   - [ ] Confirm `@bytebase/dbhub` package/flags; DSN examples; read-only flag.
   - [ ] Add MCP Inspector tip for debugging.
     - Sources: DBHub — `https://github.com/bytebase/dbhub`, MCP Inspector — `https://modelcontextprotocol.io/docs/tools/inspector`
@@ -146,12 +146,12 @@ Keep this guide in lockstep with official Cursor docs and changelogs. Check each
   - [ ] Keep `mcp.so`/PulseMCP; add official server directories and in-app discovery if present.
     - Sources: mcp.so — `https://mcp.so/`, PulseMCP — `https://www.pulsemcp.com/servers`, MCP servers — `https://github.com/modelcontextprotocol/servers`
 
-- [ ] `07-Quick-Look-The-Docs-Feature.md`
+- [x] `07-Quick-Look-The-Docs-Feature.md`
   - [ ] Verify it’s still called “@Docs”; confirm settings label/path (“Docs” vs “Knowledge”).
   - [ ] Add PDF parsing/@link notes if supported.
     - Sources: Get Started/Concepts — `https://docs.cursor.com/get-started/concepts`, Changelog — `https://cursor.com/changelog`
 
-- [ ] `08-Markdown-Driven-Planning.md`
+- [x] `08-Markdown-Driven-Planning.md`
   - [ ] Neutral; optionally add Duplicate Chats and Export Chat tips.
     - Source: Changelog — `https://cursor.com/changelog`
 

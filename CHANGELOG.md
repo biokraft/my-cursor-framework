@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Release v1.3.3 - Cursor Docs Sync (GPT-5 pass)
+
+### 📚 Documentation
+
+- Synced the entire guide with latest Cursor docs & changelog. Added official sources throughout, removed outdated BETA labels, and referenced new features (Background Agent, BugBot, Memories, Jupyter Notebook editing, richer chat rendering).
+- Enhanced Essential Settings with `.gitignore` handling, `.cursorignore`, global ignore patterns, Background Agent panel shortcut (Cmd/Ctrl+E), and dashboard usage notes.
+- Updated MCP docs (Inspector, one-click/OAuth notes) and validated Atlassian/DBHub guidance.
+- Finalized developer docs sources and terminology alignment.
+
+### 🧭 Tracking
+
+- Added `gpt5.md` to track per-file sync tasks; only screenshot refreshes remain under “Workshops & Assets”.
+
+### 🔗 Links
+
+- [Compare v1.3.2...v1.3.3](https://github.com/biokraft/my-cursor-framework/compare/v1.3.2...v1.3.3)
+
 ## Release v1.3.2 - The "Make a Todo List" Revolution & Cross-Platform Enhancement
 
 ### ✨ Features
@@ -65,15 +82,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [v1.2.0]: https://github.com/biokraft/my-cursor-framework/compare/v1.1.0...v1.2.0 
 
-## Unreleased - Cursor Docs Sync (GPT-5 pass)
-
-### 📚 Documentation
-
-- Synced all guides with latest Cursor docs and changelog: added official sources, removed outdated BETA labels, and referenced new features (Background Agent, BugBot, Memories, Jupyter Notebook editing, richer chat rendering).
-- Enhanced Essential Settings with `.gitignore`, `.cursorignore`, global ignores, Background Agent panel shortcut (Cmd/Ctrl+E), and dashboard usage notes.
-- Updated MCP section with MCP Inspector and one-click/OAuth notes; validated Atlassian and DBHub guidance.
-- Completed developer docs sources and terminology alignment.
-
-### 🧭 Tracking
-
-- Introduced `gpt5.md` checklist to track per-file sync tasks; most items completed. Remaining: screenshot refresh under “Workshops & Assets”.
+ 

@@ -23,10 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Removed (deprecated toggle): `assets/include_project_structure.png`
   - Unchanged: `assets/add_custom_mode.png`
 
-### 🔧 Maintenance
-
-- Removed temporary checklist file `gpt5.md` now that all items are complete.
-
 [v1.3.3]: https://github.com/biokraft/my-cursor-framework/compare/v1.3.2...v1.3.3
 
 ## Release v1.3.2 - The "Make a Todo List" Revolution & Cross-Platform Enhancement

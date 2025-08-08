@@ -121,6 +121,7 @@ Keep this guide in lockstep with official Cursor docs and changelogs. Check each
   - [ ] Add global ignore patterns and `.cursorignore` guidance.
   - [ ] Add Background Agent panel shortcut and dashboard usage analytics mention.
     - Sources: Concepts — `https://docs.cursor.com/get-started/concepts`, Changelog — `https://cursor.com/changelog`, 1.0 Changelog — `https://cursor.com/en/changelog/1-0`
+  - [x] Updated: project structure now default (image removed), new auto-run UI text, updated web search image.
 
 - [x] `06-The-Model-Context-Protocol-MCP/README.md`
   - [ ] Add one-click MCP install and OAuth support notes.
@@ -207,12 +208,12 @@ Keep this guide in lockstep with official Cursor docs and changelogs. Check each
 - [ ] Skim workshop README files for old labels/screenshots; queue refresh if needed.
   - [x] Skimmed and added sources; fixed stray text in workshop overview.
 - [ ] Update/recapture assets:
-  - [ ] `include_project_structure.png`
-  - [ ] `web_search_tool.png`
-  - [ ] `auto_run_mode.png`
-  - [ ] `add_docs_sources_ui.png`
-  - [ ] `custom_modes_setup_ui.png`
-  - [ ] `add_custom_mode_ui.png`
+  - [x] `include_project_structure.png` (deprecated; removed reference)
+  - [x] `web_search_tool.png` (replaced)
+  - [x] `auto_run_mode.png` (updated text to match new UI)
+  - [x] `add_docs_sources_ui.png` (replaced)
+  - [x] `custom_modes_setup_ui.png` (replaced)
+  - [x] `add_custom_mode_ui.png` (no change needed)
   - [ ] (New) Background Agent panel, dashboard analytics, export/duplicate chat as needed
     - Source: Current UI (capture fresh from latest Cursor build)
 

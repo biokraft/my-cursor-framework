@@ -2,7 +2,7 @@
 
 > **🔑 Key Takeaways:**
 > 
-> - **Enable `Include project structure`:** This is the most important setting. It gives the AI a file tree of your project, massively improving its context and accuracy.
+> - **Project structure is included by default:** Cursor automatically includes your project tree for better context. No toggle required.
 > - **Enable `Web Search Tool`:** Allows the AI to access up-to-date information from the internet, crucial for research and current best practices.
 > - **Enable `Auto-run mode` for Speed:** For advanced users, this allows the AI to execute commands and edits without confirmation, creating a faster workflow.
 > - **Enable `Play sound on finish` for Feedback:** A simple but effective auditory cue that an AI task is complete.
@@ -11,12 +11,11 @@
 
 To get the most out of Cursor, you should enable a few key settings. These options significantly enhance your productivity.
 
-### 1. Include project structure
+### 1. Project structure in context (Default)
 
-**This is a game-changer. Enable it.** It gives the AI a simplified directory tree of your project, so it always understands your codebase layout.
+Cursor provides a simplified directory tree of your project, so it always understands your codebase layout.
 
--   **Why it's crucial:** Improves contextual awareness and accuracy, reducing the need for you to manually reference files.  
-    ![Include Project Structure Setting](../assets/include_project_structure.png)
+-   **Why it's crucial:** Improves contextual awareness and accuracy, reducing the need for you to manually reference files.
 
 ### 2. Web Search Tool
 
@@ -25,12 +24,15 @@ To get the most out of Cursor, you should enable a few key settings. These optio
 -   **Why it's essential:** Gives the AI access to current documentation, APIs, and articles beyond its training data.  
     ![Web Search Tool Setting](../assets/web_search_tool.png)
 
-### 3. Enable auto-run mode
+### 3. Auto-run Mode (configurable)
 
-For users who want to work at maximum speed and are comfortable with the AI taking initiative.
+Choose how the Agent runs tools like command execution and file writes.
 
--   **Why it's powerful:** The AI can execute terminal commands and apply file edits without pausing for your approval, creating a much smoother workflow. Use with confidence!  
-    ![Enable Auto-run Mode Setting](../assets/auto_run_mode.png)
+-   **Mode selector:** Choose the level of autonomy (e.g., Run Everything vs Ask First).
+-   **Command Allowlist:** Restrict what can run automatically (e.g., `git add`, `uv run`, `docker compose`, `make`).
+-   **Safety tip:** Keep destructive commands off auto-run; use the denylist alongside an allowlist strategy.
+
+![Enable Auto-run Mode Setting](../assets/auto_run_mode.png)
 
 ### 4. Play sound on finish
 

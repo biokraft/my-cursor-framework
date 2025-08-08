@@ -9,18 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 📚 Documentation
 
-- Synced the entire guide with latest Cursor docs & changelog. Added official sources throughout, removed outdated BETA labels, and referenced new features (Background Agent, BugBot, Memories, Jupyter Notebook editing, richer chat rendering).
+- Synced the entire guide with the latest Cursor docs & changelog. Added official sources throughout, removed outdated BETA labels, referenced new features (Background Agent, BugBot, Memories, Jupyter Notebook editing, richer chat rendering), and updated screenshots for the setup guide.
 - Enhanced Essential Settings with `.gitignore` handling, `.cursorignore`, global ignore patterns, Background Agent panel shortcut (Cmd/Ctrl+E), and dashboard usage notes.
 - Updated MCP docs (Inspector, one-click/OAuth notes) and validated Atlassian/DBHub guidance.
 - Finalized developer docs sources and terminology alignment.
+- Essential Settings refinements:
+  - Project structure is now provided by default; removed the old toggle description and image.
+  - Rewrote Auto-run Mode to match the new UI (mode selector + command allowlist) and added safety guidance.
+  - Refreshed Web Search section and screenshot.
+- @Docs quick-look: improved Sources block formatting for consistency.
+- Assets refreshed:
+  - Updated: `assets/web_search_tool.png`, `assets/add_docs_sources_ui.png`, `assets/custom_modes_setup_ui.png`, `assets/auto_run_mode.png`
+  - Removed (deprecated toggle): `assets/include_project_structure.png`
+  - Unchanged: `assets/add_custom_mode.png`
 
-### 🧭 Tracking
+### 🔧 Maintenance
 
-- Added `gpt5.md` to track per-file sync tasks; only screenshot refreshes remain under “Workshops & Assets”.
+- Removed temporary checklist file `gpt5.md` now that all items are complete.
 
-### 🔗 Links
-
-- [Compare v1.3.2...v1.3.3](https://github.com/biokraft/my-cursor-framework/compare/v1.3.2...v1.3.3)
+[v1.3.3]: https://github.com/biokraft/my-cursor-framework/compare/v1.3.2...v1.3.3
 
 ## Release v1.3.2 - The "Make a Todo List" Revolution & Cross-Platform Enhancement
 

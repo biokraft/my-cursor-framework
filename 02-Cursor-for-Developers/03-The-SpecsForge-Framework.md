@@ -262,4 +262,8 @@ Run and evaluate tests
 
 ---
 
+### Sources
+
+- Changelog (export/duplicate chats): https://cursor.com/changelog
+
 [⬅️ Back to Evolving Ruleset](./02-Crafting-Rules-for-Your-Tech-Stack/02c-Evolving-Your-Ruleset.md) | [Up: Cursor for Developers](./README.md) | [Next: Terminal Integration ➡️](./04-Leveraging-Terminal-Integration.md)

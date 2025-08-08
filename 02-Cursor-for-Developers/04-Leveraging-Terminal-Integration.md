@@ -32,4 +32,9 @@ By integrating the command line into your AI-driven workflow, you can investigat
 
 ---
 
+### Sources
+
+- Concepts (terminal integration, auto-run): https://docs.cursor.com/get-started/concepts
+- Changelog (Background Agent): https://cursor.com/en/changelog/1-0
+
 [⬅️ Back to TDV Mode](./03a-Mode-Spotlight-TDV.md) | [Up: Cursor for Developers](./README.md) | [Next: Working Across Repositories ➡️](./05-Working-Across-Repositories.md) 

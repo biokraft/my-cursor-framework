@@ -47,4 +47,9 @@ The AI will generate a draft of the new rule. Review it, make any necessary adju
 
 ---
 
+### Sources
+
+- Concepts (@Docs, context): https://docs.cursor.com/get-started/concepts
+- Cursor Rules: https://docs.cursor.com/context/rules
+
 [⬅️ Back to Why Rules Matter](./02a-Why-Tech-Specific-Rules-Matter.md) | [Up: Cursor for Developers](../README.md) | [Next: Evolving Your Ruleset ➡️](./02c-Evolving-Your-Ruleset.md) 

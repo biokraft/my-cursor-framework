@@ -29,4 +29,8 @@ By treating your rules as a core part of your project's knowledge base, you ensu
 
 ---
 
+### Sources
+
+- Concepts (@Docs, context): https://docs.cursor.com/get-started/concepts
+
 [⬅️ Back to Auto-Generating Rules](./02b-Auto-Generating-Rules-from-Docs.md) | [Up: Cursor for Developers](../README.md) | [Next: SpecsForge Framework ➡️](../03-The-SpecsForge-Framework.md) 

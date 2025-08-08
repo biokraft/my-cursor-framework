@@ -41,4 +41,8 @@ By providing clear, comprehensive context—preferably through multi-root worksp
 
 ---
 
+### Sources
+
+- Concepts (workspaces, context, indexing): https://docs.cursor.com/get-started/concepts
+
 [⬅️ Back to Terminal Integration](./04-Leveraging-Terminal-Integration.md) | [Up: Cursor for Developers](./README.md) 

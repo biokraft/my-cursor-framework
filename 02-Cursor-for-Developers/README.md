@@ -32,6 +32,11 @@ The goal is to establish a "vibe" with the AI—a seamless partnership where Cur
 -   **[🌐 Working Across Repositories](./05-Working-Across-Repositories.md)**  
     *Techniques for managing and referencing code across multiple repositories.*
 
+
 ---
+
+### Sources
+
+- Concepts (context, @Docs, indexing): https://docs.cursor.com/get-started/concepts
 
 [⬅️ Back to Home](../../README.md)

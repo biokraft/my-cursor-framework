@@ -41,4 +41,8 @@ By creating these rules, you encode your team's expert knowledge and project-spe
 
 ---
 
+### Sources
+
+- Cursor Rules: https://docs.cursor.com/context/rules
+
 [⬅️ Back to Crafting Rules](./README.md) | [Up: Cursor for Developers](../README.md) | [Next: Auto-Generating Rules ➡️](./02b-Auto-Generating-Rules-from-Docs.md) 

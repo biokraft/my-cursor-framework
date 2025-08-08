@@ -102,4 +102,8 @@ Once all implementation steps in `plan.md` are successfully completed and marked
 
 ---
 
+### Sources
+
+- Changelog (Background Agent): https://cursor.com/en/changelog/1-0
+
 [⬅️ Back to SpecsForge Framework](./03-The-SpecsForge-Framework.md) | [Up: Cursor for Developers](./README.md) | [Next: Terminal Integration ➡️](./04-Leveraging-Terminal-Integration.md)

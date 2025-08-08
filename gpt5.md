@@ -157,47 +157,47 @@ Keep this guide in lockstep with official Cursor docs and changelogs. Check each
 
 ## 02-Cursor-for-Developers
 
-- [ ] `00-The-Vibe-Programmer-Manifesto.md`
+- [x] `00-The-Vibe-Programmer-Manifesto.md`
   - [ ] No product coupling; keep as-is.
 
-- [ ] `01-Mastering-the-Docs-Feature.md`
+- [x] `01-Mastering-the-Docs-Feature.md`
   - [ ] Confirm settings path/label for adding docs sources.
   - [ ] Add advanced capabilities: PDFs, @link, interplay with codebase indexing.
   - [ ] Note explicit prompts referencing the chosen docs.
     - Sources: Concepts — `https://docs.cursor.com/get-started/concepts`, Changelog — `https://cursor.com/changelog`
 
-- [ ] `02-Crafting-Rules-for-Your-Tech-Stack/README.md`
+- [x] `02-Crafting-Rules-for-Your-Tech-Stack/README.md`
   - [ ] Ensure the bootstrap-from-docs flow matches current UI.
   - [ ] Optionally add AI Review/Shadow Workspace as complementary guardrails.
     - Sources: Rules — `https://docs.cursor.com/context/rules`, (Community) Cursor 101 — `https://github.com/alchaincyf/cursor101`
 
-- [ ] `02a-Why-Tech-Specific-Rules-Matter.md`
+- [x] `02a-Why-Tech-Specific-Rules-Matter.md`
   - [ ] Keep examples; ensure language mentions current stack specifics (e.g., Pydantic v2) as examples, not prescriptions.
     - Source: Rules — `https://docs.cursor.com/context/rules`
 
-- [ ] `02b-Auto-Generating-Rules-from-Docs.md`
+- [x] `02b-Auto-Generating-Rules-from-Docs.md`
   - [ ] Confirm `@Docs` flow/UI; update screenshots/labels.
   - [ ] Keep master rule `@`-reference pattern.
     - Sources: Concepts — `https://docs.cursor.com/get-started/concepts`, Rules — `https://docs.cursor.com/context/rules`
 
-- [ ] `02c-Evolving-Your-Ruleset.md`
+- [x] `02c-Evolving-Your-Ruleset.md`
   - [ ] Add note to use release notes via `@Docs` for rule refresh; consider team ceremonies tip.
     - Sources: Concepts — `https://docs.cursor.com/get-started/concepts`
 
-- [ ] `03-The-SpecsForge-Framework.md`
+- [x] `03-The-SpecsForge-Framework.md`
   - [ ] Neutral; optionally add Duplicate Chats/export chat for branching/recordkeeping.
     - Source: Changelog — `https://cursor.com/changelog`
 
-- [ ] `03a-Mode-Spotlight-TDV.md`
+- [x] `03a-Mode-Spotlight-TDV.md`
   - [ ] Neutral; optionally mention Background Agent for long-running test cycles.
     - Source: 1.0 Changelog — `https://cursor.com/en/changelog/1-0`
 
-- [ ] `04-Leveraging-Terminal-Integration.md`
+- [x] `04-Leveraging-Terminal-Integration.md`
   - [ ] Verify Auto-run label/behavior; recommend non-interactive flags by default.
   - [ ] Mention Background Agent for long-running commands; confirm Inline Edit/Cmd+K UI changes if referenced.
     - Sources: Concepts — `https://docs.cursor.com/get-started/concepts`, Changelog — `https://cursor.com/changelog`
 
-- [ ] `05-Working-Across-Repositories.md`
+- [x] `05-Working-Across-Repositories.md`
   - [ ] Confirm “File > Add Folder to Workspace…” label.
   - [ ] Add `.cursorignore` tips for large assets; note indexing behavior across multiple roots.
     - Sources: Concepts — `https://docs.cursor.com/get-started/concepts`

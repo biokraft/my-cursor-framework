@@ -23,4 +23,9 @@ Welcome! While "Part 1" covered the basics of Rules, this section dives into cre
 
 ---
 
+### Sources
+
+- Cursor Rules: https://docs.cursor.com/context/rules
+- Concepts (@Docs, context): https://docs.cursor.com/get-started/concepts
+
 [⬅️ Back to @Docs Guide](../01-Mastering-the-Docs-Feature.md) | [Up: Cursor for Developers](../README.md) | [Next: Why They Matter ➡️](./02a-Why-Tech-Specific-Rules-Matter.md) 

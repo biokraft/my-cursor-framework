@@ -45,4 +45,9 @@ You can create incredibly powerful, tech-stack-specific guidance by using `@Docs
 
 ---
 
+### Sources
+
+- Concepts (@Docs, context): https://docs.cursor.com/get-started/concepts
+- Changelog (PDF parsing/@link & chat rendering): https://cursor.com/changelog
+
 [⬅️ Back to Manifesto](./00-The-Vibe-Programmer-Manifesto.md) | [Up: Cursor for Developers](./README.md) | [Next: Crafting Rules ➡️](./02-Crafting-Rules-for-Your-Tech-Stack/README.md) 

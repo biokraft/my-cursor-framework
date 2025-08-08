@@ -50,6 +50,18 @@ However, this feature can cause issues with very large files.
 
 This prevents the AI from deleting files automatically. It can still *suggest* `rm` commands, but you will have to approve them explicitly. This small change adds a crucial safety net, making Cursor much more stable for projects with large assets, without disrupting your workflow.
 
+### 6. Exclude Noisy Files with `.cursorignore` and Global Ignores
+
+Keep large or irrelevant files out of prompts and indexing to improve accuracy and performance.
+
+- Use a project-level `.cursorignore` to exclude folders like `node_modules/`, `dist/`, build artifacts, and large assets.
+- Configure user-level global ignore patterns in settings to apply across projects.
+
+### 7. Background Agent Panel & Dashboard
+
+- Open the Background Agent panel quickly with `Cmd/Ctrl+E` to manage long-running tasks.
+- Use the Dashboard to view usage analytics for you or your team.
+
 ---
 
 By thoughtfully configuring these settings, you can create a highly efficient and context-aware working environment in Cursor.

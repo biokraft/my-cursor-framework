@@ -4,27 +4,27 @@ Keep this guide in lockstep with official Cursor docs and changelogs. Check each
 
 ## Global
 
-- [ ] **Beta → GA/default audit**: Review all mentions of BETA features and update status/naming (Include project structure, Web Search, Auto-run, Play sound on finish).
+- [x] **Beta → GA/default audit**: Review all mentions of BETA features and update status/naming (Include project structure, Web Search, Auto-run, Play sound on finish).
   - Source: Changelog (scan latest entries) — `https://cursor.com/changelog`
-- [ ] **New platform features**: Integrate coverage where relevant:
-  - [ ] Background Agent (incl. Slack launch, panel shortcut Cmd/Ctrl+E)
+- [x] **New platform features**: Integrate coverage where relevant:
+  - [x] Background Agent (incl. Slack launch, panel shortcut Cmd/Ctrl+E)
     - Source: 1.0 Changelog — `https://cursor.com/en/changelog/1-0`
-  - [ ] BugBot for PR reviews
+  - [x] BugBot for PR reviews
     - Source: 1.0 Changelog — `https://cursor.com/en/changelog/1-0`
-  - [ ] Memories
+  - [x] Memories
     - Source: 1.0 Changelog — `https://cursor.com/en/changelog/1-0`
-  - [ ] Jupyter Notebook editing (multi-cell apply)
+  - [x] Jupyter Notebook editing (multi-cell apply)
     - Source: 1.0 Changelog — `https://cursor.com/en/changelog/1-0`
-  - [ ] Richer chat rendering (Mermaid, tables)
+  - [x] Richer chat rendering (Mermaid, tables)
     - Source: 1.0 Changelog — `https://cursor.com/en/changelog/1-0`
-  - [ ] Global ignore patterns/user-level ignores and `.cursorignore`
+  - [x] Global ignore patterns/user-level ignores and `.cursorignore`
     - Source: Changelog — `https://cursor.com/changelog`
-  - [ ] Dashboard usage analytics; export/duplicate chats
+  - [x] Dashboard usage analytics; export/duplicate chats
     - Source: Changelog — `https://cursor.com/changelog`
 - [ ] **Models**: Refresh availability, naming, long-context support, and guidance on “Max mode”.
   - Source: Changelog (models/Max mode updates) — `https://cursor.com/changelog`
 - [ ] **Links**: Prefer official `docs.cursor.com`/Cursor changelog pages; annotate any community resources as such.
-- [ ] **Indexing**: Document automatic indexing behavior and configuration; include `.cursorignore` examples.
+- [x] **Indexing**: Document automatic indexing behavior and configuration; include `.cursorignore` examples.
   - Source: Concepts — `https://docs.cursor.com/get-started/concepts`
 - [ ] **Advanced dev features (optional)**: Consider adding AI Review and Shadow Workspace tips where they add value.
   - Source (Community): Cursor 101 — `https://github.com/alchaincyf/cursor101`

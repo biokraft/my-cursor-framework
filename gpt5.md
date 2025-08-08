@@ -142,7 +142,7 @@ Keep this guide in lockstep with official Cursor docs and changelogs. Check each
   - [ ] Add MCP Inspector tip for debugging.
     - Sources: DBHub — `https://github.com/bytebase/dbhub`, MCP Inspector — `https://modelcontextprotocol.io/docs/tools/inspector`
 
-- [ ] `06d-Exploring-the-MCP-Ecosystem.md`
+- [x] `06d-Exploring-the-MCP-Ecosystem.md`
   - [ ] Keep `mcp.so`/PulseMCP; add official server directories and in-app discovery if present.
     - Sources: mcp.so — `https://mcp.so/`, PulseMCP — `https://www.pulsemcp.com/servers`, MCP servers — `https://github.com/modelcontextprotocol/servers`
 

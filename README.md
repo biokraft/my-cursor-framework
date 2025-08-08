@@ -16,7 +16,7 @@ Welcome to this personal collection of best practices, rules, and workflows desi
 
 This repository is structured to guide you through understanding core Cursor concepts and then diving into advanced development workflows.
 
-> Note: Cursor evolves quickly. Recent platform capabilities include **Background Agent** (with a dedicated panel and Slack launch), **BugBot** for PR reviews, **Memories**, **richer chat rendering** (Mermaid, tables), and improvements across settings, indexing, and dashboards. See the official changelog for details.
+> Note: Cursor evolves quickly. Recent platform capabilities include **Background Agent** (with a dedicated panel and Slack launch), **BugBot** for PR reviews, **Memories**, **Jupyter Notebook editing**, **richer chat rendering** (Mermaid, tables), and improvements across settings, indexing, and dashboards. See the official changelog for details.
 
 Sources: `https://cursor.com/en/changelog/1-0`, `https://cursor.com/changelog`
 

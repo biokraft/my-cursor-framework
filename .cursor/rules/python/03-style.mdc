@@ -37,14 +37,53 @@ Essential standards for modern Python development using the latest language feat
 - **Spacing**: Two blank lines before classes/functions, one before methods
 
 ## Data Structures
-- **Preferred**: Pydantic v2 `BaseModel` for data validation and serialization
-- **Alternative**: `@dataclass(frozen=True, slots=True)` for simple containers
+
+### Modern Python: Pydantic First
+- **Always Use**: Pydantic V2 `BaseModel` for all data structures in modern Python projects
+- **Never Use**: `@dataclass` in modern Python projects
 - **Collections**: Use `collections.abc` for protocols, `deque` for queues, `Counter` for counting
 
+## Pydantic V2 Best Practices
+
+### Model Definition
+- **Inherit from `BaseModel`**: Always use `from pydantic import BaseModel`
+- **Use `ConfigDict`**: Set model configuration with `model_config = ConfigDict(...)`
+- **Explicit Types**: Avoid generic types like `Any` - use specific types for better performance
+- **Field Validation**: Use `Field()` for constraints, defaults, and documentation
+
+### Validation Patterns
+- **Field Validators**: Use `@field_validator` for single-field validation
+- **Model Validators**: Use `@model_validator` for cross-field validation
+- **Strict Mode**: Consider `strict=True` for new projects to prevent unexpected coercion
+- **Validation Context**: Pass dynamic data via `context` parameter in `model_validate()`
+
+### Serialization and Export
+- **Use `model_dump()`**: Replace legacy `.dict()` method
+- **Control Output**: Use `include`/`exclude` sets to control serialized fields
+- **Export Modes**: Use `mode='json'` for JSON-compatible types, `mode='python'` for rich objects
+- **Computed Fields**: Use `@computed_field` for derived properties that need serialization
+
+### Advanced Patterns
+- **Field Aliases**: Use `alias` for external field names, `serialization_alias` for output-only names
+- **Discriminated Unions**: Use `Field(discriminator='type')` for polymorphic models
+- **Forward References**: Quote type names as strings to handle circular dependencies
+- **Model Inheritance**: Create reusable base models with common fields
+- **Custom Types**: Define custom field types with `Annotated` and constraints
+
+### Error Handling
+- **Catch `ValidationError`**: Handle validation failures gracefully
+- **Custom Error Messages**: Use `Field(description=...)` for clear error context
+- **Error Location**: Access `error['loc']` for field-specific error handling
+
+### Performance Optimization
+- **Specific Types**: Use `int`, `str`, `list[str]` instead of generic types
+- **Efficient Validators**: Avoid expensive operations in validators
+- **Consider Alternatives**: For read-heavy operations without validation needs, standard dataclasses may be slightly faster
+
 ## Performance
-- Use `dataclass(slots=True)` for memory efficiency
 - Prefer generators over lists for large datasets
-- Use `__slots__` in classes to reduce memory footprint
+- Use Pydantic's Rust-powered validation for data structures
+- Profile validation-heavy code paths and optimize accordingly
 
 ## Documentation
 - Docstrings for all public functions/classes (Google format)
@@ -60,27 +99,156 @@ def process_data(items: list[float], threshold: float, multiplier: float | None 
     return [item * mult for item in items if item > threshold]
 ```
 
-### Modern Data Models
+### Modern Pydantic V2 Models
 ```python
-# Pydantic v2 (Recommended)
-from pydantic import BaseModel, Field
+from typing import Literal
+from pydantic import BaseModel, Field, ConfigDict, field_validator, computed_field
 
 class UserProfile(BaseModel):
-    name: str = Field(min_length=1)
+    model_config = ConfigDict(str_strip_whitespace=True, validate_assignment=True)
+    
+    name: str = Field(min_length=1, max_length=100)
     age: int = Field(ge=0, le=150)
+    email: str = Field(pattern=r'^[\w\.-]+@[\w\.-]+\.\w+$')
+    role: Literal["admin", "user", "guest"] = "user"
+    
+    @field_validator('name')
+    @classmethod
+    def validate_name(cls, v: str) -> str:
+        if not v.replace(' ', '').isalpha():
+            raise ValueError('Name must contain only letters and spaces')
+        return v.title()
+    
+    @computed_field
+    @property
+    def display_name(self) -> str:
+        return f"{self.name} ({self.role})"
+
+# Settings management with pydantic-settings
+from pydantic_settings import BaseSettings
+
+class AppConfig(BaseSettings):
+    database_url: str = Field(alias='DATABASE_URL')
+    debug: bool = False
+    api_key: str = Field(min_length=32)
+    
+    model_config = ConfigDict(env_file='.env', env_file_encoding='utf-8')
+
+# Advanced validation with context
+class ApiRequest(BaseModel):
+    user_id: int
+    action: str
+    
+    @field_validator('action')
+    @classmethod
+    def validate_action(cls, v: str, info) -> str:
+        # Access validation context for dynamic validation
+        allowed_actions = info.context.get('allowed_actions', []) if info.context else []
+        if allowed_actions and v not in allowed_actions:
+            raise ValueError(f'Action must be one of: {allowed_actions}')
+        return v
+
+# Usage with context
+request_data = {"user_id": 123, "action": "delete"}
+context = {"allowed_actions": ["read", "write", "delete"]}
+validated_request = ApiRequest.model_validate(request_data, context=context)
+```
+
+### Advanced Pydantic Patterns
+```python
+from typing import Annotated, Literal, Union
+from pydantic import BaseModel, Field, ValidationError, field_validator
+from datetime import datetime
+
+# Model inheritance with base models
+class TimestampedModel(BaseModel):
+    created_at: datetime = Field(default_factory=datetime.now)
+    updated_at: datetime | None = None
+
+class BaseEntity(TimestampedModel):
+    id: int = Field(gt=0)
+    name: str = Field(min_length=1, max_length=100)
+
+# Field aliases for API compatibility
+class UserApiModel(BaseEntity):
+    email_address: str = Field(alias='email', serialization_alias='email')
+    full_name: str = Field(alias='fullName', serialization_alias='displayName')
+
+# Discriminated unions for polymorphic models
+class Cat(BaseModel):
+    type: Literal['cat'] = 'cat'
+    meows: int
+
+class Dog(BaseModel):
+    type: Literal['dog'] = 'dog'
+    barks: float
+
+Animal = Annotated[Union[Cat, Dog], Field(discriminator='type')]
+
+class Pet(BaseModel):
+    animal: Animal
+    name: str
+
+# Forward references for circular dependencies
+class Node(BaseModel):
+    value: int
+    children: list['Node'] = []
+    parent: 'Node | None' = None
+
+# Custom types with constraints
+UserId = Annotated[int, Field(gt=0, description="Positive user identifier")]
+Email = Annotated[str, Field(pattern=r'^[\w\.-]+@[\w\.-]+\.\w+$')]
+
+class User(BaseModel):
+    id: UserId
+    email: Email
     role: Literal["admin", "user", "guest"] = "user"
 
-# High-performance dataclass alternative
-@dataclass(frozen=True, slots=True)
-class Point:
-    x: float
-    y: float
+# Error handling pattern
+def process_user_data(raw_data: dict) -> User | None:
+    try:
+        return User.model_validate(raw_data)
+    except ValidationError as e:
+        for error in e.errors():
+            field = error['loc'][0] if error['loc'] else 'unknown'
+            message = error['msg']
+            print(f"Validation error in {field}: {message}")
+        return None
+
+# Resolve forward references after all models are defined
+Node.model_rebuild()
 ```
 
 ### Quick Migration Checklist
+
+#### Type Hinting Updates
 - `List[T]` → `list[T]`
 - `Dict[K, V]` → `dict[K, V]`  
 - `Union[A, B]` → `A | B`
 - `Optional[T]` → `T | None`
 - Add `from typing import Self` for method chaining
-- Use `dataclass(slots=True)` for performance
+
+#### Pydantic V1 to V2 Migration
+- `.dict()` → `.model_dump()`
+- `.json()` → `.model_dump_json()`
+- `.parse_obj()` → `.model_validate()`
+- `.parse_raw()` → `.model_validate_json()`
+- `@validator` → `@field_validator`
+- `@root_validator` → `@model_validator`
+- `Config` class → `model_config = ConfigDict(...)`
+
+#### Dataclass to Pydantic Migration
+- `@dataclass` → `class MyModel(BaseModel):`
+- Remove `from dataclasses import dataclass`
+- Add `from pydantic import BaseModel, Field`
+- Convert field defaults to `Field()` with constraints
+- Add validation with `@field_validator` decorators
+- Replace manual validation with Pydantic's automatic validation
+
+#### Advanced Pydantic V2 Features
+- **JSON Schema**: Use `model.model_json_schema()` for API documentation
+- **Validation Modes**: Set `strict=True` in ConfigDict for no type coercion
+- **Forward References**: Always call `Model.model_rebuild()` after circular model definitions
+- **Custom Serializers**: Use `@field_serializer` for custom field output formatting
+- **Model Copying**: Use `model.model_copy(update={...})` for immutable updates
+- **Union Validation**: Use `Field(discriminator='field_name')` for efficient union parsing

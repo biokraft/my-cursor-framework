@@ -1,150 +1,86 @@
 ---
-description: Standards for code style and formatting in Python projects
+description: Python 3.11+ style guide: Apply when working with modern Python code
 globs: **/*.py
 alwaysApply: false
 ---
-# Python Code Style and Formatting
+# Python 3.11+ Style Guide
 
-## Introduction
-This guide defines the standard code style and formatting rules for Python projects.
+## Core Rules
+Essential standards for modern Python development using the latest language features.
 
-## Guidelines
+## Type Hinting
 
-### Type Hints
+### Required
 - Always use type hints for function parameters and return values
-- Use type hints for variable annotations where possible
-- Import types from typing module (List, Dict, Optional, etc.)
-- Use Union[type1, type2] for multiple possible types
-- Use Optional[type] instead of Union[type, None]
-- Consider using TypeVar for generic types
-- Use collections.abc for container types (Sequence, Mapping, etc.)
+- Use built-in collection types: `list[T]`, `dict[K, V]`, `set[T]`, `tuple[T, ...]`
+- Use pipe operator for unions: `int | str | None` instead of `Union` or `Optional`
+- Use `Self` for methods returning class instances (method chaining)
 
-### Code Organization Principles
-- **DRY (Don't Repeat Yourself)**: Avoid duplicating code, logic, or validation
-  - Place validation logic close to the relevant class/data structure
-  - Use helper functions for repeated operations
-  - Each piece of knowledge should have a single, unambiguous representation
-- **Single Responsibility Principle**: Each class/function should have one reason to change
-- **Encapsulation**: Keep implementation details hidden when appropriate
-- **Composition over Inheritance**: Prefer composition for code reuse when possible
+### Advanced Features
+- `Literal["value"]` for exact value specifications  
+- `LiteralString` for security-sensitive string parameters
+- `Protocol` for structural subtyping (duck typing)
+- `TypedDict` for structured dictionaries
+- `class Container[T]:` syntax for generics (Python 3.12+)
+- `TypeIs` for type guard functions (Python 3.13+)
 
-### Indentation
-- Use 4 spaces for indentation
-- Never mix tabs and spaces
-- Align continuation lines with parentheses/brackets
+## Code Organization
+- **DRY**: Single source of truth for all logic and validation
+- **Single Responsibility**: One clear purpose per class/function
+- **Composition over Inheritance**: Prefer composition for reusability
 
-### Line Length
-- Maximum line length: 88 characters (Black formatter standard)
-- Use parentheses for line continuation
-- Break before binary operators
+## Formatting
+- **Indentation**: 4 spaces, never tabs
+- **Line Length**: 88 characters maximum
+- **Imports**: Group by standard library → third party → local
+- **Naming**: Classes `PascalCase`, functions/variables `snake_case`, constants `UPPER_CASE`
+- **Spacing**: Two blank lines before classes/functions, one before methods
 
-### Naming Conventions
-- Classes: CapWords (PascalCase)
-- Functions/Variables: lowercase_with_underscores (snake_case)
-- Constants: UPPERCASE_WITH_UNDERSCORES
-- Protected attributes: _single_leading_underscore
-- Private attributes: __double_leading_underscore
-- Magic methods: __double_underscores__
+## Data Structures
+- **Preferred**: Pydantic v2 `BaseModel` for data validation and serialization
+- **Alternative**: `@dataclass(frozen=True, slots=True)` for simple containers
+- **Collections**: Use `collections.abc` for protocols, `deque` for queues, `Counter` for counting
 
-### Imports
-- One import per line
-- Group imports in this order:
-  1. Standard library imports
-  2. Related third party imports
-  3. Local application imports
-- Use absolute imports over relative imports
+## Performance
+- Use `dataclass(slots=True)` for memory efficiency
+- Prefer generators over lists for large datasets
+- Use `__slots__` in classes to reduce memory footprint
 
-### Whitespace
-- Two blank lines before top-level classes/functions
-- One blank line before class methods
-- No trailing whitespace
-- Surround operators with single space
-- No space inside parentheses/brackets
-
-### Documentation
-- Use docstrings for all public modules/functions/classes
-- Follow Google-style docstring format
-- Include type hints for function parameters and return values
+## Documentation
+- Docstrings for all public functions/classes (Google format)
+- Type hints reduce documentation needs
 
 ## Examples
 
+### Basic Function Signature
 ```python
-# Bad style - no type hints
-def process_data(items, threshold):
-    results = []
-    for item in items:
-        if item > threshold:
-            results.append(item * 2)
-    return results
-
-# Good style - with type hints
-from typing import List, Optional
-
-def process_data(
-    items: List[float],
-    threshold: float,
-    multiplier: Optional[float] = None
-) -> List[float]:
-    """Process a list of numbers above a threshold.
-
-    Args:
-        items: List of numbers to process
-        threshold: Minimum value to include
-        multiplier: Optional value to multiply by (defaults to 2)
-
-    Returns:
-        List of processed values above threshold
-    """
-    results: List[float] = []
-    mult = multiplier if multiplier is not None else 2.0
-    for item in items:
-        if item > threshold:
-            results.append(item * mult)
-    return results
+def process_data(items: list[float], threshold: float, multiplier: float | None = None) -> list[float]:
+    """Process numbers above threshold."""
+    mult = multiplier or 2.0
+    return [item * mult for item in items if item > threshold]
 ```
 
-# DRY Principle Examples
-
+### Modern Data Models
 ```python
-# Bad - Duplicated validation logic
-class Template:
-    def validate_config(self, config):
-        # Primary validation
-        if 'name' not in config:
-            raise ValueError("Missing name")
+# Pydantic v2 (Recommended)
+from pydantic import BaseModel, Field
 
-        # Feature validation (duplicated from Feature class)
-        for feature in config['features']:
-            if 'name' not in feature:
-                raise ValueError("Feature missing name")
-            if 'rules' not in feature:
-                raise ValueError("Feature missing rules")
+class UserProfile(BaseModel):
+    name: str = Field(min_length=1)
+    age: int = Field(ge=0, le=150)
+    role: Literal["admin", "user", "guest"] = "user"
 
-class Feature:
-    def validate(self, config):
-        # Same validation logic duplicated
-        if 'name' not in config:
-            raise ValueError("Feature missing name")
-        if 'rules' not in config:
-            raise ValueError("Feature missing rules")
-
-# Good - Delegation of responsibility
-class Template:
-    def validate_config(self, config):
-        # Only validate what belongs to Template
-        if 'name' not in config:
-            raise ValueError("Missing name")
-
-        # Delegate feature validation to Feature class
-        for feature in config['features']:
-            Feature.validate(feature)  # Let Feature validate its own structure
-
-class Feature:
-    @classmethod
-    def validate(cls, config):
-        # Single place for feature validation logic
-        if 'name' not in config:
-            raise ValueError("Feature missing name")
-        if 'rules' not in config:
-            raise ValueError("Feature missing rules")
+# High-performance dataclass alternative
+@dataclass(frozen=True, slots=True)
+class Point:
+    x: float
+    y: float
 ```
+
+### Quick Migration Checklist
+- `List[T]` → `list[T]`
+- `Dict[K, V]` → `dict[K, V]`  
+- `Union[A, B]` → `A | B`
+- `Optional[T]` → `T | None`
+- Add `from typing import Self` for method chaining
+- Use `dataclass(slots=True)` for performance

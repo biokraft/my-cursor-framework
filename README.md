@@ -1,6 +1,15 @@
 # A Comprehensive Guide to 🚀 Cursor AI 🚀
 
+[![Project Status: Archived](https://img.shields.io/badge/status-archived-red?style=for-the-badge)](https://github.com/biokraft/my-cursor-framework)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/biokraft/my-cursor-framework)](https://github.com/biokraft/my-cursor-framework/releases/latest)
+
+> **⚠️ Archived — no longer maintained**
+>
+> This repository is **discontinued**. Cursor and agent workflows have changed significantly since this guide was written, and I am no longer updating it.
+>
+> The content may still be useful as historical reference or for ideas, but expect outdated terminology, UI, and workflows. For current Cursor documentation, see [docs.cursor.com](https://docs.cursor.com) and the [changelog](https://cursor.com/changelog).
+>
+> Issues and pull requests will not be reviewed. Fork freely if you want to maintain your own version.
 
 > **🔑 Key Takeaways:**
 >
@@ -71,7 +80,7 @@ See the `SpecsForge` framework and `TDV` mode in action! This video gives a prac
 
 1.  Explore **Part 1** to build a solid foundation in Cursor's core functionalities.
 2.  If you're a developer, proceed to **Part 2** to learn about my specific coding workflows, including the `SpecsForge` framework and `TDV` mode.
-3.  Adapt and adopt what works for you! This is a living guide, and I encourage you to tailor these practices to your own needs.
+3.  Adapt and adopt what works for you! Treat this as a snapshot in time — verify anything important against current Cursor docs before relying on it.
 
 ---
 
@@ -87,10 +96,6 @@ I recommend always starting with these foundational rules in your `.cursor/rules
 Dive into the `.cursor/rules` directory in this repository to find my collection of reusable rules. Feel free to pick and choose what you need!
 
 ---
-
-## ⭐ Enjoying This Guide?
-
-If you've found this framework helpful, I'd be incredibly grateful if you could leave a star on the GitHub repository! Your support helps motivate further development and makes it easier for others to discover this guide. Thank you! 🙏
 
 ## Star History
 
@@ -115,9 +120,3 @@ If you've found this framework helpful, I'd be incredibly grateful if you could 
 
 ---
 
-## 🤔 Future Considerations
-
--   Explore Notion, Obsidian, Anytype, Figma, and Grafana MCP integrations more deeply.
--   Develop more sophisticated custom modes for specialized tasks.
--   Continuously refine rules based on new Cursor features and model capabilities.
--   Expand the workshop materials.

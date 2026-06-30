@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - Repository archived
+
+### Changed
+
+- Repository marked as **archived and discontinued**. No further updates, issue triage, or pull request reviews are planned. Content remains available for reference; see the README notice for current Cursor resources.
+
 ## Release v1.3.3 - Cursor Docs Sync (GPT-5 pass)
 
 ### 📚 Documentation
